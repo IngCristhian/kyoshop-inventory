@@ -1,0 +1,36 @@
+# Ignorar archivos del sistema
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# Ignorar archivos de desarrollo
+*.log
+error_log
+.env
+.env.local
+
+# Ignorar imágenes subidas por usuarios
+uploads/*
+!uploads/.gitkeep
+
+# Ignorar archivos temporales
+tmp/
+temp/
+cache/
+
+# Ignorar archivos de configuración local
+config/database_local.php
+
+# Ignorar archivos de IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Ignorar dependencias (si usas Composer en el futuro)
+vendor/
+composer.lock
