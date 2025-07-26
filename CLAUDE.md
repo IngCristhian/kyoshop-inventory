@@ -19,6 +19,11 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Testing manual completado exitosamente
 - Listo para producción
 
+🚀 **DEPLOYED TO PRODUCTION** (January 2025)
+- **URL de producción**: https://inventory.kyoshop.co
+- **Hosting**: Namecheap Shared Hosting
+- **Deployment status**: En proceso...
+
 ## Development Environment Setup (macOS)
 
 ### Local Development Stack
@@ -40,6 +45,40 @@ private $password = '0309';
 ```php
 // config/config.php (local)
 define('APP_URL', 'http://localhost:8000');
+```
+
+## Production Environment Setup (Namecheap)
+
+### Production Hosting Details
+- **Hosting Provider**: Namecheap Shared Hosting
+- **Domain**: kyoshop.co
+- **Subdomain**: inventory.kyoshop.co
+- **Server**: server277.web-hosting.com
+- **SSH User**: kyosankk
+- **Document Root**: /home/kyosankk/public_html/inventory/
+
+### Production Database Configuration
+```php
+// config/database.php (production)
+private $host = 'localhost';
+private $db_name = 'kyosankk_inventory';
+private $username = 'kyosankk_inv';
+private $password = '[production_password]';
+```
+
+### Production Application Configuration
+```php
+// config/config.php (production)
+define('APP_URL', 'https://inventory.kyoshop.co');
+```
+
+### SSH Access
+```bash
+# Connect to production server
+ssh kyosankk@server277.web-hosting.com
+
+# Navigate to project directory
+cd /home/kyosankk/public_html/inventory/
 ```
 
 ## Development Commands
@@ -157,17 +196,37 @@ main (producción estable)
 
 ## Deployment Plans
 
-### Current: Manual cPanel Deployment
-1. Upload files via File Manager
-2. Create MySQL database and user
-3. Import `sql/database.sql`
-4. Update `config/database.php` with cPanel credentials
-5. Set `uploads/` permissions to 755
+### ✅ Current: SSH + cPanel Hybrid Deployment (COMPLETED)
+**Production Environment Setup:**
+1. ✅ Created subdomain `inventory.kyoshop.co` via cPanel
+2. ✅ Created MySQL database `kyosankk_inventory` 
+3. ✅ Created MySQL user `kyosankk_inv` with ALL PRIVILEGES
+4. ✅ SSH access configured to `/home/kyosankk/public_html/inventory/`
+
+**Next Steps (In Progress):**
+- [ ] Upload project files via SSH/SCP
+- [ ] Configure production database credentials
+- [ ] Import `sql/database.sql` via SSH
+- [ ] Set proper file permissions (uploads/ directory)
+- [ ] Test functionality on https://inventory.kyoshop.co
+
+### Production Deployment Commands
+```bash
+# Upload project files from local
+scp -r * kyosankk@server277.web-hosting.com:/home/kyosankk/public_html/inventory/
+
+# Import database via SSH
+mysql -u kyosankk_inv -p kyosankk_inventory < sql/database.sql
+
+# Set permissions
+chmod 755 uploads/
+chmod 644 config/*.php
+```
 
 ### Future: GitHub Actions Automation
 - **Cost**: FREE (under 2000 minutes/month for private repos)
 - **Trigger**: Push to `main` branch
-- **Action**: FTP deploy to cPanel automatically
+- **Action**: SSH deploy to Namecheap automatically
 - **Benefits**: Zero-downtime deployments, deployment history
 
 ### Deployment Files Ready
@@ -238,25 +297,53 @@ Simple switch-based routing in `index.php`:
 - CSS/JS minification ready for production
 - Database connection reuses single PDO instance
 
-## Future Roadmap
+## Future Roadmap & Improvement Plan
 
-### Phase 1 - Immediate Improvements
-- [ ] Deploy to production cPanel
-- [ ] Setup GitHub Actions for auto-deployment
-- [ ] Add user authentication system
-- [ ] Implement basic reporting features
+### Phase 1 - Immediate Improvements (Next 1-2 months)
+**Priority: HIGH** - Foundation & Production Ready
+- [ ] Deploy to production cPanel hosting
+- [ ] Setup GitHub Actions for automated deployment
+- [ ] Add user authentication system (login/logout)
+- [ ] Implement basic reporting features (inventory reports)
+- [ ] Add data backup functionality
+- [ ] Implement input validation improvements
+- [ ] Add system logging for debugging
 
-### Phase 2 - Feature Expansion
-- [ ] WhatsApp API integration for notifications
-- [ ] Barcode scanning support
-- [ ] Multi-location inventory
-- [ ] Advanced reporting (PDF exports)
+### Phase 2 - Feature Expansion (Next 3-6 months)
+**Priority: MEDIUM** - Business Value Features
+- [ ] WhatsApp API integration for low stock notifications
+- [ ] Barcode scanning support (mobile-friendly)
+- [ ] Multi-location inventory management
+- [ ] Advanced reporting with PDF exports
+- [ ] Product categories management system
+- [ ] Bulk product import/export (CSV/Excel)
+- [ ] Advanced search filters (price ranges, dates)
+- [ ] Product image gallery (multiple images per product)
 
-### Phase 3 - Enterprise Features
+### Phase 3 - Enterprise Features (Next 6-12 months)
+**Priority: LOW** - Scalability & Integration
 - [ ] REST API for third-party integrations
-- [ ] Advanced user roles and permissions
-- [ ] Audit logging
-- [ ] Backup automation
+- [ ] Advanced user roles and permissions system
+- [ ] Comprehensive audit logging
+- [ ] Automated backup scheduling
+- [ ] Mobile app (React Native or PWA)
+- [ ] Advanced analytics dashboard
+- [ ] Integration with accounting software
+- [ ] Multi-currency support
+- [ ] Supplier management system
+- [ ] Purchase order management
+
+### Phase 4 - Advanced Optimization (Future)
+**Priority: ENHANCEMENT** - Performance & Scale
+- [ ] Database query optimization
+- [ ] Caching layer implementation (Redis)
+- [ ] CDN integration for image delivery
+- [ ] Advanced security measures
+- [ ] Load balancing support
+- [ ] Microservices architecture migration
+- [ ] Real-time notifications system
+- [ ] Advanced inventory forecasting
+- [ ] Machine learning for demand prediction
 
 ## Development Notes
 
