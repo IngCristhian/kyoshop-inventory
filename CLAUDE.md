@@ -375,4 +375,14 @@ Simple switch-based routing in `index.php`:
 - Commits deben ser del desarrollador únicamente
 - Seguir conventional commits cuando sea posible
 
+### Entorno Profesional - Principios Fundamentales
+- **NUNCA editar archivos directamente en producción**
+- **TODO cambio debe pasar por Git workflow**: develop → PR → main → deploy
+- **Diferentes configuraciones por ambiente**:
+  - `develop`: Configuraciones locales (kyoshop_inventory, localhost:8000)
+  - `main`: Configuraciones de producción (kyosankk_inventory, inventory.kyoshop.co)
+- **Separar SQL por ambiente**: database_local.sql vs database_production.sql
+- **Mantener integridad del código**: Cambios controlados y versionados
+- **Un deploy profesional SIEMPRE pasa por el repositorio**
+
 This system prioritizes simplicity, security, and maintainability while being production-ready for small to medium-sized clothing store inventories.
