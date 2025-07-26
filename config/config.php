@@ -7,7 +7,13 @@
 // Configuración de la aplicación
 define('APP_NAME', 'KyoShop Inventory');
 define('APP_VERSION', '1.0.0');
-define('APP_URL', 'http://localhost:8000'); // URL para servidor PHP integrado
+
+// URL desde variable de entorno
+$app_url = getenv('APP_URL');
+if (!$app_url) {
+    die("Error: La variable de entorno APP_URL debe estar configurada");
+}
+define('APP_URL', $app_url);
 
 // Configuración de archivos
 define('UPLOAD_DIR', 'uploads/');
