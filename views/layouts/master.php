@@ -81,7 +81,7 @@
                 
                 <ul class="nav flex-column">
                     <li class="nav-item">
-                        <a class="nav-link <?= (strpos($_SERVER['REQUEST_URI'], 'dashboard') !== false || $_SERVER['REQUEST_URI'] === '/kyoshop-inventory/' || $_SERVER['REQUEST_URI'] === '/kyoshop-inventory') ? 'active' : '' ?>" href="<?= APP_URL ?>">
+                        <a class="nav-link <?= (strpos($_SERVER['REQUEST_URI'], 'dashboard') !== false || $_SERVER['REQUEST_URI'] === '/' || $_SERVER['REQUEST_URI'] === '') ? 'active' : '' ?>" href="<?= APP_URL ?>">
                             <i class="bi bi-speedometer2"></i> Dashboard
                         </a>
                     </li>
@@ -117,7 +117,7 @@
                     <h1 class="h2 text-dark">
                         <?php
                         $rutaActual = $_SERVER['REQUEST_URI'];
-                        if (strpos($rutaActual, 'dashboard') !== false || $rutaActual === '/kyoshop-inventory/' || $rutaActual === '/kyoshop-inventory') {
+                        if (strpos($rutaActual, 'dashboard') !== false || $rutaActual === '/' || $rutaActual === '') {
                             echo '<i class="bi bi-speedometer2"></i> Dashboard';
                         } elseif (strpos($rutaActual, 'productos/crear') !== false) {
                             echo '<i class="bi bi-plus-circle"></i> Nuevo Producto';

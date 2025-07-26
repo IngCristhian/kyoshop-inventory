@@ -80,7 +80,7 @@ function performLiveSearch(query) {
     searchResults.innerHTML = '<div class="text-center p-3"><div class="spinner-border spinner-border-sm" role="status"></div> Buscando...</div>';
     searchResults.style.display = 'block';
     
-    fetch('/kyoshop-inventory/productos/buscar', {
+    fetch('/productos/buscar', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/x-www-form-urlencoded',
@@ -111,10 +111,10 @@ function displaySearchResults(productos) {
     let html = '<div class="list-group">';
     productos.forEach(producto => {
         html += `
-            <a href="/kyoshop-inventory/productos/editar/${producto.id}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
+            <a href="/productos/editar/${producto.id}" class="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                 <div class="d-flex align-items-center">
                     ${producto.imagen ? 
-                        `<img src="/kyoshop-inventory/uploads/${producto.imagen}" class="rounded me-2" width="40" height="40" style="object-fit: cover;">` :
+                        `<img src="/uploads/${producto.imagen}" class="rounded me-2" width="40" height="40" style="object-fit: cover;">` :
                         '<div class="bg-secondary rounded me-2 d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;"><i class="bi bi-image text-white"></i></div>'
                     }
                     <div>
@@ -200,7 +200,7 @@ function createConfirmModal() {
 function eliminarProducto(id) {
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = `/kyoshop-inventory/productos/eliminar/${id}`;
+    form.action = `/productos/eliminar/${id}`;
     
     const csrfToken = document.createElement('input');
     csrfToken.type = 'hidden';
