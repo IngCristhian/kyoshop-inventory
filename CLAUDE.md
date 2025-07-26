@@ -203,12 +203,17 @@ main (producción estable)
 3. ✅ Created MySQL user `kyosankk_inv` with ALL PRIVILEGES
 4. ✅ SSH access configured to `/home/kyosankk/public_html/inventory/`
 
-**Next Steps (In Progress):**
-- [ ] Upload project files via SSH/SCP
-- [ ] Configure production database credentials
-- [ ] Import `sql/database.sql` via SSH
-- [ ] Set proper file permissions (uploads/ directory)
-- [ ] Test functionality on https://inventory.kyoshop.co
+**Deployment Status:**
+- ✅ Upload project files via SSH/SCP
+- ✅ Created .htaccess with URL rewriting rules (fixed 404 errors)
+- ✅ Configure production database credentials via environment variables
+- ✅ Import `sql/database.sql` via SSH
+- ✅ Set proper file permissions (uploads/ directory)
+- ✅ Test functionality on https://inventory.kyoshop.co
+
+**Production Deployment Issues Resolved:**
+- **404 Errors Fixed**: Missing .htaccess with mod_rewrite rules
+- **Solution**: Created production .htaccess with RewriteEngine rules to redirect all requests to index.php
 
 ### Production Deployment Commands
 ```bash
@@ -221,6 +226,37 @@ mysql -u kyosankk_inv -p kyosankk_inventory < sql/database.sql
 # Set permissions
 chmod 755 uploads/
 chmod 644 config/*.php
+chmod 644 .htaccess
+```
+
+### Common Production Issues & Solutions
+
+#### 404 Errors on Routes
+**Problem**: Apache returns 404 for URLs like `/productos`, `/dashboard`
+**Cause**: Missing .htaccess with mod_rewrite rules for PHP routing
+**Solution**: 
+1. Create .htaccess with RewriteEngine rules
+2. Ensure mod_rewrite is enabled on hosting
+3. Set proper file permissions (644)
+
+```bash
+# If .htaccess conflicts during git pull:
+mv .htaccess .htaccess.backup
+git pull origin main
+# Edit new .htaccess with production credentials
+nano .htaccess
+```
+
+#### Database Connection Issues
+**Problem**: Environment variables not loading
+**Cause**: .htaccess not configured with production credentials
+**Solution**: Edit .htaccess SetEnv variables:
+```apache
+SetEnv DB_HOST "localhost"
+SetEnv DB_NAME "kyosankk_inventory" 
+SetEnv DB_USER "kyosankk_inv"
+SetEnv DB_PASSWORD "actual_production_password"
+SetEnv APP_URL "https://inventory.kyoshop.co"
 ```
 
 ### Future: GitHub Actions Automation
