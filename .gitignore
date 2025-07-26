@@ -33,4 +33,4 @@ config/database_local.php
 
 # Ignorar dependencias (si usas Composer en el futuro)
 vendor/
-composer.lock
+composer.lock.htaccess
