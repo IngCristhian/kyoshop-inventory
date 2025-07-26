@@ -369,4 +369,10 @@ Simple switch-based routing in `index.php`:
 - Sanitize all user inputs
 - Use prepared statements for all database queries
 
+### Git Commit Guidelines
+- **NO incluir co-autoría de Claude** en commits
+- Usar mensajes descriptivos y concisos
+- Commits deben ser del desarrollador únicamente
+- Seguir conventional commits cuando sea posible
+
 This system prioritizes simplicity, security, and maintainability while being production-ready for small to medium-sized clothing store inventories.

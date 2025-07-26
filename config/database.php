@@ -6,10 +6,10 @@
 
 class Database {
     // Configuración para cPanel/hosting compartido
-    private $host = 'localhost';          // Cambiar por tu host de cPanel
-    private $db_name = 'kyoshop_inventory'; // Cambiar por tu nombre de BD
-    private $username = 'root';           // Tu usuario de MySQL
-    private $password = '0309';           // Tu contraseña de MySQL
+    private $host;
+    private $db_name;
+    private $username;
+    private $password;
     private $charset = 'utf8mb4';
     
     private $pdo;
@@ -19,6 +19,17 @@ class Database {
      * Constructor privado para patrón Singleton
      */
     private function __construct() {
+        // Configuración desde variables de entorno
+        $this->host = getenv('DB_HOST');
+        $this->db_name = getenv('DB_NAME');
+        $this->username = getenv('DB_USER');
+        $this->password = getenv('DB_PASSWORD');
+        
+        // Validar que todas las variables estén configuradas
+        if (!$this->host || !$this->db_name || !$this->username || !$this->password) {
+            die("Error: Todas las variables de entorno de la base de datos deben estar configuradas");
+        }
+        
         $this->connect();
     }
     
