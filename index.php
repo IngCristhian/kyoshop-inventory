@@ -18,7 +18,6 @@ require_once 'config/config.php';
 // Obtener la ruta solicitada
 $request = $_SERVER['REQUEST_URI'];
 $path = parse_url($request, PHP_URL_PATH);
-$path = str_replace('/kyoshop-inventory', '', $path);
 $path = trim($path, '/');
 
 // Enrutamiento simple
