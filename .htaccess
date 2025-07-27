@@ -1,10 +1,10 @@
-# KyoShop Inventory - Production Configuration
+# KyoShop Inventory - Development Configuration
 # Environment Variables
 SetEnv DB_HOST "localhost"
-SetEnv DB_NAME "kyosankk_inventory"
-SetEnv DB_USER "kyosankk_inv" 
-SetEnv DB_PASSWORD "your_production_password"
-SetEnv APP_URL "https://inventory.kyoshop.co"
+SetEnv DB_NAME "kyosankk_inventory_dev"
+SetEnv DB_USER "kyosankk_dev" 
+SetEnv DB_PASSWORD "your_dev_password"
+SetEnv APP_URL "https://dev.inventory.kyoshop.co"
 
 # URL Rewriting for PHP routing
 RewriteEngine On
