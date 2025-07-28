@@ -1,13 +1,20 @@
-# KyoShop Inventory - Environment Variables Template
-# Copy this file to .htaccess and configure with your environment values
-
+# KyoShop Inventory - Development Configuration
+# Environment Variables
 SetEnv DB_HOST "localhost"
-SetEnv DB_NAME "your_database_name"
-SetEnv DB_USER "your_db_user"
-SetEnv DB_PASSWORD "your_password"
-SetEnv APP_URL "your_app_url"
+SetEnv DB_NAME "kyosankk_inventory_dev"
+SetEnv DB_USER "kyosankk_dev" 
+SetEnv DB_PASSWORD "YOUR_DEV_PASSWORD_HERE"
+SetEnv APP_URL "https://dev.inventory.kyoshop.co"
 
-# Security Headers - Always security first!
+# URL Rewriting for PHP routing
+RewriteEngine On
+
+# Redirect all requests to index.php (except existing files/directories)
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Security Headers
 Header always set X-Content-Type-Options nosniff
 Header always set X-Frame-Options DENY
 Header always set X-XSS-Protection "1; mode=block"
@@ -25,7 +32,7 @@ Header always set Permissions-Policy "geolocation=(), microphone=(), camera=()"
     Deny from all
 </Files>
 
-# Disable directory browsing (you can still access via SSH/FTP)
+# Disable directory browsing
 Options -Indexes
 
 # Cache static assets for performance

@@ -259,6 +259,49 @@ SetEnv DB_PASSWORD "actual_production_password"
 SetEnv APP_URL "https://inventory.kyoshop.co"
 ```
 
+### ✅ Development Environment Setup (IN PROGRESS)
+**Development Environment Setup:**
+1. ✅ Created subdomain `dev.inventory.kyoshop.co` via cPanel
+2. ⏳ Create MySQL database `kyosankk_inventory_dev` 
+3. ⏳ Create MySQL user `kyosankk_dev` with ALL PRIVILEGES
+4. ✅ SSH access configured to `/home/kyosankk/dev.inventory.kyoshop.co/`
+
+**Development Configuration:**
+- **URL**: https://dev.inventory.kyoshop.co
+- **Database**: kyosankk_inventory_dev
+- **User**: kyosankk_dev
+- **Branch**: develop
+- **Directory**: `/home/kyosankk/dev.inventory.kyoshop.co/`
+
+### Development Deployment Commands
+```bash
+# Upload project files from develop branch
+scp -r * kyosankk@server277.web-hosting.com:/home/kyosankk/dev.inventory.kyoshop.co/
+
+# Import database via SSH
+mysql -u kyosankk_dev -p kyosankk_inventory_dev < sql/database.sql
+
+# Set permissions
+chmod 755 uploads/
+chmod 644 config/*.php
+chmod 644 .htaccess
+```
+
+**Development .htaccess Configuration:**
+```apache
+# KyoShop Inventory - Development Configuration
+SetEnv DB_HOST "localhost"
+SetEnv DB_NAME "kyosankk_inventory_dev"
+SetEnv DB_USER "kyosankk_dev" 
+SetEnv DB_PASSWORD "your_dev_password"
+SetEnv APP_URL "https://dev.inventory.kyoshop.co"
+```
+
+### Branch Strategy
+- **main branch** → Production (inventory.kyoshop.co)
+- **develop branch** → Development (dev.inventory.kyoshop.co)
+- **Workflow**: develop → PR → main → production deploy
+
 ### Future: GitHub Actions Automation
 - **Cost**: FREE (under 2000 minutes/month for private repos)
 - **Trigger**: Push to `main` branch
