@@ -327,8 +327,8 @@ body {
 /* Dark Mode Support - Improved Contrast */
 @media (prefers-color-scheme: dark) {
     :root {
-        --light-bg: #121212;
-        --dark-card-bg: #1e1e1e;
+        --light-bg: #1a1a1a;
+        --dark-card-bg: #2d2d2d;
         --dark-text: #ffffff;
         --dark-text-secondary: #b3b3b3;
         --dark-border: #333333;
@@ -346,7 +346,7 @@ body {
     }
     
     .card-header {
-        background-color: #252525;
+        background-color: #3a3a3a;
         color: var(--dark-text);
         border-bottom: 1px solid var(--dark-border);
     }
@@ -367,7 +367,7 @@ body {
     
     .form-control,
     .form-select {
-        background-color: #2a2a2a;
+        background-color: #3a3a3a;
         color: var(--dark-text);
         border-color: var(--dark-border);
     }
