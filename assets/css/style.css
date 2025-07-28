@@ -483,6 +483,10 @@ body {
 }
 
 /* Dashboard Tables - Force Text Visibility */
+.card .table-hover tbody td {
+    color: #212529 !important;
+}
+
 .card .table tbody tr td .fw-bold,
 .card .table tbody tr td div .fw-bold {
     color: #212529 !important;
@@ -525,6 +529,10 @@ body {
 
 /* Dark mode dashboard tables - Force visibility */
 @media (prefers-color-scheme: dark) {
+    .card .table-hover tbody td {
+        color: #ffffff !important;
+    }
+    
     .card .table tbody tr td .fw-bold,
     .card .table tbody tr td div .fw-bold {
         color: #ffffff !important;
@@ -535,7 +543,7 @@ body {
     .card .table tbody tr td .text-muted,
     .card .table tbody tr td div .text-muted,
     .card .table tbody tr td small.text-muted {
-        color: #ced4da !important;
+        color: #e1e1e1 !important;
         font-weight: 500 !important;
         opacity: 1 !important;
         visibility: visible !important;
