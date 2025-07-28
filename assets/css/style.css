@@ -482,6 +482,44 @@ body {
     box-shadow: var(--box-shadow-hover) !important;
 }
 
+/* Dashboard Tables - Improved Readability */
+.table .fw-bold {
+    color: #212529 !important;
+}
+
+.table .text-muted {
+    color: #6c757d !important;
+    font-weight: 500;
+}
+
+.table tbody tr:hover .fw-bold {
+    color: #000000 !important;
+}
+
+.table tbody tr:hover .text-muted {
+    color: #495057 !important;
+}
+
+/* Dark mode dashboard tables */
+@media (prefers-color-scheme: dark) {
+    .table .fw-bold {
+        color: #ffffff !important;
+    }
+    
+    .table .text-muted {
+        color: #adb5bd !important;
+        font-weight: 500;
+    }
+    
+    .table tbody tr:hover .fw-bold {
+        color: #ffffff !important;
+    }
+    
+    .table tbody tr:hover .text-muted {
+        color: #ced4da !important;
+    }
+}
+
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
     width: 8px;
