@@ -482,41 +482,89 @@ body {
     box-shadow: var(--box-shadow-hover) !important;
 }
 
-/* Dashboard Tables - Improved Readability */
-.table .fw-bold {
+/* Dashboard Tables - Force Text Visibility */
+.card .table tbody tr td .fw-bold,
+.card .table tbody tr td div .fw-bold {
     color: #212529 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
-.table .text-muted {
-    color: #6c757d !important;
-    font-weight: 500;
-}
-
-.table tbody tr:hover .fw-bold {
-    color: #000000 !important;
-}
-
-.table tbody tr:hover .text-muted {
+.card .table tbody tr td .text-muted,
+.card .table tbody tr td div .text-muted,
+.card .table tbody tr td small.text-muted {
     color: #495057 !important;
+    font-weight: 500 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
 }
 
-/* Dark mode dashboard tables */
+.card .table tbody tr td.fw-bold {
+    color: #212529 !important;
+    opacity: 1 !important;
+    visibility: visible !important;
+}
+
+/* Enhanced hover effects */
+.card .table tbody tr:hover td .fw-bold,
+.card .table tbody tr:hover td div .fw-bold {
+    color: #000000 !important;
+    font-weight: 700 !important;
+}
+
+.card .table tbody tr:hover td .text-muted,
+.card .table tbody tr:hover td div .text-muted,
+.card .table tbody tr:hover td small.text-muted {
+    color: #343a40 !important;
+}
+
+.card .table tbody tr:hover td.fw-bold {
+    color: #000000 !important;
+    font-weight: 700 !important;
+}
+
+/* Dark mode dashboard tables - Force visibility */
 @media (prefers-color-scheme: dark) {
-    .table .fw-bold {
+    .card .table tbody tr td .fw-bold,
+    .card .table tbody tr td div .fw-bold {
         color: #ffffff !important;
+        opacity: 1 !important;
+        visibility: visible !important;
     }
     
-    .table .text-muted {
-        color: #adb5bd !important;
-        font-weight: 500;
-    }
-    
-    .table tbody tr:hover .fw-bold {
-        color: #ffffff !important;
-    }
-    
-    .table tbody tr:hover .text-muted {
+    .card .table tbody tr td .text-muted,
+    .card .table tbody tr td div .text-muted,
+    .card .table tbody tr td small.text-muted {
         color: #ced4da !important;
+        font-weight: 500 !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    
+    .card .table tbody tr td.fw-bold {
+        color: #ffffff !important;
+        opacity: 1 !important;
+        visibility: visible !important;
+    }
+    
+    /* Enhanced dark mode hover */
+    .card .table tbody tr:hover td .fw-bold,
+    .card .table tbody tr:hover td div .fw-bold {
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        text-shadow: 0 0 1px rgba(255,255,255,0.3);
+    }
+    
+    .card .table tbody tr:hover td .text-muted,
+    .card .table tbody tr:hover td div .text-muted,
+    .card .table tbody tr:hover td small.text-muted {
+        color: #f8f9fa !important;
+    }
+    
+    .card .table tbody tr:hover td.fw-bold {
+        color: #ffffff !important;
+        font-weight: 700 !important;
+        text-shadow: 0 0 1px rgba(255,255,255,0.3);
     }
 }
 
