@@ -18,25 +18,7 @@
 /* Layout Principal */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: red !important;
-    color: white !important;
-}
-
-/* TEST MESSAGE */
-body::before {
-    content: "🚨 SERVIDOR NO ACTUALIZA CSS - CAMBIO DE PRUEBA ACTIVO 🚨";
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    background: #ff0000;
-    color: white;
-    text-align: center;
-    padding: 20px;
-    font-size: 24px;
-    font-weight: bold;
-    z-index: 9999;
-    border: 5px solid yellow;
+    background-color: var(--light-bg);
 }
 
 /* Sidebar */
@@ -117,7 +99,7 @@ body::before {
 
 /* Tables */
 .table {
-    background: yellow !important;
+    background: white;
     border-radius: var(--border-radius);
     overflow: hidden;
 }
@@ -500,6 +482,39 @@ body::before {
     box-shadow: var(--box-shadow-hover) !important;
 }
 
+
+/* Dashboard Table Text Visibility Fix */
+.card .table tbody tr td {
+    color: #212529 !important;
+}
+
+.card .table tbody tr td .fw-bold {
+    color: #212529 !important;
+    font-weight: bold !important;
+}
+
+.card .table tbody tr td .text-muted {
+    color: #6c757d !important;
+}
+
+.card .table tbody tr td.fw-bold {
+    color: #212529 !important;
+    font-weight: bold !important;
+}
+
+/* Ensure visibility on hover as well */
+.card .table tbody tr:hover td {
+    color: #212529 !important;
+}
+
+.card .table tbody tr:hover td .fw-bold {
+    color: #000000 !important;
+    font-weight: bold !important;
+}
+
+.card .table tbody tr:hover td .text-muted {
+    color: #495057 !important;
+}
 
 /* Custom Scrollbar */
 ::-webkit-scrollbar {
