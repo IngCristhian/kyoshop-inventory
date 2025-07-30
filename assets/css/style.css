@@ -99,7 +99,7 @@ body {
 
 /* Tables */
 .table {
-    background: white;
+    background: yellow !important;
     border-radius: var(--border-radius);
     overflow: hidden;
 }
