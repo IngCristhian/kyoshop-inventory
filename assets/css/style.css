@@ -18,7 +18,25 @@
 /* Layout Principal */
 body {
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: var(--light-bg);
+    background-color: red !important;
+    color: white !important;
+}
+
+/* TEST MESSAGE */
+body::before {
+    content: "🚨 SERVIDOR NO ACTUALIZA CSS - CAMBIO DE PRUEBA ACTIVO 🚨";
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    background: #ff0000;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    font-size: 24px;
+    font-weight: bold;
+    z-index: 9999;
+    border: 5px solid yellow;
 }
 
 /* Sidebar */
