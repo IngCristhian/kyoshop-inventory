@@ -1,0 +1,60 @@
+/**
+ * KYOSHOP INVENTORY SYSTEM
+ * Estilos específicos del dashboard
+ */
+
+/* Product Cards */
+.product-card {
+    transition: all 0.3s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 1rem 2rem rgba(0,0,0,0.1);
+}
+
+.product-image {
+    height: 200px;
+    object-fit: cover;
+    transition: transform 0.3s ease;
+}
+
+.product-card:hover .product-image {
+    transform: scale(1.05);
+}
+
+/* Stats Cards */
+.stats-card {
+    background: white;
+    border-radius: var(--border-radius);
+    padding: 1.5rem;
+    box-shadow: var(--box-shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.stats-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: var(--primary-gradient);
+}
+
+.stats-card.success::before {
+    background: var(--success-color);
+}
+
+.stats-card.warning::before {
+    background: var(--warning-color);
+}
+
+.stats-card.danger::before {
+    background: var(--danger-color);
+}
+
+.stats-card.info::before {
+    background: var(--info-color);
+}
