@@ -1,0 +1,52 @@
+name: Deploy to Development
+
+on:
+  push:
+    branches: [ develop ]
+  pull_request:
+    branches: [ develop ]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+    
+    - name: Deploy to Development Server
+      uses: appleboy/ssh-action@v1.0.0
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_PRIVATE_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        script: |
+          cd ${{ secrets.DEPLOY_PATH_DEV }}
+          
+          # Check if git repo exists, if not clone it
+          if [ ! -d ".git" ]; then
+            echo "🆕 First deployment - cloning repository..."
+            git clone -b develop https://github.com/IngCristhian/kyoshop-inventory.git /tmp/kyoshop-temp
+            cp -r /tmp/kyoshop-temp/* .
+            cp /tmp/kyoshop-temp/.??* . 2>/dev/null || true
+            rm -rf /tmp/kyoshop-temp
+            echo "✅ Repository cloned successfully"
+          else
+            echo "🔄 Existing repository - pulling latest changes..."
+            git pull origin develop
+          fi
+          
+          # Update .htaccess with development environment variables
+          sed -i 's/SetEnv DB_NAME ".*"/SetEnv DB_NAME "${{ secrets.DB_NAME_DEV }}"/' .htaccess
+          sed -i 's/SetEnv DB_USER ".*"/SetEnv DB_USER "${{ secrets.DB_USER_DEV }}"/' .htaccess  
+          sed -i 's/SetEnv DB_PASSWORD ".*"/SetEnv DB_PASSWORD "${{ secrets.DB_PASSWORD_DEV }}"/' .htaccess
+          sed -i 's/SetEnv APP_URL ".*"/SetEnv APP_URL "https:\/\/dev.inventory.kyoshop.co"/' .htaccess
+          
+          # Set proper file permissions
+          chmod 755 uploads/
+          chmod 644 config/*.php
+          chmod 644 .htaccess
+          
+          echo "✅ Development deployment completed successfully"
+          echo "🌐 Available at: https://dev.inventory.kyoshop.co"
