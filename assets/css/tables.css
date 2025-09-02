@@ -1,0 +1,66 @@
+/**
+ * KYOSHOP INVENTORY SYSTEM
+ * Estilos para tablas
+ */
+
+/* Tables */
+.table {
+    background: white;
+    border-radius: var(--border-radius);
+    overflow: hidden;
+}
+
+.table thead th {
+    background: var(--primary-gradient);
+    color: white;
+    border: none;
+    font-weight: 600;
+    padding: 1rem;
+}
+
+.table tbody tr {
+    transition: background-color 0.2s ease;
+}
+
+.table tbody tr:hover {
+    background-color: rgba(102, 126, 234, 0.05);
+}
+
+.table td {
+    padding: 1rem;
+    border-color: #eee;
+    vertical-align: middle;
+}
+
+/* Dashboard Table Text Visibility Fix */
+.card .table tbody tr td {
+    color: #212529 !important;
+}
+
+.card .table tbody tr td .fw-bold {
+    color: #212529 !important;
+    font-weight: bold !important;
+}
+
+.card .table tbody tr td .text-muted {
+    color: #6c757d !important;
+}
+
+.card .table tbody tr td.fw-bold {
+    color: #212529 !important;
+    font-weight: bold !important;
+}
+
+/* Ensure visibility on hover as well */
+.card .table tbody tr:hover td {
+    color: #212529 !important;
+}
+
+.card .table tbody tr:hover td .fw-bold {
+    color: #000000 !important;
+    font-weight: bold !important;
+}
+
+.card .table tbody tr:hover td .text-muted {
+    color: #495057 !important;
+}

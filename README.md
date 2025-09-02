@@ -6,6 +6,7 @@ Sistema de inventario web para tienda de ropa desarrollado en **PHP puro** con a
 ![PHP](https://img.shields.io/badge/PHP-8.0%2B-purple)
 ![MySQL](https://img.shields.io/badge/MySQL-8.0%2B-orange)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3-violet)
+![CI/CD](https://img.shields.io/badge/CI%2FCD-GitHub%20Actions-green)
 
 ## 🎯 Características Principales
 

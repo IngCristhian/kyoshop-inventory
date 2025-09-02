@@ -1,0 +1,135 @@
+/**
+ * KYOSHOP INVENTORY SYSTEM
+ * Media queries y estilos responsivos
+ */
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .sidebar {
+        margin-bottom: 1rem;
+    }
+    
+    .main-content {
+        padding: 1rem;
+    }
+    
+    .card-body {
+        padding: 1rem;
+    }
+    
+    .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.875rem;
+    }
+    
+    .table-responsive {
+        border-radius: var(--border-radius);
+    }
+}
+
+/* Dark Mode Support - Improved Contrast */
+@media (prefers-color-scheme: dark) {
+    :root {
+        --light-bg: #1a1a1a;
+        --dark-card-bg: #2d2d2d;
+        --dark-text: #ffffff;
+        --dark-text-secondary: #b3b3b3;
+        --dark-border: #333333;
+    }
+    
+    body {
+        background-color: var(--light-bg);
+        color: var(--dark-text);
+    }
+    
+    .card {
+        background-color: var(--dark-card-bg);
+        color: var(--dark-text);
+        border: 1px solid var(--dark-border);
+    }
+    
+    .card-header {
+        background-color: #3a3a3a;
+        color: var(--dark-text);
+        border-bottom: 1px solid var(--dark-border);
+    }
+    
+    .table {
+        background-color: var(--dark-card-bg);
+        color: var(--dark-text);
+    }
+    
+    .table td {
+        border-color: var(--dark-border);
+        color: var(--dark-text);
+    }
+    
+    .table tbody tr:hover {
+        background-color: rgba(102, 126, 234, 0.15);
+    }
+    
+    .form-control,
+    .form-select {
+        background-color: #3a3a3a;
+        color: var(--dark-text);
+        border-color: var(--dark-border);
+    }
+    
+    .form-control::placeholder {
+        color: var(--dark-text-secondary);
+    }
+    
+    .text-muted {
+        color: var(--dark-text-secondary) !important;
+    }
+    
+    .btn-outline-secondary {
+        color: var(--dark-text);
+        border-color: var(--dark-border);
+    }
+    
+    .btn-outline-secondary:hover {
+        background-color: var(--dark-border);
+        color: var(--dark-text);
+    }
+    
+    /* Dark mode badges */
+    .badge-success {
+        background-color: #198754;
+        color: #ffffff;
+    }
+    
+    .badge-warning {
+        background-color: #fd7e14;
+        color: #ffffff;
+    }
+    
+    .badge-danger {
+        background-color: #dc3545;
+        color: #ffffff;
+    }
+    
+    .badge-secondary {
+        background-color: #495057;
+        color: #ffffff;
+    }
+    
+    /* Dark mode alerts */
+    .alert-success {
+        background-color: #0f5132;
+        color: #d1e7dd;
+        border: 1px solid #0a3622;
+    }
+    
+    .alert-danger {
+        background-color: #58151c;
+        color: #f8d7da;
+        border: 1px solid #2c0b0e;
+    }
+    
+    .alert-warning {
+        background-color: #664d03;
+        color: #fff3cd;
+        border: 1px solid #332701;
+    }
+}
