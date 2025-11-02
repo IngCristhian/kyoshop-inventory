@@ -34,11 +34,6 @@ switch ($path) {
         $controller->logout();
         break;
 
-    case 'registro':
-        $controller = new AuthController();
-        $controller->registro();
-        break;
-
     // Rutas protegidas (requieren autenticación)
     case '':
     case 'dashboard':
@@ -96,7 +91,57 @@ switch ($path) {
         $controller = new ProductoController();
         $controller->buscar();
         break;
-        
+
+    // Rutas de gestión de usuarios (solo admin)
+    case 'usuarios':
+        requiereAdmin();
+        require_once 'controllers/UserController.php';
+        $controller = new UserController();
+        $controller->index();
+        break;
+
+    case 'usuarios/crear':
+        requiereAdmin();
+        require_once 'controllers/UserController.php';
+        $controller = new UserController();
+        $controller->crear();
+        break;
+
+    case 'usuarios/guardar':
+        requiereAdmin();
+        require_once 'controllers/UserController.php';
+        $controller = new UserController();
+        $controller->guardar();
+        break;
+
+    case (preg_match('/usuarios\/editar\/(\d+)/', $path, $matches) ? true : false):
+        requiereAdmin();
+        require_once 'controllers/UserController.php';
+        $controller = new UserController();
+        $controller->editar($matches[1]);
+        break;
+
+    case (preg_match('/usuarios\/actualizar\/(\d+)/', $path, $matches) ? true : false):
+        requiereAdmin();
+        require_once 'controllers/UserController.php';
+        $controller = new UserController();
+        $controller->actualizar($matches[1]);
+        break;
+
+    case (preg_match('/usuarios\/desactivar\/(\d+)/', $path, $matches) ? true : false):
+        requiereAdmin();
+        require_once 'controllers/UserController.php';
+        $controller = new UserController();
+        $controller->desactivar($matches[1]);
+        break;
+
+    case (preg_match('/usuarios\/activar\/(\d+)/', $path, $matches) ? true : false):
+        requiereAdmin();
+        require_once 'controllers/UserController.php';
+        $controller = new UserController();
+        $controller->activar($matches[1]);
+        break;
+
     default:
         http_response_code(404);
         include 'views/404.php';

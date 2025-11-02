@@ -100,6 +100,19 @@
                             <i class="bi bi-plus-circle"></i> Nuevo Producto
                         </a>
                     </li>
+
+                    <?php
+                    // Mostrar opción de usuarios solo para admins
+                    $usuarioActual = usuarioActual();
+                    if ($usuarioActual && $usuarioActual['rol'] === 'admin'):
+                    ?>
+                        <hr class="text-white-50 my-2">
+                        <li class="nav-item">
+                            <a class="nav-link <?= (strpos($_SERVER['REQUEST_URI'], 'usuarios') !== false) ? 'active' : '' ?>" href="<?= APP_URL ?>/usuarios">
+                                <i class="bi bi-people"></i> Usuarios
+                            </a>
+                        </li>
+                    <?php endif; ?>
                 </ul>
 
                 <hr class="text-white-50 my-4">
@@ -145,6 +158,12 @@
                         $rutaActual = $_SERVER['REQUEST_URI'];
                         if (strpos($rutaActual, 'dashboard') !== false || $rutaActual === '/' || $rutaActual === '') {
                             echo '<i class="bi bi-speedometer2"></i> Dashboard';
+                        } elseif (strpos($rutaActual, 'usuarios/crear') !== false) {
+                            echo '<i class="bi bi-person-plus"></i> Crear Usuario';
+                        } elseif (strpos($rutaActual, 'usuarios/editar') !== false) {
+                            echo '<i class="bi bi-pencil-square"></i> Editar Usuario';
+                        } elseif (strpos($rutaActual, 'usuarios') !== false) {
+                            echo '<i class="bi bi-people"></i> Usuarios';
                         } elseif (strpos($rutaActual, 'productos/crear') !== false) {
                             echo '<i class="bi bi-plus-circle"></i> Nuevo Producto';
                         } elseif (strpos($rutaActual, 'productos/editar') !== false) {
