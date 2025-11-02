@@ -101,9 +101,35 @@
                         </a>
                     </li>
                 </ul>
-                
+
                 <hr class="text-white-50 my-4">
-                
+
+                <!-- Usuario logueado -->
+                <?php $usuario = usuarioActual(); ?>
+                <?php if ($usuario): ?>
+                    <div class="px-3 mb-3">
+                        <div class="bg-white bg-opacity-10 rounded p-2">
+                            <div class="d-flex align-items-center mb-2">
+                                <div class="bg-white rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px;">
+                                    <i class="bi bi-person-fill" style="color: #667eea; font-size: 1.5rem;"></i>
+                                </div>
+                                <div class="ms-2 text-white">
+                                    <div class="fw-bold" style="font-size: 0.9rem;"><?= htmlspecialchars($usuario['nombre']) ?></div>
+                                    <small class="text-white-50" style="font-size: 0.75rem;"><?= htmlspecialchars($usuario['email']) ?></small>
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-between align-items-center">
+                                <span class="badge bg-light text-dark">
+                                    <i class="bi bi-shield-check"></i> <?= ucfirst($usuario['rol']) ?>
+                                </span>
+                                <a href="<?= APP_URL ?>/logout" class="btn btn-sm btn-light" title="Cerrar sesión">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                <?php endif; ?>
+
                 <div class="text-center">
                     <small class="text-white-50">
                         <?= APP_NAME ?> v<?= APP_VERSION ?>

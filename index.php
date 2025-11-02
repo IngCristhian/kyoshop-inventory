@@ -14,6 +14,7 @@ ini_set('display_errors', 1);
 // Incluir archivos necesarios
 require_once 'config/database.php';
 require_once 'config/config.php';
+require_once 'controllers/AuthController.php';
 
 // Obtener la ruta solicitada
 $request = $_SERVER['REQUEST_URI'];
@@ -22,50 +23,75 @@ $path = trim($path, '/');
 
 // Enrutamiento simple
 switch ($path) {
+    // Rutas de autenticación (públicas)
+    case 'login':
+        $controller = new AuthController();
+        $controller->login();
+        break;
+
+    case 'logout':
+        $controller = new AuthController();
+        $controller->logout();
+        break;
+
+    case 'registro':
+        $controller = new AuthController();
+        $controller->registro();
+        break;
+
+    // Rutas protegidas (requieren autenticación)
     case '':
     case 'dashboard':
+        requiereAuth();
         require_once 'controllers/ProductoController.php';
         $controller = new ProductoController();
         $controller->dashboard();
         break;
         
     case 'productos':
+        requiereAuth();
         require_once 'controllers/ProductoController.php';
         $controller = new ProductoController();
         $controller->index();
         break;
-        
+
     case 'productos/crear':
+        requiereAuth();
         require_once 'controllers/ProductoController.php';
         $controller = new ProductoController();
         $controller->crear();
         break;
-        
+
     case 'productos/guardar':
+        requiereAuth();
         require_once 'controllers/ProductoController.php';
         $controller = new ProductoController();
         $controller->guardar();
         break;
-        
+
     case (preg_match('/productos\/editar\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
         require_once 'controllers/ProductoController.php';
         $controller = new ProductoController();
         $controller->editar($matches[1]);
         break;
-        
+
     case (preg_match('/productos\/actualizar\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
         require_once 'controllers/ProductoController.php';
         $controller = new ProductoController();
         $controller->actualizar($matches[1]);
         break;
-        
+
     case (preg_match('/productos\/eliminar\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
         require_once 'controllers/ProductoController.php';
         $controller = new ProductoController();
         $controller->eliminar($matches[1]);
         break;
-        
+
     case 'productos/buscar':
+        requiereAuth();
         require_once 'controllers/ProductoController.php';
         $controller = new ProductoController();
         $controller->buscar();
