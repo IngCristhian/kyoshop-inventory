@@ -152,15 +152,6 @@
                             </button>
                         </form>
 
-                        <!-- Información de usuario demo -->
-                        <div class="mt-4 p-3 bg-light rounded">
-                            <small class="text-muted">
-                                <strong>Usuario de prueba:</strong><br>
-                                <i class="bi bi-envelope"></i> admin@kyoshop.co<br>
-                                <i class="bi bi-lock"></i> Admin123!
-                            </small>
-                        </div>
-
                         <!-- Link a registro (opcional) -->
                         <!-- <div class="text-center mt-3">
                             <small>

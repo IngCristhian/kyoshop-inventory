@@ -16,7 +16,64 @@
         .sidebar {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            transition: transform 0.3s ease-in-out;
         }
+
+        /* Sidebar oculto en móvil por defecto */
+        @media (max-width: 767.98px) {
+            .sidebar {
+                transform: translateX(-100%);
+                width: 80%;
+                max-width: 300px;
+            }
+            .sidebar.show {
+                transform: translateX(0);
+            }
+        }
+
+        /* Botón hamburguesa */
+        .navbar-toggler {
+            position: fixed;
+            top: 1rem;
+            left: 1rem;
+            z-index: 999;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border: none;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+        }
+
+        @media (min-width: 768px) {
+            .navbar-toggler {
+                display: none;
+            }
+            .sidebar {
+                position: sticky;
+                transform: translateX(0);
+            }
+        }
+
+        /* Overlay */
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 999;
+        }
+
+        .sidebar-overlay.show {
+            display: block;
+        }
+
         .sidebar .nav-link {
             color: rgba(255,255,255,0.8);
             margin: 0.25rem 0;
@@ -32,6 +89,12 @@
         .main-content {
             background-color: #f8f9fa;
             min-height: 100vh;
+        }
+
+        @media (max-width: 767.98px) {
+            .main-content {
+                margin-left: 0 !important;
+            }
         }
         .card {
             border: none;
@@ -68,10 +131,18 @@
     </style>
 </head>
 <body>
+    <!-- Botón hamburguesa (solo móvil) -->
+    <button class="navbar-toggler d-md-none" type="button" id="sidebarToggle">
+        <i class="bi bi-list text-white" style="font-size: 1.5rem;"></i>
+    </button>
+
+    <!-- Overlay para cerrar sidebar en móvil -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
     <div class="container-fluid">
         <div class="row">
             <!-- Sidebar -->
-            <nav class="col-md-2 d-md-block sidebar p-3">
+            <nav class="col-md-2 sidebar p-3" id="sidebar">
                 <div class="text-center mb-4">
                     <h4 class="text-white fw-bold">
                         <i class="bi bi-shop"></i> KyoShop
@@ -220,24 +291,53 @@
     <script src="<?= APP_URL ?>/assets/js/app.js"></script>
     
     <script>
+        // Toggle sidebar en móvil
+        const sidebarToggle = document.getElementById('sidebarToggle');
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+        if (sidebarToggle) {
+            sidebarToggle.addEventListener('click', function() {
+                sidebar.classList.toggle('show');
+                sidebarOverlay.classList.toggle('show');
+            });
+
+            // Cerrar sidebar al hacer click en overlay
+            sidebarOverlay.addEventListener('click', function() {
+                sidebar.classList.remove('show');
+                sidebarOverlay.classList.remove('show');
+            });
+
+            // Cerrar sidebar al hacer click en un link (solo móvil)
+            const sidebarLinks = sidebar.querySelectorAll('.nav-link');
+            sidebarLinks.forEach(function(link) {
+                link.addEventListener('click', function() {
+                    if (window.innerWidth < 768) {
+                        sidebar.classList.remove('show');
+                        sidebarOverlay.classList.remove('show');
+                    }
+                });
+            });
+        }
+
         // Confirmar eliminación
         function confirmarEliminacion(id, nombre) {
             if (confirm(`¿Estás seguro de que deseas eliminar el producto "${nombre}"?\n\nEsta acción no se puede deshacer.`)) {
                 const form = document.createElement('form');
                 form.method = 'POST';
                 form.action = `<?= APP_URL ?>/productos/eliminar/${id}`;
-                
+
                 const csrfToken = document.createElement('input');
                 csrfToken.type = 'hidden';
                 csrfToken.name = 'csrf_token';
                 csrfToken.value = '<?= generateCSRFToken() ?>';
                 form.appendChild(csrfToken);
-                
+
                 document.body.appendChild(form);
                 form.submit();
             }
         }
-        
+
         // Auto-hide alerts after 5 seconds
         setTimeout(function() {
             const alerts = document.querySelectorAll('.alert');
