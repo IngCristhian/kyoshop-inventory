@@ -7,7 +7,15 @@
  * Este script crea el usuario admin por defecto con credenciales:
  * Email: admin@kyoshop.co
  * Password: admin123
+ *
+ * SEGURIDAD: Solo ejecutable desde línea de comandos (CLI)
  */
+
+// PROTECCIÓN: Solo permitir ejecución desde CLI
+if (php_sapi_name() !== 'cli') {
+    http_response_code(403);
+    die('Acceso denegado. Este script solo puede ejecutarse desde línea de comandos.');
+}
 
 // Cargar configuración
 require_once __DIR__ . '/../config/database.php';
