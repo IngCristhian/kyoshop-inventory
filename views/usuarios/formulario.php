@@ -80,12 +80,17 @@ unset($_SESSION['datos_formulario']);
                                 <small class="text-muted">(dejar en blanco para mantener la actual)</small>
                             <?php endif; ?>
                         </label>
-                        <input type="password"
-                               class="form-control"
-                               id="password"
-                               name="password"
-                               minlength="6"
-                               <?= !$esEdicion ? 'required' : '' ?>>
+                        <div class="input-group">
+                            <input type="password"
+                                   class="form-control"
+                                   id="password"
+                                   name="password"
+                                   minlength="6"
+                                   <?= !$esEdicion ? 'required' : '' ?>>
+                            <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                <i class="bi bi-eye" id="toggleIconPassword"></i>
+                            </button>
+                        </div>
                         <small class="text-muted">Mínimo 6 caracteres</small>
                     </div>
 
@@ -97,12 +102,17 @@ unset($_SESSION['datos_formulario']);
                                 <span class="text-danger">*</span>
                             <?php endif; ?>
                         </label>
-                        <input type="password"
-                               class="form-control"
-                               id="password_confirmacion"
-                               name="password_confirmacion"
-                               minlength="6"
-                               <?= !$esEdicion ? 'required' : '' ?>>
+                        <div class="input-group">
+                            <input type="password"
+                                   class="form-control"
+                                   id="password_confirmacion"
+                                   name="password_confirmacion"
+                                   minlength="6"
+                                   <?= !$esEdicion ? 'required' : '' ?>>
+                            <button class="btn btn-outline-secondary" type="button" id="togglePasswordConfirm">
+                                <i class="bi bi-eye" id="toggleIconConfirm"></i>
+                            </button>
+                        </div>
                     </div>
 
                     <!-- Botones -->
@@ -148,6 +158,42 @@ unset($_SESSION['datos_formulario']);
 </div>
 
 <script>
+// Toggle password visibility
+const togglePassword = document.getElementById('togglePassword');
+const passwordInput = document.getElementById('password');
+const toggleIconPassword = document.getElementById('toggleIconPassword');
+
+togglePassword.addEventListener('click', function() {
+    const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordInput.setAttribute('type', type);
+
+    if (type === 'password') {
+        toggleIconPassword.classList.remove('bi-eye-slash');
+        toggleIconPassword.classList.add('bi-eye');
+    } else {
+        toggleIconPassword.classList.remove('bi-eye');
+        toggleIconPassword.classList.add('bi-eye-slash');
+    }
+});
+
+// Toggle password confirmation visibility
+const togglePasswordConfirm = document.getElementById('togglePasswordConfirm');
+const passwordConfirmInput = document.getElementById('password_confirmacion');
+const toggleIconConfirm = document.getElementById('toggleIconConfirm');
+
+togglePasswordConfirm.addEventListener('click', function() {
+    const type = passwordConfirmInput.getAttribute('type') === 'password' ? 'text' : 'password';
+    passwordConfirmInput.setAttribute('type', type);
+
+    if (type === 'password') {
+        toggleIconConfirm.classList.remove('bi-eye-slash');
+        toggleIconConfirm.classList.add('bi-eye');
+    } else {
+        toggleIconConfirm.classList.remove('bi-eye');
+        toggleIconConfirm.classList.add('bi-eye-slash');
+    }
+});
+
 // Validar que las contraseñas coincidan
 document.querySelector('form').addEventListener('submit', function(e) {
     const password = document.getElementById('password').value;

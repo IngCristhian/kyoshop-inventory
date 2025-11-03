@@ -140,6 +140,9 @@
                                            name="password"
                                            placeholder="••••••••"
                                            required>
+                                    <button class="btn btn-outline-secondary" type="button" id="togglePassword">
+                                        <i class="bi bi-eye" id="toggleIcon"></i>
+                                    </button>
                                 </div>
                             </div>
 
@@ -179,5 +182,27 @@
 
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Toggle password visibility
+        const togglePassword = document.getElementById('togglePassword');
+        const passwordInput = document.getElementById('password');
+        const toggleIcon = document.getElementById('toggleIcon');
+
+        togglePassword.addEventListener('click', function() {
+            // Toggle input type
+            const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+            passwordInput.setAttribute('type', type);
+
+            // Toggle icon
+            if (type === 'password') {
+                toggleIcon.classList.remove('bi-eye-slash');
+                toggleIcon.classList.add('bi-eye');
+            } else {
+                toggleIcon.classList.remove('bi-eye');
+                toggleIcon.classList.add('bi-eye-slash');
+            }
+        });
+    </script>
 </body>
 </html>
