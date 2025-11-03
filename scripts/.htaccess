@@ -1,0 +1,9 @@
+# Bloquear acceso web a scripts administrativos
+# Solo accesibles vía SSH/CLI
+
+Order deny,allow
+Deny from all
+
+<FilesMatch "\.(md|txt)$">
+    Allow from all
+</FilesMatch>
