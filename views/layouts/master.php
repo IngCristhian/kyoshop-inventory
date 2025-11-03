@@ -77,10 +77,21 @@
         .logo-link {
             cursor: pointer;
             transition: opacity 0.3s ease;
+            display: block;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
         }
 
         .logo-link:hover {
             opacity: 0.8;
+        }
+
+        .logo-link h4,
+        .logo-link small {
+            pointer-events: none;
+            user-select: none;
         }
 
         .sidebar .nav-link {
