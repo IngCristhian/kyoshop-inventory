@@ -17,6 +17,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 1rem;
         }
         .login-card {
             background: white;
@@ -25,6 +26,7 @@
             overflow: hidden;
             max-width: 450px;
             width: 100%;
+            margin: 0 auto;
         }
         .login-header {
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
@@ -67,10 +69,7 @@
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="login-card">
+    <div class="login-card">
                     <div class="login-header">
                         <h3 class="mb-0">
                             <i class="bi bi-shop"></i> KyoShop Inventory
@@ -162,13 +161,10 @@
                     </div>
                 </div>
 
-                <div class="text-center mt-3">
-                    <small class="text-white">
-                        <?= APP_NAME ?> v<?= APP_VERSION ?> &copy; <?= date('Y') ?>
-                    </small>
-                </div>
-            </div>
-        </div>
+    <div class="text-center mt-3" style="position: fixed; bottom: 1rem; left: 0; right: 0;">
+        <small class="text-white">
+            <?= APP_NAME ?> v<?= APP_VERSION ?> &copy; <?= date('Y') ?>
+        </small>
     </div>
 
     <!-- Bootstrap JS -->
