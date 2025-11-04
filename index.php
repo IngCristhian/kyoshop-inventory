@@ -36,6 +36,17 @@ switch ($path) {
 
     // Rutas protegidas (requieren autenticación)
     case '':
+        // Ruta raíz: redirigir a login sin mensaje si no está autenticado
+        $auth = new AuthController();
+        if (!$auth->estaAutenticado()) {
+            header('Location: ' . APP_URL . '/login');
+            exit;
+        }
+        require_once 'controllers/ProductoController.php';
+        $controller = new ProductoController();
+        $controller->dashboard();
+        break;
+
     case 'dashboard':
         requiereAuth();
         require_once 'controllers/ProductoController.php';

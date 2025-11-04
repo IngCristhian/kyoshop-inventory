@@ -74,6 +74,26 @@
             display: block;
         }
 
+        .logo-link {
+            cursor: pointer;
+            transition: opacity 0.3s ease;
+            display: block;
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+        }
+
+        .logo-link:hover {
+            opacity: 0.8;
+        }
+
+        .logo-link h4,
+        .logo-link small {
+            pointer-events: none;
+            user-select: none;
+        }
+
         .sidebar .nav-link {
             color: rgba(255,255,255,0.8);
             margin: 0.25rem 0;
@@ -144,10 +164,12 @@
             <!-- Sidebar -->
             <nav class="col-md-2 sidebar p-3" id="sidebar">
                 <div class="text-center mb-4">
-                    <h4 class="text-white fw-bold">
-                        <i class="bi bi-shop"></i> KyoShop
-                    </h4>
-                    <small class="text-white-50">Sistema de Inventario</small>
+                    <a href="<?= APP_URL ?>" class="text-decoration-none logo-link">
+                        <h4 class="text-white fw-bold">
+                            <i class="bi bi-shop"></i> KyoShop
+                        </h4>
+                        <small class="text-white-50">Sistema de Inventario</small>
+                    </a>
                 </div>
                 
                 <ul class="nav flex-column">
