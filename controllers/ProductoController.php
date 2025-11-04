@@ -195,7 +195,7 @@ class ProductoController {
         
         try {
             $this->producto->actualizar($id, $datos);
-            redirect('productos', 'Producto actualizado exitosamente');
+            redirect('productos', 'Producto actualizado exitosamente', 'success');
         } catch (Exception $e) {
             error_log("Error al actualizar producto: " . $e->getMessage());
             redirect("productos/editar/{$id}", 'Error al actualizar el producto', 'error');
