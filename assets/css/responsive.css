@@ -92,13 +92,23 @@
     }
     
     .btn-outline-secondary {
-        color: var(--dark-text);
+        color: #212529 !important;
         border-color: var(--dark-border);
+        background-color: transparent;
     }
-    
+
+    .btn-outline-secondary .bi {
+        color: #212529 !important;
+    }
+
     .btn-outline-secondary:hover {
-        background-color: var(--dark-border);
-        color: var(--dark-text);
+        background-color: #212529 !important;
+        color: #ffffff !important;
+        border-color: #212529;
+    }
+
+    .btn-outline-secondary:hover .bi {
+        color: #ffffff !important;
     }
     
     /* Dark mode badges */
