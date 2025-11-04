@@ -75,6 +75,12 @@
     opacity: 1;
 }
 
+/* Fix select options visibility in Windows */
+.form-select option {
+    background-color: #ffffff;
+    color: #212529;
+}
+
 /* Search and Filters */
 .input-group-text {
     background: white;

@@ -79,6 +79,11 @@
         color: var(--dark-text-secondary);
     }
 
+    .form-select option {
+        background-color: #3a3a3a;
+        color: var(--dark-text);
+    }
+
     .form-label {
         color: var(--dark-text) !important;
     }
