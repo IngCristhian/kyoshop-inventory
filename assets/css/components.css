@@ -53,8 +53,8 @@
     border: 1px solid #ddd;
     padding: 0.75rem 1rem;
     transition: all 0.3s ease;
-    background-color: #ffffff;
-    color: #212529;
+    background-color: #ffffff !important;
+    color: #212529 !important;
 }
 
 .form-control:focus,
@@ -73,6 +73,12 @@
 .form-control::placeholder {
     color: #6c757d;
     opacity: 1;
+}
+
+/* Fix select options visibility in Windows */
+.form-select option {
+    background-color: #ffffff;
+    color: #212529;
 }
 
 /* Search and Filters */
