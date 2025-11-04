@@ -148,6 +148,22 @@
             border: none;
             border-radius: 10px;
         }
+        .alert-success {
+            background-color: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724 !important;
+        }
+        .alert-success .bi {
+            color: #155724 !important;
+        }
+        .alert-danger {
+            background-color: #f8d7da;
+            border-color: #f5c6cb;
+            color: #721c24 !important;
+        }
+        .alert-danger .bi {
+            color: #721c24 !important;
+        }
     </style>
 </head>
 <body>
