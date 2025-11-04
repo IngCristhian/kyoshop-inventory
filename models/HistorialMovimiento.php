@@ -10,7 +10,7 @@ class HistorialMovimiento {
     private $db;
 
     public function __construct() {
-        $this->db = Database::getInstance()->getConnection();
+        $this->db = getDB();
     }
 
     /**
