@@ -22,7 +22,7 @@ class HistorialMovimiento {
                 VALUES
                 (:producto_id, :usuario_id, :tipo_movimiento, :cantidad, :stock_anterior, :stock_nuevo, :motivo)";
 
-        return $this->db->execute($sql, [
+        return $this->db->insert($sql, [
             'producto_id' => $datos['producto_id'],
             'usuario_id' => $datos['usuario_id'],
             'tipo_movimiento' => $datos['tipo_movimiento'],
