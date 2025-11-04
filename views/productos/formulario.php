@@ -209,17 +209,25 @@
     document.querySelector('form').addEventListener('submit', function(e) {
         const precio = parseFloat(document.getElementById('precio').value);
         const stock = parseInt(document.getElementById('stock').value);
-        
+
         if (precio <= 0) {
             e.preventDefault();
             alert('El precio debe ser mayor a 0');
             return;
         }
-        
+
         if (stock < 0) {
             e.preventDefault();
             alert('El stock no puede ser negativo');
             return;
         }
+
+        // Confirmación al editar producto
+        <?php if ($accion !== 'crear'): ?>
+        if (!confirm('¿Estás seguro de que deseas actualizar este producto?')) {
+            e.preventDefault();
+            return;
+        }
+        <?php endif; ?>
     });
 </script>
