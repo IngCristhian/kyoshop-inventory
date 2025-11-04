@@ -209,6 +209,11 @@
                             <i class="bi bi-plus-circle"></i> Nuevo Producto
                         </a>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link <?= (strpos($_SERVER['REQUEST_URI'], 'historial') !== false) ? 'active' : '' ?>" href="<?= APP_URL ?>/historial">
+                            <i class="bi bi-clock-history"></i> Historial
+                        </a>
+                    </li>
 
                     <?php
                     // Mostrar opción de usuarios solo para admins
@@ -279,6 +284,8 @@
                             echo '<i class="bi bi-pencil-square"></i> Editar Producto';
                         } elseif (strpos($rutaActual, 'productos') !== false) {
                             echo '<i class="bi bi-box-seam"></i> Productos';
+                        } elseif (strpos($rutaActual, 'historial') !== false) {
+                            echo '<i class="bi bi-clock-history"></i> Historial de Movimientos';
                         }
                         ?>
                     </h1>
