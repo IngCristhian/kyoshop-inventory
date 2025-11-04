@@ -78,7 +78,15 @@
     .form-control::placeholder {
         color: var(--dark-text-secondary);
     }
-    
+
+    .form-label {
+        color: var(--dark-text) !important;
+    }
+
+    .form-check-label {
+        color: var(--dark-text) !important;
+    }
+
     .text-muted {
         color: var(--dark-text-secondary) !important;
     }
