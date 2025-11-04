@@ -70,8 +70,8 @@
     
     .form-control,
     .form-select {
-        background-color: #3a3a3a;
-        color: var(--dark-text);
+        background-color: #3a3a3a !important;
+        color: var(--dark-text) !important;
         border-color: var(--dark-border);
     }
     
