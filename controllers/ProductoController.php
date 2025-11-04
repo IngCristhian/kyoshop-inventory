@@ -5,12 +5,15 @@
  */
 
 require_once 'models/Producto.php';
+require_once 'models/HistorialMovimiento.php';
 
 class ProductoController {
     private $producto;
-    
+    private $historial;
+
     public function __construct() {
         $this->producto = new Producto();
+        $this->historial = new HistorialMovimiento();
     }
     
     /**
@@ -120,6 +123,18 @@ class ProductoController {
         
         try {
             $id = $this->producto->crear($datos);
+
+            // Registrar movimiento de creación en historial
+            $this->historial->registrar([
+                'producto_id' => $id,
+                'usuario_id' => $_SESSION['usuario_id'],
+                'tipo_movimiento' => 'creacion',
+                'cantidad' => $datos['stock'],
+                'stock_anterior' => 0,
+                'stock_nuevo' => $datos['stock'],
+                'motivo' => 'Producto creado'
+            ]);
+
             redirect('productos', 'Producto creado exitosamente');
         } catch (Exception $e) {
             error_log("Error al crear producto: " . $e->getMessage());
@@ -194,7 +209,31 @@ class ProductoController {
         }
         
         try {
+            // Verificar si cambió el stock para registrar movimiento
+            $stockAnterior = $producto['stock'];
+            $stockNuevo = $datos['stock'];
+
             $this->producto->actualizar($id, $datos);
+
+            // Registrar movimiento solo si cambió el stock
+            if ($stockAnterior != $stockNuevo) {
+                $diferencia = $stockNuevo - $stockAnterior;
+                $tipoMovimiento = $diferencia > 0 ? 'entrada' : 'salida';
+                $motivo = $diferencia > 0
+                    ? "Entrada de stock (+{$diferencia} unidades)"
+                    : "Salida de stock ({$diferencia} unidades)";
+
+                $this->historial->registrar([
+                    'producto_id' => $id,
+                    'usuario_id' => $_SESSION['usuario_id'],
+                    'tipo_movimiento' => $tipoMovimiento,
+                    'cantidad' => $diferencia,
+                    'stock_anterior' => $stockAnterior,
+                    'stock_nuevo' => $stockNuevo,
+                    'motivo' => $motivo
+                ]);
+            }
+
             redirect('productos', 'Producto actualizado exitosamente', 'success');
         } catch (Exception $e) {
             error_log("Error al actualizar producto: " . $e->getMessage());
@@ -216,7 +255,24 @@ class ProductoController {
         }
         
         try {
+            // Obtener producto antes de eliminarlo para el historial
+            $producto = $this->producto->obtenerPorId($id);
+
             $this->producto->eliminar($id);
+
+            // Registrar movimiento de eliminación
+            if ($producto) {
+                $this->historial->registrar([
+                    'producto_id' => $id,
+                    'usuario_id' => $_SESSION['usuario_id'],
+                    'tipo_movimiento' => 'eliminacion',
+                    'cantidad' => -$producto['stock'],
+                    'stock_anterior' => $producto['stock'],
+                    'stock_nuevo' => 0,
+                    'motivo' => 'Producto eliminado del sistema'
+                ]);
+            }
+
             redirect('productos', 'Producto eliminado exitosamente');
         } catch (Exception $e) {
             error_log("Error al eliminar producto: " . $e->getMessage());

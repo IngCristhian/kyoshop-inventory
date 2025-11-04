@@ -153,6 +153,21 @@ switch ($path) {
         $controller->activar($matches[1]);
         break;
 
+    // Rutas de historial
+    case 'historial':
+        requiereAuth();
+        require_once 'controllers/HistorialController.php';
+        $controller = new HistorialController();
+        $controller->index();
+        break;
+
+    case (preg_match('/historial\/producto\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/HistorialController.php';
+        $controller = new HistorialController();
+        $controller->producto($matches[1]);
+        break;
+
     default:
         http_response_code(404);
         include 'views/404.php';
