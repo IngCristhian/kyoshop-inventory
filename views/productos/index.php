@@ -17,15 +17,24 @@
                 <select class="form-select" id="categoria" name="categoria">
                     <option value="">Todas las categorías</option>
                     <?php foreach ($categorias as $categoria): ?>
-                        <option value="<?= htmlspecialchars($categoria) ?>" 
+                        <option value="<?= htmlspecialchars($categoria) ?>"
                                 <?= $filtros['categoria'] === $categoria ? 'selected' : '' ?>>
                             <?= htmlspecialchars($categoria) ?>
                         </option>
                     <?php endforeach; ?>
                 </select>
             </div>
-            
-            <div class="col-md-3">
+
+            <div class="col-md-2">
+                <label for="ubicacion" class="form-label">Ubicación</label>
+                <select class="form-select" id="ubicacion" name="ubicacion">
+                    <option value="">Todas</option>
+                    <option value="Medellín" <?= ($filtros['ubicacion'] ?? '') === 'Medellín' ? 'selected' : '' ?>>Medellín</option>
+                    <option value="Bogotá" <?= ($filtros['ubicacion'] ?? '') === 'Bogotá' ? 'selected' : '' ?>>Bogotá</option>
+                </select>
+            </div>
+
+            <div class="col-md-2">
                 <label for="stock_bajo" class="form-label">Filtros</label>
                 <div class="form-check mt-2">
                     <input class="form-check-input" type="checkbox" id="stock_bajo" name="stock_bajo" value="1"
@@ -35,7 +44,7 @@
                     </label>
                 </div>
             </div>
-            
+
             <div class="col-md-2">
                 <label class="form-label">&nbsp;</label>
                 <div class="d-grid">
@@ -57,7 +66,7 @@
         <?php endif; ?>
     </div>
     
-    <?php if (!empty($filtros['busqueda']) || !empty($filtros['categoria']) || $filtros['stock_bajo']): ?>
+    <?php if (!empty($filtros['busqueda']) || !empty($filtros['categoria']) || !empty($filtros['ubicacion']) || $filtros['stock_bajo']): ?>
         <a href="<?= APP_URL ?>/productos" class="btn btn-outline-secondary btn-sm">
             <i class="bi bi-x-circle"></i> Limpiar filtros
         </a>
@@ -71,7 +80,7 @@
             <i class="bi bi-inbox text-muted" style="font-size: 4rem;"></i>
             <h4 class="text-muted mt-3">No se encontraron productos</h4>
             <p class="text-muted">
-                <?php if (!empty($filtros['busqueda']) || !empty($filtros['categoria']) || $filtros['stock_bajo']): ?>
+                <?php if (!empty($filtros['busqueda']) || !empty($filtros['categoria']) || !empty($filtros['ubicacion']) || $filtros['stock_bajo']): ?>
                     Intenta ajustar los filtros de búsqueda.
                 <?php else: ?>
                     ¡Comienza agregando tu primer producto!
@@ -135,18 +144,26 @@
                             </div>
                         </div>
                         
-                        <?php if ($producto['talla'] || $producto['color']): ?>
+                        <?php if ($producto['talla'] || $producto['color'] || $producto['ubicacion']): ?>
                             <div class="row g-0 mb-3">
                                 <?php if ($producto['talla']): ?>
-                                    <div class="col-6">
+                                    <div class="col-4">
                                         <small class="text-muted">Talla:</small><br>
                                         <span class="badge bg-secondary"><?= htmlspecialchars($producto['talla']) ?></span>
                                     </div>
                                 <?php endif; ?>
                                 <?php if ($producto['color']): ?>
-                                    <div class="col-6">
+                                    <div class="col-4">
                                         <small class="text-muted">Color:</small><br>
                                         <span class="badge bg-info"><?= htmlspecialchars($producto['color']) ?></span>
+                                    </div>
+                                <?php endif; ?>
+                                <?php if ($producto['ubicacion']): ?>
+                                    <div class="col-4">
+                                        <small class="text-muted">Ubicación:</small><br>
+                                        <span class="badge bg-warning text-dark">
+                                            <i class="bi bi-geo-alt"></i> <?= htmlspecialchars($producto['ubicacion']) ?>
+                                        </span>
                                     </div>
                                 <?php endif; ?>
                             </div>
@@ -185,7 +202,7 @@
             <ul class="pagination justify-content-center">
                 <?php if ($paginacion['pagina_actual'] > 1): ?>
                     <li class="page-item">
-                        <a class="page-link" href="<?= APP_URL ?>/productos?pagina=<?= $paginacion['pagina_actual'] - 1 ?><?= !empty($filtros['busqueda']) ? '&busqueda=' . urlencode($filtros['busqueda']) : '' ?><?= !empty($filtros['categoria']) ? '&categoria=' . urlencode($filtros['categoria']) : '' ?><?= $filtros['stock_bajo'] ? '&stock_bajo=1' : '' ?>">
+                        <a class="page-link" href="<?= APP_URL ?>/productos?pagina=<?= $paginacion['pagina_actual'] - 1 ?><?= !empty($filtros['busqueda']) ? '&busqueda=' . urlencode($filtros['busqueda']) : '' ?><?= !empty($filtros['categoria']) ? '&categoria=' . urlencode($filtros['categoria']) : '' ?><?= !empty($filtros['ubicacion']) ? '&ubicacion=' . urlencode($filtros['ubicacion']) : '' ?><?= $filtros['stock_bajo'] ? '&stock_bajo=1' : '' ?>">
                             <i class="bi bi-chevron-left"></i> Anterior
                         </a>
                     </li>
@@ -198,15 +215,15 @@
                 
                 <?php for ($i = $inicio; $i <= $fin; $i++): ?>
                     <li class="page-item <?= $i == $paginacion['pagina_actual'] ? 'active' : '' ?>">
-                        <a class="page-link" href="<?= APP_URL ?>/productos?pagina=<?= $i ?><?= !empty($filtros['busqueda']) ? '&busqueda=' . urlencode($filtros['busqueda']) : '' ?><?= !empty($filtros['categoria']) ? '&categoria=' . urlencode($filtros['categoria']) : '' ?><?= $filtros['stock_bajo'] ? '&stock_bajo=1' : '' ?>">
+                        <a class="page-link" href="<?= APP_URL ?>/productos?pagina=<?= $i ?><?= !empty($filtros['busqueda']) ? '&busqueda=' . urlencode($filtros['busqueda']) : '' ?><?= !empty($filtros['categoria']) ? '&categoria=' . urlencode($filtros['categoria']) : '' ?><?= !empty($filtros['ubicacion']) ? '&ubicacion=' . urlencode($filtros['ubicacion']) : '' ?><?= $filtros['stock_bajo'] ? '&stock_bajo=1' : '' ?>">
                             <?= $i ?>
                         </a>
                     </li>
                 <?php endfor; ?>
-                
+
                 <?php if ($paginacion['pagina_actual'] < $paginacion['total_paginas']): ?>
                     <li class="page-item">
-                        <a class="page-link" href="<?= APP_URL ?>/productos?pagina=<?= $paginacion['pagina_actual'] + 1 ?><?= !empty($filtros['busqueda']) ? '&busqueda=' . urlencode($filtros['busqueda']) : '' ?><?= !empty($filtros['categoria']) ? '&categoria=' . urlencode($filtros['categoria']) : '' ?><?= $filtros['stock_bajo'] ? '&stock_bajo=1' : '' ?>">
+                        <a class="page-link" href="<?= APP_URL ?>/productos?pagina=<?= $paginacion['pagina_actual'] + 1 ?><?= !empty($filtros['busqueda']) ? '&busqueda=' . urlencode($filtros['busqueda']) : '' ?><?= !empty($filtros['categoria']) ? '&categoria=' . urlencode($filtros['categoria']) : '' ?><?= !empty($filtros['ubicacion']) ? '&ubicacion=' . urlencode($filtros['ubicacion']) : '' ?><?= $filtros['stock_bajo'] ? '&stock_bajo=1' : '' ?>">
                             Siguiente <i class="bi bi-chevron-right"></i>
                         </a>
                     </li>
