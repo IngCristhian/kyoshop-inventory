@@ -276,14 +276,30 @@ class ComboController {
      * Cargar vista con layout
      */
     private function cargarVista($vista, $data = []) {
-        extract($data);
-        $contenido = "views/{$vista}.php";
-
-        if (!file_exists($contenido)) {
-            die("Vista no encontrada: {$contenido}");
+        $flashMessage = getFlashMessage();
+        if ($flashMessage) {
+            $data['flash'] = $flashMessage;
         }
 
-        require_once 'views/layouts/master.php';
+        // Obtener errores de sesión si existen
+        if (isset($_SESSION['errores'])) {
+            $data['errores'] = $_SESSION['errores'];
+            unset($_SESSION['errores']);
+        }
+
+        // Obtener datos antiguos si existen
+        if (isset($_SESSION['datos_antiguos'])) {
+            $data['datos_antiguos'] = $_SESSION['datos_antiguos'];
+            unset($_SESSION['datos_antiguos']);
+        }
+
+        extract($data);
+
+        ob_start();
+        include "views/{$vista}.php";
+        $contenido = ob_get_clean();
+
+        include 'views/layouts/master.php';
     }
 }
 ?>
