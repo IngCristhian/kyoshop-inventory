@@ -161,6 +161,56 @@ switch ($path) {
         $controller->index();
         break;
 
+    // Rutas de combos
+    case 'combos':
+        requiereAuth();
+        require_once 'controllers/ComboController.php';
+        $controller = new ComboController();
+        $controller->index();
+        break;
+
+    case 'combos/crear':
+        requiereAuth();
+        require_once 'controllers/ComboController.php';
+        $controller = new ComboController();
+        $controller->crear();
+        break;
+
+    case 'combos/guardar':
+        requiereAuth();
+        require_once 'controllers/ComboController.php';
+        $controller = new ComboController();
+        $controller->guardar();
+        break;
+
+    case (preg_match('/combos\/ver\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/ComboController.php';
+        $controller = new ComboController();
+        $controller->ver($matches[1]);
+        break;
+
+    case (preg_match('/combos\/editar\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/ComboController.php';
+        $controller = new ComboController();
+        $controller->editar($matches[1]);
+        break;
+
+    case (preg_match('/combos\/actualizar\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/ComboController.php';
+        $controller = new ComboController();
+        $controller->actualizar($matches[1]);
+        break;
+
+    case (preg_match('/combos\/eliminar\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/ComboController.php';
+        $controller = new ComboController();
+        $controller->eliminar($matches[1]);
+        break;
+
     case (preg_match('/historial\/producto\/(\d+)/', $path, $matches) ? true : false):
         requiereAuth();
         require_once 'controllers/HistorialController.php';

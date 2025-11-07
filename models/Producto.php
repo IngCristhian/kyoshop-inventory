@@ -26,12 +26,17 @@ class Producto {
             $condiciones[] = 'categoria = :categoria';
             $parametros['categoria'] = $filtros['categoria'];
         }
-        
+
+        if (!empty($filtros['ubicacion'])) {
+            $condiciones[] = 'ubicacion = :ubicacion';
+            $parametros['ubicacion'] = $filtros['ubicacion'];
+        }
+
         if (!empty($filtros['busqueda'])) {
             $condiciones[] = '(nombre LIKE :busqueda OR descripcion LIKE :busqueda OR codigo_producto LIKE :busqueda)';
             $parametros['busqueda'] = '%' . $filtros['busqueda'] . '%';
         }
-        
+
         if (isset($filtros['stock_bajo']) && $filtros['stock_bajo']) {
             $condiciones[] = 'stock <= 5';
         }
@@ -61,12 +66,17 @@ class Producto {
             $condiciones[] = 'categoria = :categoria';
             $parametros['categoria'] = $filtros['categoria'];
         }
-        
+
+        if (!empty($filtros['ubicacion'])) {
+            $condiciones[] = 'ubicacion = :ubicacion';
+            $parametros['ubicacion'] = $filtros['ubicacion'];
+        }
+
         if (!empty($filtros['busqueda'])) {
             $condiciones[] = '(nombre LIKE :busqueda OR descripcion LIKE :busqueda OR codigo_producto LIKE :busqueda)';
             $parametros['busqueda'] = '%' . $filtros['busqueda'] . '%';
         }
-        
+
         if (isset($filtros['stock_bajo']) && $filtros['stock_bajo']) {
             $condiciones[] = 'stock <= 5';
         }
@@ -99,13 +109,13 @@ class Producto {
      */
     public function crear($datos) {
         $sql = "INSERT INTO productos (
-                    nombre, descripcion, precio, stock, imagen, 
-                    categoria, talla, color, codigo_producto
+                    nombre, descripcion, precio, stock, imagen,
+                    categoria, talla, color, ubicacion, codigo_producto
                 ) VALUES (
                     :nombre, :descripcion, :precio, :stock, :imagen,
-                    :categoria, :talla, :color, :codigo_producto
+                    :categoria, :talla, :color, :ubicacion, :codigo_producto
                 )";
-        
+
         return $this->db->insert($sql, [
             'nombre' => $datos['nombre'],
             'descripcion' => $datos['descripcion'],
@@ -115,6 +125,7 @@ class Producto {
             'categoria' => $datos['categoria'],
             'talla' => $datos['talla'],
             'color' => $datos['color'],
+            'ubicacion' => $datos['ubicacion'],
             'codigo_producto' => $datos['codigo_producto']
         ]);
     }
@@ -131,10 +142,11 @@ class Producto {
             'categoria = :categoria',
             'talla = :talla',
             'color = :color',
+            'ubicacion = :ubicacion',
             'codigo_producto = :codigo_producto',
             'fecha_actualizacion = CURRENT_TIMESTAMP'
         ];
-        
+
         $parametros = [
             'id' => $id,
             'nombre' => $datos['nombre'],
@@ -144,6 +156,7 @@ class Producto {
             'categoria' => $datos['categoria'],
             'talla' => $datos['talla'],
             'color' => $datos['color'],
+            'ubicacion' => $datos['ubicacion'],
             'codigo_producto' => $datos['codigo_producto']
         ];
         

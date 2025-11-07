@@ -210,6 +210,12 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link <?= (strpos($_SERVER['REQUEST_URI'], 'combos') !== false) ? 'active' : '' ?>" href="<?= APP_URL ?>/combos">
+                            <i class="bi bi-box-seam"></i> Combos
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
                         <a class="nav-link <?= (strpos($_SERVER['REQUEST_URI'], 'historial') !== false) ? 'active' : '' ?>" href="<?= APP_URL ?>/historial">
                             <i class="bi bi-clock-history"></i> Historial
                         </a>
@@ -284,6 +290,14 @@
                             echo '<i class="bi bi-pencil-square"></i> Editar Producto';
                         } elseif (strpos($rutaActual, 'productos') !== false) {
                             echo '<i class="bi bi-box-seam"></i> Productos';
+                        } elseif (strpos($rutaActual, 'combos/crear') !== false) {
+                            echo '<i class="bi bi-plus-circle"></i> Crear Combo';
+                        } elseif (strpos($rutaActual, 'combos/editar') !== false) {
+                            echo '<i class="bi bi-pencil-square"></i> Editar Combo';
+                        } elseif (strpos($rutaActual, 'combos/ver') !== false) {
+                            echo '<i class="bi bi-eye"></i> Detalle de Combo';
+                        } elseif (strpos($rutaActual, 'combos') !== false) {
+                            echo '<i class="bi bi-box-seam"></i> Combos';
                         } elseif (strpos($rutaActual, 'historial') !== false) {
                             echo '<i class="bi bi-clock-history"></i> Historial de Movimientos';
                         }
@@ -294,6 +308,11 @@
                         <?php if (strpos($_SERVER['REQUEST_URI'], 'productos') !== false && strpos($_SERVER['REQUEST_URI'], 'crear') === false && strpos($_SERVER['REQUEST_URI'], 'editar') === false): ?>
                             <a href="<?= APP_URL ?>/productos/crear" class="btn btn-primary">
                                 <i class="bi bi-plus-lg"></i> Nuevo Producto
+                            </a>
+                        <?php endif; ?>
+                        <?php if (strpos($_SERVER['REQUEST_URI'], 'combos') !== false && strpos($_SERVER['REQUEST_URI'], 'crear') === false && strpos($_SERVER['REQUEST_URI'], 'editar') === false && strpos($_SERVER['REQUEST_URI'], 'ver') === false): ?>
+                            <a href="<?= APP_URL ?>/combos/crear" class="btn btn-success">
+                                <i class="bi bi-plus-lg"></i> Crear Combo
                             </a>
                         <?php endif; ?>
                     </div>

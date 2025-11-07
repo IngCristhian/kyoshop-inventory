@@ -41,6 +41,7 @@ class ProductoController {
         $pagina = $_GET['pagina'] ?? 1;
         $filtros = [
             'categoria' => $_GET['categoria'] ?? '',
+            'ubicacion' => $_GET['ubicacion'] ?? '',
             'busqueda' => $_GET['busqueda'] ?? '',
             'stock_bajo' => isset($_GET['stock_bajo'])
         ];
@@ -311,6 +312,7 @@ class ProductoController {
             'categoria' => sanitize($datos['categoria'] ?? ''),
             'talla' => sanitize($datos['talla'] ?? ''),
             'color' => sanitize($datos['color'] ?? ''),
+            'ubicacion' => sanitize($datos['ubicacion'] ?? 'Medellín'),
             'codigo_producto' => sanitize($datos['codigo_producto'] ?? '')
         ];
     }
