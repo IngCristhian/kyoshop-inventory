@@ -83,8 +83,8 @@
 
                     <div class="card bg-light">
                         <div class="card-body">
-                            <h6 class="text-muted mb-2">Tipos de Combo</h6>
-                            <ul class="list-unstyled small">
+                            <h6 class="text-dark mb-2">Tipos de Combo</h6>
+                            <ul class="list-unstyled small text-dark">
                                 <li><strong>Small:</strong> 10 prendas</li>
                                 <li><strong>Medium:</strong> 25 prendas</li>
                                 <li><strong>Big:</strong> 50 prendas</li>
@@ -93,8 +93,8 @@
 
                             <hr>
 
-                            <h6 class="text-muted mb-2">Instrucciones</h6>
-                            <ol class="small">
+                            <h6 class="text-dark mb-2">Instrucciones</h6>
+                            <ol class="small text-dark">
                                 <li>Seleccione el tipo de combo</li>
                                 <li>Agregue categorías y cantidades</li>
                                 <li>La suma debe coincidir con el total</li>
@@ -103,7 +103,7 @@
 
                             <hr>
 
-                            <h6 class="text-muted mb-2">Categorías Disponibles</h6>
+                            <h6 class="text-dark mb-2">Categorías Disponibles</h6>
                             <div id="categorias-disponibles" class="small">
                                 <?php if (!empty($categorias)): ?>
                                     <?php foreach ($categorias as $cat): ?>
