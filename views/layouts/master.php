@@ -94,6 +94,19 @@
             user-select: none;
         }
 
+        .kyoris-logo {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1rem;
+            display: block;
+            filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));
+            transition: transform 0.3s ease;
+        }
+
+        .kyoris-logo:hover {
+            transform: scale(1.05);
+        }
+
         .sidebar .nav-link {
             color: rgba(255,255,255,0.8);
             margin: 0.25rem 0;
@@ -181,8 +194,9 @@
             <nav class="col-md-2 sidebar p-3" id="sidebar">
                 <div class="text-center mb-4">
                     <a href="<?= APP_URL ?>" class="text-decoration-none logo-link">
-                        <h4 class="text-white fw-bold">
-                            <i class="bi bi-shop"></i> KyoShop
+                        <img src="<?= APP_URL ?>/assets/images/kyoris-logo.png" alt="Kyoris Logo" class="kyoris-logo">
+                        <h4 class="text-white fw-bold mb-1">
+                            KyoShop
                         </h4>
                         <small class="text-white-50">Sistema de Inventario</small>
                     </a>
