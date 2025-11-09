@@ -158,7 +158,7 @@
                                         <span class="badge bg-info"><?= htmlspecialchars($producto['color']) ?></span>
                                     </div>
                                 <?php endif; ?>
-                                <?php if ($producto['ubicacion']): ?>
+                                <?php if (isset($producto['ubicacion']) && $producto['ubicacion']): ?>
                                     <div class="col-4">
                                         <small class="text-muted">Ubicación:</small><br>
                                         <span class="badge bg-warning text-dark">
