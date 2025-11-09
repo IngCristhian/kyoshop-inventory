@@ -40,7 +40,7 @@
                         <h4 class="text-info"><?= formatPrice($combo['precio'] / $combo['cantidad_total']) ?></h4>
                     </div>
                     <div class="col-md-4">
-                        <small class="text-muted">Categorías</small>
+                        <small class="text-muted">Tipos</small>
                         <h4 class="text-warning"><?= count($combo['categorias']) ?></h4>
                     </div>
                 </div>
@@ -48,12 +48,12 @@
                 <hr>
 
                 <div class="mb-3">
-                    <h6 class="text-muted">Distribución por Categorías</h6>
+                    <h6 class="text-muted">Distribución por Tipos</h6>
                     <div class="row g-2">
                         <?php foreach ($combo['categorias'] as $cat): ?>
                             <div class="col-md-6">
                                 <div class="d-flex justify-content-between align-items-center p-2 bg-light rounded">
-                                    <span class="badge bg-primary"><?= htmlspecialchars($cat['categoria']) ?></span>
+                                    <span class="badge bg-primary"><?= htmlspecialchars($cat['tipo']) ?></span>
                                     <strong><?= $cat['cantidad'] ?> prendas</strong>
                                 </div>
                             </div>
@@ -105,21 +105,21 @@
             <p class="text-muted text-center py-4">No hay productos asignados a este combo</p>
         <?php else: ?>
             <?php
-            // Agrupar productos por categoría
-            $productosPorCategoria = [];
+            // Agrupar productos por tipo
+            $productosPorTipo = [];
             foreach ($combo['productos'] as $producto) {
-                $categoria = $producto['categoria'];
-                if (!isset($productosPorCategoria[$categoria])) {
-                    $productosPorCategoria[$categoria] = [];
+                $tipo = $producto['tipo'];
+                if (!isset($productosPorTipo[$tipo])) {
+                    $productosPorTipo[$tipo] = [];
                 }
-                $productosPorCategoria[$categoria][] = $producto;
+                $productosPorTipo[$tipo][] = $producto;
             }
             ?>
 
-            <?php foreach ($productosPorCategoria as $categoria => $productos): ?>
+            <?php foreach ($productosPorTipo as $tipo => $productos): ?>
                 <div class="mb-4">
                     <h6 class="text-primary border-bottom pb-2">
-                        <span class="badge bg-primary me-2"><?= htmlspecialchars($categoria) ?></span>
+                        <span class="badge bg-primary me-2"><?= htmlspecialchars($tipo) ?></span>
                         <?= count($productos) ?> productos
                     </h6>
 

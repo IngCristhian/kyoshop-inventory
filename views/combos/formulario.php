@@ -58,7 +58,7 @@
                     <input type="hidden" id="cantidad_total" name="cantidad_total" value="0">
 
                     <h5 class="text-primary mb-3 mt-4">
-                        <i class="bi bi-tags"></i> Distribución por Categorías
+                        <i class="bi bi-tags"></i> Distribución por Tipos
                     </h5>
 
                     <div class="alert alert-info">
@@ -66,12 +66,12 @@
                         <strong>Total de prendas:</strong> <span id="total_prendas">0</span> / <span id="max_prendas">0</span>
                     </div>
 
-                    <div id="categorias-container">
-                        <!-- Las categorías se agregarán dinámicamente aquí -->
+                    <div id="tipos-container">
+                        <!-- Los tipos se agregarán dinámicamente aquí -->
                     </div>
 
-                    <button type="button" class="btn btn-outline-primary btn-sm" id="btnAgregarCategoria">
-                        <i class="bi bi-plus-circle"></i> Agregar Categoría
+                    <button type="button" class="btn btn-outline-primary btn-sm" id="btnAgregarTipo">
+                        <i class="bi bi-plus-circle"></i> Agregar Tipo
                     </button>
                 </div>
 
@@ -96,22 +96,18 @@
                             <h6 class="text-dark mb-2">Instrucciones</h6>
                             <ol class="small text-dark">
                                 <li>Seleccione el tipo de combo</li>
-                                <li>Agregue categorías y cantidades</li>
+                                <li>Agregue tipos (Niño, Mujer, Hombre) y cantidades</li>
                                 <li>La suma debe coincidir con el total</li>
                                 <li>Los productos se seleccionan aleatoriamente</li>
                             </ol>
 
                             <hr>
 
-                            <h6 class="text-dark mb-2">Categorías Disponibles</h6>
-                            <div id="categorias-disponibles" class="small">
-                                <?php if (!empty($categorias)): ?>
-                                    <?php foreach ($categorias as $cat): ?>
-                                        <span class="badge bg-secondary me-1 mb-1"><?= htmlspecialchars($cat) ?></span>
-                                    <?php endforeach; ?>
-                                <?php else: ?>
-                                    <p class="text-muted">No hay categorías disponibles</p>
-                                <?php endif; ?>
+                            <h6 class="text-dark mb-2">Tipos Disponibles</h6>
+                            <div id="tipos-disponibles" class="small">
+                                <span class="badge bg-secondary me-1 mb-1">Niño</span>
+                                <span class="badge bg-secondary me-1 mb-1">Mujer</span>
+                                <span class="badge bg-secondary me-1 mb-1">Hombre</span>
                             </div>
                         </div>
                     </div>
@@ -144,9 +140,9 @@ const tiposCombos = {
     'extra_big': 100
 };
 
-const categoriasDisponibles = <?= json_encode($categorias) ?>;
+const tiposDisponibles = ['Niño', 'Mujer', 'Hombre'];
 
-let contadorCategorias = 0;
+let contadorTipos = 0;
 
 // Cambiar tipo de combo
 document.getElementById('tipo').addEventListener('change', function() {
@@ -157,38 +153,38 @@ document.getElementById('tipo').addEventListener('change', function() {
     calcularTotal();
 });
 
-// Agregar categoría
-document.getElementById('btnAgregarCategoria').addEventListener('click', function() {
-    agregarCategoria();
+// Agregar tipo
+document.getElementById('btnAgregarTipo').addEventListener('click', function() {
+    agregarTipo();
 });
 
-function agregarCategoria(nombre = '', cantidad = '') {
-    const container = document.getElementById('categorias-container');
-    const id = contadorCategorias++;
+function agregarTipo(nombre = '', cantidad = '') {
+    const container = document.getElementById('tipos-container');
+    const id = contadorTipos++;
 
     const div = document.createElement('div');
-    div.className = 'row mb-2 categoria-row';
-    div.id = `categoria-${id}`;
+    div.className = 'row mb-2 tipo-row';
+    div.id = `tipo-${id}`;
 
     div.innerHTML = `
         <div class="col-md-6">
-            <select class="form-select" name="categorias[${id}][nombre]" required>
-                <option value="">Seleccione categoría</option>
-                ${categoriasDisponibles.map(cat =>
-                    `<option value="${cat}" ${cat === nombre ? 'selected' : ''}>${cat}</option>`
+            <select class="form-select" name="tipos[${id}][nombre]" required>
+                <option value="">Seleccione tipo</option>
+                ${tiposDisponibles.map(tipo =>
+                    `<option value="${tipo}" ${tipo === nombre ? 'selected' : ''}>${tipo}</option>`
                 ).join('')}
             </select>
         </div>
         <div class="col-md-4">
             <input type="number" class="form-control cantidad-input"
-                   name="categorias[${id}][cantidad]"
+                   name="tipos[${id}][cantidad]"
                    placeholder="Cantidad"
                    min="1"
                    value="${cantidad}"
                    required>
         </div>
         <div class="col-md-2">
-            <button type="button" class="btn btn-danger btn-sm w-100" onclick="eliminarCategoria(${id})">
+            <button type="button" class="btn btn-danger btn-sm w-100" onclick="eliminarTipo(${id})">
                 <i class="bi bi-trash"></i>
             </button>
         </div>
@@ -200,8 +196,8 @@ function agregarCategoria(nombre = '', cantidad = '') {
     div.querySelector('.cantidad-input').addEventListener('input', calcularTotal);
 }
 
-function eliminarCategoria(id) {
-    const elemento = document.getElementById(`categoria-${id}`);
+function eliminarTipo(id) {
+    const elemento = document.getElementById(`tipo-${id}`);
     if (elemento) {
         elemento.remove();
         calcularTotal();
@@ -253,13 +249,13 @@ document.getElementById('formCombo').addEventListener('submit', function(e) {
 
     if (total === 0) {
         e.preventDefault();
-        alert('Debe agregar al menos una categoría con cantidad');
+        alert('Debe agregar al menos un tipo con cantidad');
         return;
     }
 
     if (total !== max) {
         e.preventDefault();
-        alert(`La suma de categorías (${total}) debe ser igual al total del combo (${max})`);
+        alert(`La suma de tipos (${total}) debe ser igual al total del combo (${max})`);
         return;
     }
 

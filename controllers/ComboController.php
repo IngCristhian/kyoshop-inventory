@@ -42,11 +42,8 @@ class ComboController {
      * Mostrar formulario de creación
      */
     public function crear() {
-        $categorias = $this->producto->obtenerCategorias();
-
         $data = [
             'titulo' => 'Crear Combo - ' . APP_NAME,
-            'categorias' => $categorias,
             'combo' => [],
             'accion' => 'crear',
             'tipos_combo' => Combo::TIPOS
@@ -78,19 +75,19 @@ class ComboController {
             redirect('combos/crear');
         }
 
-        // Procesar categorías
-        $categorias = $this->procesarCategorias($_POST);
+        // Procesar tipos
+        $tipos = $this->procesarTipos($_POST);
 
-        // Validar que la suma de categorías coincida con el total
-        $sumaCategorias = array_sum($categorias);
-        if ($sumaCategorias !== (int)$datos['cantidad_total']) {
-            $_SESSION['errores'] = ["La suma de categorías ({$sumaCategorias}) no coincide con el total del combo ({$datos['cantidad_total']})"];
+        // Validar que la suma de tipos coincida con el total
+        $sumaTipos = array_sum($tipos);
+        if ($sumaTipos !== (int)$datos['cantidad_total']) {
+            $_SESSION['errores'] = ["La suma de tipos ({$sumaTipos}) no coincide con el total del combo ({$datos['cantidad_total']})"];
             $_SESSION['datos_antiguos'] = $_POST;
             redirect('combos/crear');
         }
 
         // Crear combo
-        $resultado = $this->combo->crear($datos, $categorias);
+        $resultado = $this->combo->crear($datos, $tipos);
 
         if ($resultado['success']) {
             $mensaje = 'Combo creado exitosamente';
@@ -111,7 +108,7 @@ class ComboController {
             if (!empty($resultado['faltantes'])) {
                 $error .= ': ';
                 foreach ($resultado['faltantes'] as $faltante) {
-                    $error .= "{$faltante['categoria']} (necesita {$faltante['necesita']}, disponible {$faltante['disponible']} en {$faltante['ubicacion']}), ";
+                    $error .= "{$faltante['tipo']} (necesita {$faltante['necesita']}, disponible {$faltante['disponible']} en {$faltante['ubicacion']}), ";
                 }
                 $error = rtrim($error, ', ');
             }
@@ -222,25 +219,25 @@ class ComboController {
     }
 
     /**
-     * Procesar categorías del formulario
+     * Procesar tipos del formulario
      */
-    private function procesarCategorias($datos) {
-        $categorias = [];
+    private function procesarTipos($datos) {
+        $tipos = [];
 
-        if (!empty($datos['categorias']) && is_array($datos['categorias'])) {
-            foreach ($datos['categorias'] as $categoria) {
-                if (!empty($categoria['nombre']) && !empty($categoria['cantidad'])) {
-                    $nombre = sanitize($categoria['nombre']);
-                    $cantidad = intval($categoria['cantidad']);
+        if (!empty($datos['tipos']) && is_array($datos['tipos'])) {
+            foreach ($datos['tipos'] as $tipo) {
+                if (!empty($tipo['nombre']) && !empty($tipo['cantidad'])) {
+                    $nombre = sanitize($tipo['nombre']);
+                    $cantidad = intval($tipo['cantidad']);
 
                     if ($cantidad > 0) {
-                        $categorias[$nombre] = $cantidad;
+                        $tipos[$nombre] = $cantidad;
                     }
                 }
             }
         }
 
-        return $categorias;
+        return $tipos;
     }
 
     /**
