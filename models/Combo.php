@@ -79,18 +79,18 @@ class Combo {
                 FROM combos_productos cp
                 INNER JOIN productos p ON cp.producto_id = p.id
                 WHERE cp.combo_id = :combo_id
-                ORDER BY cp.categoria, p.nombre";
+                ORDER BY cp.tipo, p.nombre";
 
         return $this->db->fetchAll($sql, ['combo_id' => $comboId]);
     }
 
     /**
-     * Obtener configuración de categorías de un combo
+     * Obtener configuración de tipos de un combo
      */
     public function obtenerCategoriasCombo($comboId) {
-        $sql = "SELECT * FROM combos_categorias
+        $sql = "SELECT * FROM combos_tipos
                 WHERE combo_id = :combo_id
-                ORDER BY categoria";
+                ORDER BY tipo";
 
         return $this->db->fetchAll($sql, ['combo_id' => $comboId]);
     }
@@ -98,18 +98,18 @@ class Combo {
     /**
      * Verificar disponibilidad de stock para crear combo
      */
-    public function verificarStock($categorias, $ubicacion) {
+    public function verificarStock($tipos, $ubicacion) {
         $resultado = [
             'disponible' => true,
             'faltantes' => [],
             'advertencias' => []
         ];
 
-        foreach ($categorias as $categoria => $cantidad) {
+        foreach ($tipos as $tipo => $cantidad) {
             if ($cantidad <= 0) continue;
 
-            $condiciones = ['activo = 1', 'categoria = :categoria', 'stock > 0'];
-            $parametros = ['categoria' => $categoria];
+            $condiciones = ['activo = 1', 'tipo = :tipo', 'stock > 0'];
+            $parametros = ['tipo' => $tipo];
 
             // Filtrar por ubicación si no es mixto
             if ($ubicacion !== 'Mixto') {
@@ -128,7 +128,7 @@ class Combo {
             if ($disponibilidad['total'] < $cantidad) {
                 $resultado['disponible'] = false;
                 $resultado['faltantes'][] = [
-                    'categoria' => $categoria,
+                    'tipo' => $tipo,
                     'necesita' => $cantidad,
                     'disponible' => $disponibilidad['total'],
                     'ubicacion' => $ubicacion
@@ -138,8 +138,8 @@ class Combo {
             // Advertencia si hay stock pero es justo
             if ($disponibilidad['total'] >= $cantidad && $disponibilidad['total'] < ($cantidad * 1.5)) {
                 $resultado['advertencias'][] = [
-                    'categoria' => $categoria,
-                    'mensaje' => "Stock bajo para {$categoria} en {$ubicacion}"
+                    'tipo' => $tipo,
+                    'mensaje' => "Stock bajo para {$tipo} en {$ubicacion}"
                 ];
             }
         }
@@ -150,14 +150,14 @@ class Combo {
     /**
      * Seleccionar productos aleatoriamente para el combo
      */
-    public function seleccionarProductos($categorias, $ubicacion) {
+    public function seleccionarProductos($tipos, $ubicacion) {
         $productosSeleccionados = [];
 
-        foreach ($categorias as $categoria => $cantidad) {
+        foreach ($tipos as $tipo => $cantidad) {
             if ($cantidad <= 0) continue;
 
-            $condiciones = ['activo = 1', 'categoria = :categoria', 'stock > 0'];
-            $parametros = ['categoria' => $categoria, 'limite' => $cantidad];
+            $condiciones = ['activo = 1', 'tipo = :tipo', 'stock > 0'];
+            $parametros = ['tipo' => $tipo, 'limite' => $cantidad];
 
             if ($ubicacion !== 'Mixto') {
                 $condiciones[] = 'ubicacion = :ubicacion';
@@ -167,7 +167,7 @@ class Combo {
             $where = implode(' AND ', $condiciones);
 
             // Seleccionar productos aleatoriamente
-            $sql = "SELECT id, nombre, codigo_producto, categoria, ubicacion
+            $sql = "SELECT id, nombre, codigo_producto, tipo, ubicacion
                     FROM productos
                     WHERE {$where}
                     ORDER BY RAND()
@@ -178,7 +178,7 @@ class Combo {
             foreach ($productos as $producto) {
                 $productosSeleccionados[] = [
                     'producto_id' => $producto['id'],
-                    'categoria' => $producto['categoria']
+                    'tipo' => $producto['tipo']
                 ];
             }
         }
@@ -189,10 +189,10 @@ class Combo {
     /**
      * Crear nuevo combo
      */
-    public function crear($datos, $categorias) {
+    public function crear($datos, $tipos) {
         try {
             // Verificar stock antes de crear
-            $verificacion = $this->verificarStock($categorias, $datos['ubicacion']);
+            $verificacion = $this->verificarStock($tipos, $datos['ubicacion']);
 
             if (!$verificacion['disponible']) {
                 return [
@@ -218,31 +218,31 @@ class Combo {
                 return ['success' => false, 'error' => 'Error al crear combo'];
             }
 
-            // Guardar configuración de categorías
-            foreach ($categorias as $categoria => $cantidad) {
+            // Guardar configuración de tipos
+            foreach ($tipos as $tipo => $cantidad) {
                 if ($cantidad <= 0) continue;
 
-                $sqlCat = "INSERT INTO combos_categorias (combo_id, categoria, cantidad)
-                           VALUES (:combo_id, :categoria, :cantidad)";
+                $sqlTipo = "INSERT INTO combos_tipos (combo_id, tipo, cantidad)
+                           VALUES (:combo_id, :tipo, :cantidad)";
 
-                $this->db->execute($sqlCat, [
+                $this->db->execute($sqlTipo, [
                     'combo_id' => $comboId,
-                    'categoria' => $categoria,
+                    'tipo' => $tipo,
                     'cantidad' => $cantidad
                 ]);
             }
 
             // Seleccionar y asignar productos
-            $productosSeleccionados = $this->seleccionarProductos($categorias, $datos['ubicacion']);
+            $productosSeleccionados = $this->seleccionarProductos($tipos, $datos['ubicacion']);
 
             foreach ($productosSeleccionados as $item) {
-                $sqlProd = "INSERT INTO combos_productos (combo_id, producto_id, categoria)
-                            VALUES (:combo_id, :producto_id, :categoria)";
+                $sqlProd = "INSERT INTO combos_productos (combo_id, producto_id, tipo)
+                            VALUES (:combo_id, :producto_id, :tipo)";
 
                 $this->db->execute($sqlProd, [
                     'combo_id' => $comboId,
                     'producto_id' => $item['producto_id'],
-                    'categoria' => $item['categoria']
+                    'tipo' => $item['tipo']
                 ]);
             }
 

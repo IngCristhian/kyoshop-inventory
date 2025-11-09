@@ -12,7 +12,7 @@
                 </div>
             </div>
             
-            <div class="col-md-3">
+            <div class="col-md-2">
                 <label for="categoria" class="form-label">Categoría</label>
                 <select class="form-select" id="categoria" name="categoria">
                     <option value="">Todas las categorías</option>
@@ -22,6 +22,16 @@
                             <?= htmlspecialchars($categoria) ?>
                         </option>
                     <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="col-md-2">
+                <label for="tipo" class="form-label">Tipo</label>
+                <select class="form-select" id="tipo" name="tipo">
+                    <option value="">Todos los tipos</option>
+                    <option value="Niño" <?= ($filtros['tipo'] ?? '') === 'Niño' ? 'selected' : '' ?>>Niño</option>
+                    <option value="Mujer" <?= ($filtros['tipo'] ?? '') === 'Mujer' ? 'selected' : '' ?>>Mujer</option>
+                    <option value="Hombre" <?= ($filtros['tipo'] ?? '') === 'Hombre' ? 'selected' : '' ?>>Hombre</option>
                 </select>
             </div>
 
@@ -66,7 +76,7 @@
         <?php endif; ?>
     </div>
     
-    <?php if (!empty($filtros['busqueda']) || !empty($filtros['categoria']) || !empty($filtros['ubicacion']) || $filtros['stock_bajo']): ?>
+    <?php if (!empty($filtros['busqueda']) || !empty($filtros['categoria']) || !empty($filtros['tipo']) || !empty($filtros['ubicacion']) || $filtros['stock_bajo']): ?>
         <a href="<?= APP_URL ?>/productos" class="btn btn-outline-secondary btn-sm">
             <i class="bi bi-x-circle"></i> Limpiar filtros
         </a>
@@ -80,7 +90,7 @@
             <i class="bi bi-inbox text-muted" style="font-size: 4rem;"></i>
             <h4 class="text-muted mt-3">No se encontraron productos</h4>
             <p class="text-muted">
-                <?php if (!empty($filtros['busqueda']) || !empty($filtros['categoria']) || !empty($filtros['ubicacion']) || $filtros['stock_bajo']): ?>
+                <?php if (!empty($filtros['busqueda']) || !empty($filtros['categoria']) || !empty($filtros['tipo']) || !empty($filtros['ubicacion']) || $filtros['stock_bajo']): ?>
                     Intenta ajustar los filtros de búsqueda.
                 <?php else: ?>
                     ¡Comienza agregando tu primer producto!
@@ -132,19 +142,23 @@
                         </p>
                         
                         <div class="row g-0 mb-3">
-                            <div class="col-6">
+                            <div class="col-4">
                                 <small class="text-muted">Categoría:</small><br>
                                 <span class="badge bg-primary"><?= htmlspecialchars($producto['categoria']) ?></span>
                             </div>
-                            <div class="col-6">
+                            <div class="col-4">
+                                <small class="text-muted">Tipo:</small><br>
+                                <span class="badge bg-success"><?= htmlspecialchars($producto['tipo'] ?? 'Niño') ?></span>
+                            </div>
+                            <div class="col-4">
                                 <small class="text-muted">Stock:</small><br>
                                 <strong class="text-<?= $producto['stock'] <= 5 ? ($producto['stock'] == 0 ? 'danger' : 'warning') : 'success' ?>">
                                     <?= $producto['stock'] ?> unidades
                                 </strong>
                             </div>
                         </div>
-                        
-                        <?php if ($producto['talla'] || $producto['color'] || $producto['ubicacion']): ?>
+
+                        <?php if ($producto['talla'] || $producto['color'] || (isset($producto['ubicacion']) && $producto['ubicacion'])): ?>
                             <div class="row g-0 mb-3">
                                 <?php if ($producto['talla']): ?>
                                     <div class="col-4">
@@ -202,20 +216,20 @@
             <ul class="pagination justify-content-center">
                 <?php if ($paginacion['pagina_actual'] > 1): ?>
                     <li class="page-item">
-                        <a class="page-link" href="<?= APP_URL ?>/productos?pagina=<?= $paginacion['pagina_actual'] - 1 ?><?= !empty($filtros['busqueda']) ? '&busqueda=' . urlencode($filtros['busqueda']) : '' ?><?= !empty($filtros['categoria']) ? '&categoria=' . urlencode($filtros['categoria']) : '' ?><?= !empty($filtros['ubicacion']) ? '&ubicacion=' . urlencode($filtros['ubicacion']) : '' ?><?= $filtros['stock_bajo'] ? '&stock_bajo=1' : '' ?>">
+                        <a class="page-link" href="<?= APP_URL ?>/productos?pagina=<?= $paginacion['pagina_actual'] - 1 ?><?= !empty($filtros['busqueda']) ? '&busqueda=' . urlencode($filtros['busqueda']) : '' ?><?= !empty($filtros['categoria']) ? '&categoria=' . urlencode($filtros['categoria']) : '' ?><?= !empty($filtros['tipo']) ? '&tipo=' . urlencode($filtros['tipo']) : '' ?><?= !empty($filtros['ubicacion']) ? '&ubicacion=' . urlencode($filtros['ubicacion']) : '' ?><?= $filtros['stock_bajo'] ? '&stock_bajo=1' : '' ?>">
                             <i class="bi bi-chevron-left"></i> Anterior
                         </a>
                     </li>
                 <?php endif; ?>
-                
-                <?php 
+
+                <?php
                 $inicio = max(1, $paginacion['pagina_actual'] - 2);
                 $fin = min($paginacion['total_paginas'], $paginacion['pagina_actual'] + 2);
                 ?>
-                
+
                 <?php for ($i = $inicio; $i <= $fin; $i++): ?>
                     <li class="page-item <?= $i == $paginacion['pagina_actual'] ? 'active' : '' ?>">
-                        <a class="page-link" href="<?= APP_URL ?>/productos?pagina=<?= $i ?><?= !empty($filtros['busqueda']) ? '&busqueda=' . urlencode($filtros['busqueda']) : '' ?><?= !empty($filtros['categoria']) ? '&categoria=' . urlencode($filtros['categoria']) : '' ?><?= !empty($filtros['ubicacion']) ? '&ubicacion=' . urlencode($filtros['ubicacion']) : '' ?><?= $filtros['stock_bajo'] ? '&stock_bajo=1' : '' ?>">
+                        <a class="page-link" href="<?= APP_URL ?>/productos?pagina=<?= $i ?><?= !empty($filtros['busqueda']) ? '&busqueda=' . urlencode($filtros['busqueda']) : '' ?><?= !empty($filtros['categoria']) ? '&categoria=' . urlencode($filtros['categoria']) : '' ?><?= !empty($filtros['tipo']) ? '&tipo=' . urlencode($filtros['tipo']) : '' ?><?= !empty($filtros['ubicacion']) ? '&ubicacion=' . urlencode($filtros['ubicacion']) : '' ?><?= $filtros['stock_bajo'] ? '&stock_bajo=1' : '' ?>">
                             <?= $i ?>
                         </a>
                     </li>
@@ -223,7 +237,7 @@
 
                 <?php if ($paginacion['pagina_actual'] < $paginacion['total_paginas']): ?>
                     <li class="page-item">
-                        <a class="page-link" href="<?= APP_URL ?>/productos?pagina=<?= $paginacion['pagina_actual'] + 1 ?><?= !empty($filtros['busqueda']) ? '&busqueda=' . urlencode($filtros['busqueda']) : '' ?><?= !empty($filtros['categoria']) ? '&categoria=' . urlencode($filtros['categoria']) : '' ?><?= !empty($filtros['ubicacion']) ? '&ubicacion=' . urlencode($filtros['ubicacion']) : '' ?><?= $filtros['stock_bajo'] ? '&stock_bajo=1' : '' ?>">
+                        <a class="page-link" href="<?= APP_URL ?>/productos?pagina=<?= $paginacion['pagina_actual'] + 1 ?><?= !empty($filtros['busqueda']) ? '&busqueda=' . urlencode($filtros['busqueda']) : '' ?><?= !empty($filtros['categoria']) ? '&categoria=' . urlencode($filtros['categoria']) : '' ?><?= !empty($filtros['tipo']) ? '&tipo=' . urlencode($filtros['tipo']) : '' ?><?= !empty($filtros['ubicacion']) ? '&ubicacion=' . urlencode($filtros['ubicacion']) : '' ?><?= $filtros['stock_bajo'] ? '&stock_bajo=1' : '' ?>">
                             Siguiente <i class="bi bi-chevron-right"></i>
                         </a>
                     </li>

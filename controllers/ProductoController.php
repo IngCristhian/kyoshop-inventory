@@ -41,6 +41,7 @@ class ProductoController {
         $pagina = $_GET['pagina'] ?? 1;
         $filtros = [
             'categoria' => $_GET['categoria'] ?? '',
+            'tipo' => $_GET['tipo'] ?? '',
             'ubicacion' => $_GET['ubicacion'] ?? '',
             'busqueda' => $_GET['busqueda'] ?? '',
             'stock_bajo' => isset($_GET['stock_bajo'])
@@ -310,6 +311,7 @@ class ProductoController {
             'precio' => floatval($datos['precio'] ?? 0),
             'stock' => intval($datos['stock'] ?? 0),
             'categoria' => sanitize($datos['categoria'] ?? ''),
+            'tipo' => sanitize($datos['tipo'] ?? 'Niño'),
             'talla' => sanitize($datos['talla'] ?? ''),
             'color' => sanitize($datos['color'] ?? ''),
             'ubicacion' => sanitize($datos['ubicacion'] ?? 'Medellín'),

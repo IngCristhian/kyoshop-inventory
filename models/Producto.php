@@ -27,6 +27,11 @@ class Producto {
             $parametros['categoria'] = $filtros['categoria'];
         }
 
+        if (!empty($filtros['tipo'])) {
+            $condiciones[] = 'tipo = :tipo';
+            $parametros['tipo'] = $filtros['tipo'];
+        }
+
         if (!empty($filtros['ubicacion'])) {
             $condiciones[] = 'ubicacion = :ubicacion';
             $parametros['ubicacion'] = $filtros['ubicacion'];
@@ -65,6 +70,11 @@ class Producto {
         if (!empty($filtros['categoria'])) {
             $condiciones[] = 'categoria = :categoria';
             $parametros['categoria'] = $filtros['categoria'];
+        }
+
+        if (!empty($filtros['tipo'])) {
+            $condiciones[] = 'tipo = :tipo';
+            $parametros['tipo'] = $filtros['tipo'];
         }
 
         if (!empty($filtros['ubicacion'])) {
@@ -110,10 +120,10 @@ class Producto {
     public function crear($datos) {
         $sql = "INSERT INTO productos (
                     nombre, descripcion, precio, stock, imagen,
-                    categoria, talla, color, ubicacion, codigo_producto
+                    categoria, tipo, talla, color, ubicacion, codigo_producto
                 ) VALUES (
                     :nombre, :descripcion, :precio, :stock, :imagen,
-                    :categoria, :talla, :color, :ubicacion, :codigo_producto
+                    :categoria, :tipo, :talla, :color, :ubicacion, :codigo_producto
                 )";
 
         return $this->db->insert($sql, [
@@ -123,6 +133,7 @@ class Producto {
             'stock' => $datos['stock'],
             'imagen' => $datos['imagen'] ?? null,
             'categoria' => $datos['categoria'],
+            'tipo' => $datos['tipo'],
             'talla' => $datos['talla'],
             'color' => $datos['color'],
             'ubicacion' => $datos['ubicacion'],
@@ -140,6 +151,7 @@ class Producto {
             'precio = :precio',
             'stock = :stock',
             'categoria = :categoria',
+            'tipo = :tipo',
             'talla = :talla',
             'color = :color',
             'ubicacion = :ubicacion',
@@ -154,6 +166,7 @@ class Producto {
             'precio' => $datos['precio'],
             'stock' => $datos['stock'],
             'categoria' => $datos['categoria'],
+            'tipo' => $datos['tipo'],
             'talla' => $datos['talla'],
             'color' => $datos['color'],
             'ubicacion' => $datos['ubicacion'],

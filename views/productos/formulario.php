@@ -73,22 +73,33 @@
                         </div>
 
                         <div class="col-md-4 mb-3">
+                            <label for="tipo" class="form-label">Tipo *</label>
+                            <select class="form-select" id="tipo" name="tipo" required>
+                                <option value="">Seleccione un tipo</option>
+                                <option value="Niño" <?= ($datos_antiguos['tipo'] ?? $producto['tipo'] ?? '') === 'Niño' ? 'selected' : '' ?>>Niño</option>
+                                <option value="Mujer" <?= ($datos_antiguos['tipo'] ?? $producto['tipo'] ?? '') === 'Mujer' ? 'selected' : '' ?>>Mujer</option>
+                                <option value="Hombre" <?= ($datos_antiguos['tipo'] ?? $producto['tipo'] ?? '') === 'Hombre' ? 'selected' : '' ?>>Hombre</option>
+                            </select>
+                            <small class="text-muted">Clasificación para armado de combos</small>
+                        </div>
+
+                        <div class="col-md-4 mb-3">
                             <label for="talla" class="form-label">Talla</label>
                             <input type="text" class="form-control" id="talla" name="talla"
                                    value="<?= htmlspecialchars($datos_antiguos['talla'] ?? $producto['talla'] ?? '') ?>"
                                    maxlength="50" placeholder="XS, S, M, L, XL, 32, 34...">
                         </div>
+                    </div>
 
+                    <div class="row">
                         <div class="col-md-4 mb-3">
                             <label for="color" class="form-label">Color</label>
                             <input type="text" class="form-control" id="color" name="color"
                                    value="<?= htmlspecialchars($datos_antiguos['color'] ?? $producto['color'] ?? '') ?>"
                                    maxlength="50" placeholder="Rojo, Azul, Negro...">
                         </div>
-                    </div>
 
-                    <div class="row">
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-4 mb-3">
                             <label for="ubicacion" class="form-label">Ubicación *</label>
                             <select class="form-select" id="ubicacion" name="ubicacion" required>
                                 <option value="">Seleccione una ciudad</option>
