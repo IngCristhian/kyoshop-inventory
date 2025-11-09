@@ -30,7 +30,7 @@
                             Stock Total
                         </div>
                         <div class="h5 mb-0 font-weight-bold text-gray-800">
-                            <?= number_format($estadisticas['total_stock']) ?>
+                            <?= number_format($estadisticas['total_stock'] ?? 0) ?>
                         </div>
                     </div>
                     <div class="col-auto">

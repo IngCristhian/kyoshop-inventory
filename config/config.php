@@ -60,7 +60,7 @@ function sanitize($data) {
  * Formatear precio en pesos colombianos
  */
 function formatPrice($price) {
-    return '$' . number_format($price, 0, ',', '.');
+    return '$' . number_format($price ?? 0, 0, ',', '.');
 }
 
 /**
