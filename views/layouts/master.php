@@ -96,7 +96,7 @@
 
         .kyoris-logo {
             width: 80px;
-            height: 80px;
+            height: auto;
             margin: 0 auto 1rem;
             display: block;
             filter: drop-shadow(0 2px 8px rgba(0,0,0,0.2));
