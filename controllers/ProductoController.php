@@ -90,14 +90,28 @@ class ProductoController {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             redirect('productos');
         }
-        
+
         // Validar token CSRF
         if (!validateCSRFToken($_POST['csrf_token'] ?? '')) {
             redirect('productos', 'Token de seguridad inválido', 'error');
         }
-        
-        $datos = $this->procesarDatos($_POST);
-        
+
+        // Verificar si se están creando variantes
+        $crearVariantes = isset($_POST['crear_variantes']) && $_POST['crear_variantes'] == '1';
+
+        if ($crearVariantes) {
+            $this->guardarVariantes($_POST, $_FILES);
+        } else {
+            $this->guardarProductoSimple($_POST, $_FILES);
+        }
+    }
+
+    /**
+     * Guardar producto simple (sin variantes)
+     */
+    private function guardarProductoSimple($post, $files) {
+        $datos = $this->procesarDatos($post);
+
         // Validar datos
         $errores = $this->producto->validar($datos);
         if (!empty($errores)) {
@@ -105,10 +119,10 @@ class ProductoController {
             $_SESSION['datos_antiguos'] = $datos;
             redirect('productos/crear');
         }
-        
+
         // Procesar imagen si existe
-        if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
-            $resultadoImagen = $this->subirImagen($_FILES['imagen']);
+        if (isset($files['imagen']) && $files['imagen']['error'] === UPLOAD_ERR_OK) {
+            $resultadoImagen = $this->subirImagen($files['imagen']);
             if ($resultadoImagen['success']) {
                 $datos['imagen'] = $resultadoImagen['filename'];
             } else {
@@ -117,12 +131,12 @@ class ProductoController {
                 redirect('productos/crear');
             }
         }
-        
+
         // Generar código si no existe
         if (empty($datos['codigo_producto'])) {
             $datos['codigo_producto'] = generateProductCode($datos['categoria'], $datos['color']);
         }
-        
+
         try {
             $id = $this->producto->crear($datos);
 
@@ -141,6 +155,108 @@ class ProductoController {
         } catch (Exception $e) {
             error_log("Error al crear producto: " . $e->getMessage());
             redirect('productos/crear', 'Error al crear el producto', 'error');
+        }
+    }
+
+    /**
+     * Guardar múltiples variantes de un producto
+     */
+    private function guardarVariantes($post, $files) {
+        // Validar que existan variantes
+        if (empty($post['variantes']) || !is_array($post['variantes'])) {
+            $_SESSION['errores'] = ['Debe agregar al menos una variante'];
+            redirect('productos/crear');
+        }
+
+        $datosBase = [
+            'nombre' => sanitize($post['nombre'] ?? ''),
+            'descripcion' => sanitize($post['descripcion'] ?? ''),
+            'precio' => floatval($post['precio'] ?? 0),
+            'categoria' => sanitize($post['categoria'] ?? ''),
+            'tipo' => sanitize($post['tipo'] ?? 'Niño'),
+            'ubicacion' => sanitize($post['ubicacion'] ?? 'Medellín')
+        ];
+
+        $productosCreados = 0;
+        $erroresVariantes = [];
+
+        try {
+            foreach ($post['variantes'] as $index => $variante) {
+                // Validar datos de la variante
+                if (empty($variante['color']) || empty($variante['talla']) || !isset($variante['stock'])) {
+                    $erroresVariantes[] = "Variante " . ($index + 1) . ": Todos los campos son obligatorios";
+                    continue;
+                }
+
+                // Crear datos del producto variante
+                $datosVariante = $datosBase;
+                $datosVariante['nombre'] = $datosBase['nombre'] . ' - ' . $variante['color'] . ' - ' . $variante['talla'];
+                $datosVariante['color'] = sanitize($variante['color']);
+                $datosVariante['talla'] = sanitize($variante['talla']);
+                $datosVariante['stock'] = intval($variante['stock']);
+
+                // Generar código automático para la variante
+                $timestamp = time() . str_pad($index, 3, '0', STR_PAD_LEFT);
+                $datosVariante['codigo_producto'] = strtoupper(
+                    substr($datosVariante['categoria'], 0, 3) . '-' .
+                    substr($datosVariante['color'], 0, 3) . '-' .
+                    substr($datosVariante['talla'], 0, 2) . '-' .
+                    $timestamp
+                );
+
+                // Procesar imagen de la variante
+                if (isset($files['variantes']['name'][$index]['imagen']) &&
+                    $files['variantes']['error'][$index]['imagen'] === UPLOAD_ERR_OK) {
+
+                    $imagenVariante = [
+                        'name' => $files['variantes']['name'][$index]['imagen'],
+                        'type' => $files['variantes']['type'][$index]['imagen'],
+                        'tmp_name' => $files['variantes']['tmp_name'][$index]['imagen'],
+                        'error' => $files['variantes']['error'][$index]['imagen'],
+                        'size' => $files['variantes']['size'][$index]['imagen']
+                    ];
+
+                    $resultadoImagen = $this->subirImagen($imagenVariante);
+                    if ($resultadoImagen['success']) {
+                        $datosVariante['imagen'] = $resultadoImagen['filename'];
+                    } else {
+                        $erroresVariantes[] = "Variante " . ($index + 1) . ": Error al subir imagen";
+                        continue;
+                    }
+                }
+
+                // Crear el producto variante
+                $id = $this->producto->crear($datosVariante);
+
+                // Registrar movimiento en historial
+                $this->historial->registrar([
+                    'producto_id' => $id,
+                    'usuario_id' => $_SESSION['usuario_id'],
+                    'tipo_movimiento' => 'creacion',
+                    'cantidad' => $datosVariante['stock'],
+                    'stock_anterior' => 0,
+                    'stock_nuevo' => $datosVariante['stock'],
+                    'motivo' => 'Producto creado (variante)'
+                ]);
+
+                $productosCreados++;
+            }
+
+            if ($productosCreados > 0) {
+                $mensaje = "Se crearon $productosCreados variantes exitosamente";
+                if (!empty($erroresVariantes)) {
+                    $mensaje .= '. Algunos errores: ' . implode(', ', array_slice($erroresVariantes, 0, 3));
+                }
+                redirect('productos', $mensaje, 'success');
+            } else {
+                $_SESSION['errores'] = $erroresVariantes;
+                redirect('productos/crear');
+            }
+
+        } catch (Exception $e) {
+            error_log("Error al crear variantes: " . $e->getMessage());
+            $_SESSION['errores'] = ['Error al crear las variantes: ' . $e->getMessage()];
+            redirect('productos/crear');
         }
     }
     
