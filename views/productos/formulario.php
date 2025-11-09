@@ -58,7 +58,7 @@
                     <h5 class="text-primary mb-3 mt-4">
                         <i class="bi bi-tags"></i> Características
                     </h5>
-                    
+
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label for="categoria" class="form-label">Categoría *</label>
@@ -84,22 +84,6 @@
                         </div>
 
                         <div class="col-md-4 mb-3">
-                            <label for="talla" class="form-label">Talla</label>
-                            <input type="text" class="form-control" id="talla" name="talla"
-                                   value="<?= htmlspecialchars($datos_antiguos['talla'] ?? $producto['talla'] ?? '') ?>"
-                                   maxlength="50" placeholder="XS, S, M, L, XL, 32, 34...">
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label for="color" class="form-label">Color</label>
-                            <input type="text" class="form-control" id="color" name="color"
-                                   value="<?= htmlspecialchars($datos_antiguos['color'] ?? $producto['color'] ?? '') ?>"
-                                   maxlength="50" placeholder="Rojo, Azul, Negro...">
-                        </div>
-
-                        <div class="col-md-4 mb-3">
                             <label for="ubicacion" class="form-label">Ubicación *</label>
                             <select class="form-select" id="ubicacion" name="ubicacion" required>
                                 <option value="">Seleccione una ciudad</option>
@@ -109,6 +93,72 @@
                             <small class="text-muted">Ciudad donde está almacenada la mercancía</small>
                         </div>
                     </div>
+
+                    <?php if ($accion === 'crear'): ?>
+                        <!-- Opción de crear variantes (solo en creación) -->
+                        <div class="card border-info mb-3">
+                            <div class="card-body bg-info bg-opacity-10">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="crear_variantes" name="crear_variantes" value="1">
+                                    <label class="form-check-label fw-bold text-dark" for="crear_variantes">
+                                        ¿Crear múltiples variantes?
+                                        <small class="d-block fw-normal text-dark">Activa esta opción si tienes el mismo producto en diferentes colores y/o tallas</small>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Campos simples (se ocultan si selecciona variantes) -->
+                        <div id="campos-simples">
+                            <div class="row">
+                                <div class="col-md-6 mb-3">
+                                    <label for="color" class="form-label">Color</label>
+                                    <input type="text" class="form-control" id="color" name="color"
+                                           value="<?= htmlspecialchars($datos_antiguos['color'] ?? '') ?>"
+                                           maxlength="50" placeholder="Rojo, Azul, Negro...">
+                                </div>
+
+                                <div class="col-md-6 mb-3">
+                                    <label for="talla" class="form-label">Talla</label>
+                                    <input type="text" class="form-control" id="talla" name="talla"
+                                           value="<?= htmlspecialchars($datos_antiguos['talla'] ?? '') ?>"
+                                           maxlength="50" placeholder="XS, S, M, L, XL, 32, 34...">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Área de variantes (se muestra si selecciona variantes) -->
+                        <div id="area-variantes" style="display: none;">
+                            <h6 class="text-primary mb-3">
+                                <i class="bi bi-grid"></i> Variantes del Producto
+                            </h6>
+
+                            <div id="variantes-container">
+                                <!-- Las variantes se agregarán dinámicamente aquí -->
+                            </div>
+
+                            <button type="button" class="btn btn-outline-primary btn-sm" id="btnAgregarVariante">
+                                <i class="bi bi-plus-circle"></i> Agregar Variante
+                            </button>
+                        </div>
+                    <?php else: ?>
+                        <!-- En modo edición, campos normales -->
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="color" class="form-label">Color</label>
+                                <input type="text" class="form-control" id="color" name="color"
+                                       value="<?= htmlspecialchars($datos_antiguos['color'] ?? $producto['color'] ?? '') ?>"
+                                       maxlength="50" placeholder="Rojo, Azul, Negro...">
+                            </div>
+
+                            <div class="col-md-6 mb-3">
+                                <label for="talla" class="form-label">Talla</label>
+                                <input type="text" class="form-control" id="talla" name="talla"
+                                       value="<?= htmlspecialchars($datos_antiguos['talla'] ?? $producto['talla'] ?? '') ?>"
+                                       maxlength="50" placeholder="XS, S, M, L, XL, 32, 34...">
+                            </div>
+                        </div>
+                    <?php endif; ?>
                 </div>
                 
                 <!-- Imagen del Producto -->
@@ -191,45 +241,189 @@
 </div>
 
 <script>
-    // Preview de imagen antes de subir
-    function previewImage(input) {
-        const preview = document.getElementById('image-preview');
-        
+    <?php if ($accion === 'crear'): ?>
+    // Gestión de variantes
+    let contadorVariantes = 0;
+    const checkboxVariantes = document.getElementById('crear_variantes');
+    const camposSimples = document.getElementById('campos-simples');
+    const areaVariantes = document.getElementById('area-variantes');
+    const stockInput = document.getElementById('stock');
+    const imagenInput = document.getElementById('imagen');
+
+    // Alternar entre modo simple y modo variantes
+    checkboxVariantes.addEventListener('change', function() {
+        if (this.checked) {
+            camposSimples.style.display = 'none';
+            areaVariantes.style.display = 'block';
+            stockInput.disabled = true;
+            stockInput.value = 0;
+            // NO deshabilitar imagen principal - se usará como default para variantes
+
+            // Agregar primera variante automáticamente
+            if (contadorVariantes === 0) {
+                agregarVariante();
+            }
+        } else {
+            camposSimples.style.display = 'block';
+            areaVariantes.style.display = 'none';
+            stockInput.disabled = false;
+
+            // Limpiar variantes
+            document.getElementById('variantes-container').innerHTML = '';
+            contadorVariantes = 0;
+        }
+    });
+
+    // Agregar variante
+    document.getElementById('btnAgregarVariante').addEventListener('click', agregarVariante);
+
+    function agregarVariante(color = '', talla = '', stock = '', imagen = null) {
+        const container = document.getElementById('variantes-container');
+        const id = contadorVariantes++;
+
+        const div = document.createElement('div');
+        div.className = 'card mb-3 variante-item';
+        div.id = `variante-${id}`;
+
+        div.innerHTML = `
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h6 class="mb-0">Variante ${id + 1}</h6>
+                    <button type="button" class="btn btn-danger btn-sm" onclick="eliminarVariante(${id})">
+                        <i class="bi bi-trash"></i> Eliminar
+                    </button>
+                </div>
+                <div class="row">
+                    <div class="col-md-3">
+                        <label class="form-label">Color *</label>
+                        <input type="text" class="form-control" name="variantes[${id}][color]"
+                               value="${color}" required maxlength="50" placeholder="Rojo, Azul...">
+                    </div>
+                    <div class="col-md-3">
+                        <label class="form-label">Talla *</label>
+                        <input type="text" class="form-control" name="variantes[${id}][talla]"
+                               value="${talla}" required maxlength="50" placeholder="S, M, L...">
+                    </div>
+                    <div class="col-md-2">
+                        <label class="form-label">Stock *</label>
+                        <input type="number" class="form-control" name="variantes[${id}][stock]"
+                               value="${stock}" required min="0">
+                    </div>
+                    <div class="col-md-4">
+                        <label class="form-label">Imagen</label>
+                        <input type="file" class="form-control imagen-variante" name="variantes[${id}][imagen]"
+                               accept="image/*" onchange="previewVarianteImage(this, ${id})">
+                        <small class="text-muted d-block">Opcional. Si no subes imagen, usará la imagen principal</small>
+                        <div id="preview-variante-${id}" class="mt-2"></div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        container.appendChild(div);
+    }
+
+    function eliminarVariante(id) {
+        const elemento = document.getElementById(`variante-${id}`);
+        if (elemento) {
+            if (confirm('¿Eliminar esta variante?')) {
+                elemento.remove();
+            }
+        }
+    }
+
+    function previewVarianteImage(input, varianteId) {
+        const preview = document.getElementById(`preview-variante-${varianteId}`);
+
         if (input.files && input.files[0]) {
             const reader = new FileReader();
-            
+
             reader.onload = function(e) {
-                preview.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded" style="max-height: 200px;">`;
+                preview.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded" style="max-height: 80px;">`;
             };
-            
+
             reader.readAsDataURL(input.files[0]);
         }
     }
-    
-    // Auto-generar código de producto
+    <?php endif; ?>
+
+    // Preview de imagen antes de subir
+    function previewImage(input) {
+        const preview = document.getElementById('image-preview');
+
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                preview.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded" style="max-height: 200px;">`;
+            };
+
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Auto-generar código de producto (solo en modo simple)
+    <?php if ($accion === 'crear'): ?>
+    const categoriaInput = document.getElementById('categoria');
+    const colorInputSimple = document.getElementById('color');
+
+    if (colorInputSimple) {
+        categoriaInput.addEventListener('blur', generarCodigo);
+        colorInputSimple.addEventListener('blur', generarCodigo);
+    }
+    <?php else: ?>
     document.getElementById('categoria').addEventListener('blur', generarCodigo);
     document.getElementById('color').addEventListener('blur', generarCodigo);
-    
+    <?php endif; ?>
+
     function generarCodigo() {
         const codigoInput = document.getElementById('codigo_producto');
-        
-        // Solo generar si el campo está vacío
-        if (codigoInput.value.trim() === '') {
+        const colorInput = document.getElementById('color');
+
+        // Solo generar si el campo está vacío y no está en modo variantes
+        if (codigoInput.value.trim() === '' && colorInput && !colorInput.disabled) {
             const categoria = document.getElementById('categoria').value.trim();
-            const color = document.getElementById('color').value.trim();
-            
+            const color = colorInput.value.trim();
+
             if (categoria && color) {
                 const categoriaCod = categoria.substring(0, 3).toUpperCase();
                 const colorCod = color.substring(0, 3).toUpperCase();
                 const numero = Math.floor(Math.random() * 900) + 100;
-                
+
                 codigoInput.value = `${categoriaCod}-${colorCod}-${numero}`;
             }
         }
     }
-    
+
     // Validación del formulario
     document.querySelector('form').addEventListener('submit', function(e) {
+        <?php if ($accion === 'crear'): ?>
+        const crearVariantes = document.getElementById('crear_variantes').checked;
+
+        if (crearVariantes) {
+            const variantes = document.querySelectorAll('.variante-item');
+            if (variantes.length === 0) {
+                e.preventDefault();
+                alert('Debes agregar al menos una variante');
+                return;
+            }
+        } else {
+            const precio = parseFloat(document.getElementById('precio').value);
+            const stock = parseInt(document.getElementById('stock').value);
+
+            if (precio <= 0) {
+                e.preventDefault();
+                alert('El precio debe ser mayor a 0');
+                return;
+            }
+
+            if (stock < 0) {
+                e.preventDefault();
+                alert('El stock no puede ser negativo');
+                return;
+            }
+        }
+        <?php else: ?>
         const precio = parseFloat(document.getElementById('precio').value);
         const stock = parseInt(document.getElementById('stock').value);
 
@@ -245,8 +439,6 @@
             return;
         }
 
-        // Confirmación al editar producto
-        <?php if ($accion !== 'crear'): ?>
         if (!confirm('¿Estás seguro de que deseas actualizar este producto?')) {
             e.preventDefault();
             return;
