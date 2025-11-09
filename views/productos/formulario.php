@@ -96,13 +96,15 @@
 
                     <?php if ($accion === 'crear'): ?>
                         <!-- Opción de crear variantes (solo en creación) -->
-                        <div class="alert alert-info mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="crear_variantes" name="crear_variantes" value="1">
-                                <label class="form-check-label" for="crear_variantes">
-                                    <strong>¿Crear múltiples variantes?</strong>
-                                    <small class="d-block text-muted">Activa esta opción si tienes el mismo producto en diferentes colores y/o tallas</small>
-                                </label>
+                        <div class="card border-info mb-3">
+                            <div class="card-body bg-info bg-opacity-10">
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" id="crear_variantes" name="crear_variantes" value="1">
+                                    <label class="form-check-label fw-bold text-dark" for="crear_variantes">
+                                        ¿Crear múltiples variantes?
+                                        <small class="d-block fw-normal text-dark">Activa esta opción si tienes el mismo producto en diferentes colores y/o tallas</small>
+                                    </label>
+                                </div>
                             </div>
                         </div>
 
