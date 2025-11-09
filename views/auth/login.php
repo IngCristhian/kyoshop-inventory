@@ -66,13 +66,21 @@
         .input-group:focus-within .input-group-text {
             border-color: #667eea;
         }
+        .login-logo {
+            width: 100px;
+            height: auto;
+            margin: 0 auto 1rem;
+            display: block;
+            filter: drop-shadow(0 4px 12px rgba(0,0,0,0.3));
+        }
     </style>
 </head>
 <body>
     <div class="login-card">
                     <div class="login-header">
+                        <img src="<?= APP_URL ?>/assets/images/kyoris-logo.png" alt="Kyoris Logo" class="login-logo">
                         <h3 class="mb-0">
-                            <i class="bi bi-shop"></i> KyoShop Inventory
+                            KyoShop Inventory
                         </h3>
                         <p class="mb-0 mt-2">Sistema de Gestión de Inventario</p>
                     </div>
