@@ -177,6 +177,15 @@ class ProductoController {
             'ubicacion' => sanitize($post['ubicacion'] ?? 'Medellín')
         ];
 
+        // Procesar imagen principal (se usará como default)
+        $imagenPrincipal = null;
+        if (isset($files['imagen']) && $files['imagen']['error'] === UPLOAD_ERR_OK) {
+            $resultadoImagen = $this->subirImagen($files['imagen']);
+            if ($resultadoImagen['success']) {
+                $imagenPrincipal = $resultadoImagen['filename'];
+            }
+        }
+
         $productosCreados = 0;
         $erroresVariantes = [];
 
@@ -204,7 +213,7 @@ class ProductoController {
                     $timestamp
                 );
 
-                // Procesar imagen de la variante
+                // Procesar imagen de la variante (o usar imagen principal)
                 if (isset($files['variantes']['name'][$index]['imagen']) &&
                     $files['variantes']['error'][$index]['imagen'] === UPLOAD_ERR_OK) {
 
@@ -223,6 +232,9 @@ class ProductoController {
                         $erroresVariantes[] = "Variante " . ($index + 1) . ": Error al subir imagen";
                         continue;
                     }
+                } else {
+                    // Si no se subió imagen específica, usar la imagen principal
+                    $datosVariante['imagen'] = $imagenPrincipal;
                 }
 
                 // Crear el producto variante

@@ -320,7 +320,7 @@
                 
                 <!-- Flash Messages -->
                 <?php if (isset($flash)): ?>
-                    <div class="alert alert-<?= $flash['type'] === 'error' ? 'danger' : 'success' ?> alert-dismissible fade show" role="alert">
+                    <div class="alert alert-<?= $flash['type'] === 'error' ? 'danger' : 'success' ?> alert-dismissible fade show fw-bold" role="alert">
                         <i class="bi bi-<?= $flash['type'] === 'error' ? 'exclamation-triangle' : 'check-circle' ?>"></i>
                         <?= htmlspecialchars($flash['message']) ?>
                         <button type="button" class="btn-close" data-bs-dismiss="alert"></button>

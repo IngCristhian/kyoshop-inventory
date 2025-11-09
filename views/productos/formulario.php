@@ -255,7 +255,7 @@
             areaVariantes.style.display = 'block';
             stockInput.disabled = true;
             stockInput.value = 0;
-            imagenInput.disabled = true;
+            // NO deshabilitar imagen principal - se usará como default para variantes
 
             // Agregar primera variante automáticamente
             if (contadorVariantes === 0) {
@@ -265,7 +265,6 @@
             camposSimples.style.display = 'block';
             areaVariantes.style.display = 'none';
             stockInput.disabled = false;
-            imagenInput.disabled = false;
 
             // Limpiar variantes
             document.getElementById('variantes-container').innerHTML = '';
@@ -309,9 +308,10 @@
                                value="${stock}" required min="0">
                     </div>
                     <div class="col-md-4">
-                        <label class="form-label">Imagen *</label>
+                        <label class="form-label">Imagen</label>
                         <input type="file" class="form-control imagen-variante" name="variantes[${id}][imagen]"
-                               accept="image/*" required onchange="previewVarianteImage(this, ${id})">
+                               accept="image/*" onchange="previewVarianteImage(this, ${id})">
+                        <small class="text-muted d-block">Opcional. Si no subes imagen, usará la imagen principal</small>
                         <div id="preview-variante-${id}" class="mt-2"></div>
                     </div>
                 </div>
