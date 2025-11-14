@@ -113,16 +113,79 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="color" class="form-label">Color</label>
-                                    <input type="text" class="form-control" id="color" name="color"
-                                           value="<?= htmlspecialchars($datos_antiguos['color'] ?? '') ?>"
-                                           maxlength="50" placeholder="Rojo, Azul, Negro...">
+                                    <select class="form-select" id="color_select" onchange="toggleColorOtro(this, 'color_otro_input')">
+                                        <option value="">Seleccione un color</option>
+                                        <optgroup label="Colores Básicos">
+                                            <option value="Blanco" <?= ($datos_antiguos['color'] ?? '') === 'Blanco' ? 'selected' : '' ?>>Blanco</option>
+                                            <option value="Negro" <?= ($datos_antiguos['color'] ?? '') === 'Negro' ? 'selected' : '' ?>>Negro</option>
+                                            <option value="Gris" <?= ($datos_antiguos['color'] ?? '') === 'Gris' ? 'selected' : '' ?>>Gris</option>
+                                            <option value="Beige" <?= ($datos_antiguos['color'] ?? '') === 'Beige' ? 'selected' : '' ?>>Beige</option>
+                                            <option value="Café" <?= ($datos_antiguos['color'] ?? '') === 'Café' ? 'selected' : '' ?>>Café</option>
+                                        </optgroup>
+                                        <optgroup label="Colores Vivos">
+                                            <option value="Rojo" <?= ($datos_antiguos['color'] ?? '') === 'Rojo' ? 'selected' : '' ?>>Rojo</option>
+                                            <option value="Azul" <?= ($datos_antiguos['color'] ?? '') === 'Azul' ? 'selected' : '' ?>>Azul</option>
+                                            <option value="Verde" <?= ($datos_antiguos['color'] ?? '') === 'Verde' ? 'selected' : '' ?>>Verde</option>
+                                            <option value="Amarillo" <?= ($datos_antiguos['color'] ?? '') === 'Amarillo' ? 'selected' : '' ?>>Amarillo</option>
+                                            <option value="Naranja" <?= ($datos_antiguos['color'] ?? '') === 'Naranja' ? 'selected' : '' ?>>Naranja</option>
+                                            <option value="Rosa" <?= ($datos_antiguos['color'] ?? '') === 'Rosa' ? 'selected' : '' ?>>Rosa</option>
+                                            <option value="Morado" <?= ($datos_antiguos['color'] ?? '') === 'Morado' ? 'selected' : '' ?>>Morado</option>
+                                            <option value="Fucsia" <?= ($datos_antiguos['color'] ?? '') === 'Fucsia' ? 'selected' : '' ?>>Fucsia</option>
+                                        </optgroup>
+                                        <optgroup label="Tonos Especiales">
+                                            <option value="Azul Marino" <?= ($datos_antiguos['color'] ?? '') === 'Azul Marino' ? 'selected' : '' ?>>Azul Marino</option>
+                                            <option value="Vino Tinto" <?= ($datos_antiguos['color'] ?? '') === 'Vino Tinto' ? 'selected' : '' ?>>Vino Tinto</option>
+                                            <option value="Verde Oliva" <?= ($datos_antiguos['color'] ?? '') === 'Verde Oliva' ? 'selected' : '' ?>>Verde Oliva</option>
+                                            <option value="Turquesa" <?= ($datos_antiguos['color'] ?? '') === 'Turquesa' ? 'selected' : '' ?>>Turquesa</option>
+                                            <option value="Dorado" <?= ($datos_antiguos['color'] ?? '') === 'Dorado' ? 'selected' : '' ?>>Dorado</option>
+                                            <option value="Plateado" <?= ($datos_antiguos['color'] ?? '') === 'Plateado' ? 'selected' : '' ?>>Plateado</option>
+                                        </optgroup>
+                                        <option value="Multicolor" <?= ($datos_antiguos['color'] ?? '') === 'Multicolor' ? 'selected' : '' ?>>Multicolor</option>
+                                        <option value="otro">Otro (escribir manualmente)</option>
+                                    </select>
+                                    <input type="text" class="form-control mt-2" id="color_otro_input" name="color"
+                                           placeholder="Escriba el color personalizado"
+                                           style="display: none;" maxlength="50">
                                 </div>
 
                                 <div class="col-md-6 mb-3">
                                     <label for="talla" class="form-label">Talla</label>
-                                    <input type="text" class="form-control" id="talla" name="talla"
-                                           value="<?= htmlspecialchars($datos_antiguos['talla'] ?? '') ?>"
-                                           maxlength="50" placeholder="XS, S, M, L, XL, 32, 34...">
+                                    <select class="form-select" id="talla_select" onchange="toggleTallaOtro(this, 'talla_otro_input')">
+                                        <option value="">Seleccione una talla</option>
+                                        <optgroup label="Tallas Letras">
+                                            <option value="XS" <?= ($datos_antiguos['talla'] ?? '') === 'XS' ? 'selected' : '' ?>>XS</option>
+                                            <option value="S" <?= ($datos_antiguos['talla'] ?? '') === 'S' ? 'selected' : '' ?>>S</option>
+                                            <option value="M" <?= ($datos_antiguos['talla'] ?? '') === 'M' ? 'selected' : '' ?>>M</option>
+                                            <option value="L" <?= ($datos_antiguos['talla'] ?? '') === 'L' ? 'selected' : '' ?>>L</option>
+                                            <option value="XL" <?= ($datos_antiguos['talla'] ?? '') === 'XL' ? 'selected' : '' ?>>XL</option>
+                                            <option value="XXL" <?= ($datos_antiguos['talla'] ?? '') === 'XXL' ? 'selected' : '' ?>>XXL</option>
+                                        </optgroup>
+                                        <optgroup label="Tallas Números">
+                                            <option value="28" <?= ($datos_antiguos['talla'] ?? '') === '28' ? 'selected' : '' ?>>28</option>
+                                            <option value="30" <?= ($datos_antiguos['talla'] ?? '') === '30' ? 'selected' : '' ?>>30</option>
+                                            <option value="32" <?= ($datos_antiguos['talla'] ?? '') === '32' ? 'selected' : '' ?>>32</option>
+                                            <option value="34" <?= ($datos_antiguos['talla'] ?? '') === '34' ? 'selected' : '' ?>>34</option>
+                                            <option value="36" <?= ($datos_antiguos['talla'] ?? '') === '36' ? 'selected' : '' ?>>36</option>
+                                            <option value="38" <?= ($datos_antiguos['talla'] ?? '') === '38' ? 'selected' : '' ?>>38</option>
+                                            <option value="40" <?= ($datos_antiguos['talla'] ?? '') === '40' ? 'selected' : '' ?>>40</option>
+                                            <option value="42" <?= ($datos_antiguos['talla'] ?? '') === '42' ? 'selected' : '' ?>>42</option>
+                                        </optgroup>
+                                        <optgroup label="Tallas Infantiles">
+                                            <option value="2" <?= ($datos_antiguos['talla'] ?? '') === '2' ? 'selected' : '' ?>>2</option>
+                                            <option value="4" <?= ($datos_antiguos['talla'] ?? '') === '4' ? 'selected' : '' ?>>4</option>
+                                            <option value="6" <?= ($datos_antiguos['talla'] ?? '') === '6' ? 'selected' : '' ?>>6</option>
+                                            <option value="8" <?= ($datos_antiguos['talla'] ?? '') === '8' ? 'selected' : '' ?>>8</option>
+                                            <option value="10" <?= ($datos_antiguos['talla'] ?? '') === '10' ? 'selected' : '' ?>>10</option>
+                                            <option value="12" <?= ($datos_antiguos['talla'] ?? '') === '12' ? 'selected' : '' ?>>12</option>
+                                            <option value="14" <?= ($datos_antiguos['talla'] ?? '') === '14' ? 'selected' : '' ?>>14</option>
+                                            <option value="16" <?= ($datos_antiguos['talla'] ?? '') === '16' ? 'selected' : '' ?>>16</option>
+                                        </optgroup>
+                                        <option value="Única" <?= ($datos_antiguos['talla'] ?? '') === 'Única' ? 'selected' : '' ?>>Única</option>
+                                        <option value="otro">Otro (escribir manualmente)</option>
+                                    </select>
+                                    <input type="text" class="form-control mt-2" id="talla_otro_input" name="talla"
+                                           placeholder="Escriba la talla personalizada"
+                                           style="display: none;" maxlength="50">
                                 </div>
                             </div>
                         </div>
@@ -146,16 +209,91 @@
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="color" class="form-label">Color</label>
-                                <input type="text" class="form-control" id="color" name="color"
-                                       value="<?= htmlspecialchars($datos_antiguos['color'] ?? $producto['color'] ?? '') ?>"
-                                       maxlength="50" placeholder="Rojo, Azul, Negro...">
+                                <?php
+                                    $color_actual = $datos_antiguos['color'] ?? $producto['color'] ?? '';
+                                    $colores_predefinidos = ['Blanco', 'Negro', 'Gris', 'Beige', 'Café', 'Rojo', 'Azul', 'Verde', 'Amarillo', 'Naranja', 'Rosa', 'Morado', 'Fucsia', 'Azul Marino', 'Vino Tinto', 'Verde Oliva', 'Turquesa', 'Dorado', 'Plateado', 'Multicolor'];
+                                    $es_color_otro = !empty($color_actual) && !in_array($color_actual, $colores_predefinidos);
+                                ?>
+                                <select class="form-select" id="color_select_edit" onchange="toggleColorOtro(this, 'color_otro_input_edit')">
+                                    <option value="">Seleccione un color</option>
+                                    <optgroup label="Colores Básicos">
+                                        <option value="Blanco" <?= $color_actual === 'Blanco' ? 'selected' : '' ?>>Blanco</option>
+                                        <option value="Negro" <?= $color_actual === 'Negro' ? 'selected' : '' ?>>Negro</option>
+                                        <option value="Gris" <?= $color_actual === 'Gris' ? 'selected' : '' ?>>Gris</option>
+                                        <option value="Beige" <?= $color_actual === 'Beige' ? 'selected' : '' ?>>Beige</option>
+                                        <option value="Café" <?= $color_actual === 'Café' ? 'selected' : '' ?>>Café</option>
+                                    </optgroup>
+                                    <optgroup label="Colores Vivos">
+                                        <option value="Rojo" <?= $color_actual === 'Rojo' ? 'selected' : '' ?>>Rojo</option>
+                                        <option value="Azul" <?= $color_actual === 'Azul' ? 'selected' : '' ?>>Azul</option>
+                                        <option value="Verde" <?= $color_actual === 'Verde' ? 'selected' : '' ?>>Verde</option>
+                                        <option value="Amarillo" <?= $color_actual === 'Amarillo' ? 'selected' : '' ?>>Amarillo</option>
+                                        <option value="Naranja" <?= $color_actual === 'Naranja' ? 'selected' : '' ?>>Naranja</option>
+                                        <option value="Rosa" <?= $color_actual === 'Rosa' ? 'selected' : '' ?>>Rosa</option>
+                                        <option value="Morado" <?= $color_actual === 'Morado' ? 'selected' : '' ?>>Morado</option>
+                                        <option value="Fucsia" <?= $color_actual === 'Fucsia' ? 'selected' : '' ?>>Fucsia</option>
+                                    </optgroup>
+                                    <optgroup label="Tonos Especiales">
+                                        <option value="Azul Marino" <?= $color_actual === 'Azul Marino' ? 'selected' : '' ?>>Azul Marino</option>
+                                        <option value="Vino Tinto" <?= $color_actual === 'Vino Tinto' ? 'selected' : '' ?>>Vino Tinto</option>
+                                        <option value="Verde Oliva" <?= $color_actual === 'Verde Oliva' ? 'selected' : '' ?>>Verde Oliva</option>
+                                        <option value="Turquesa" <?= $color_actual === 'Turquesa' ? 'selected' : '' ?>>Turquesa</option>
+                                        <option value="Dorado" <?= $color_actual === 'Dorado' ? 'selected' : '' ?>>Dorado</option>
+                                        <option value="Plateado" <?= $color_actual === 'Plateado' ? 'selected' : '' ?>>Plateado</option>
+                                    </optgroup>
+                                    <option value="Multicolor" <?= $color_actual === 'Multicolor' ? 'selected' : '' ?>>Multicolor</option>
+                                    <option value="otro" <?= $es_color_otro ? 'selected' : '' ?>>Otro (escribir manualmente)</option>
+                                </select>
+                                <input type="text" class="form-control mt-2" id="color_otro_input_edit" name="color"
+                                       placeholder="Escriba el color personalizado"
+                                       value="<?= $es_color_otro ? htmlspecialchars($color_actual) : '' ?>"
+                                       style="display: <?= $es_color_otro ? 'block' : 'none' ?>;" maxlength="50">
                             </div>
 
                             <div class="col-md-6 mb-3">
                                 <label for="talla" class="form-label">Talla</label>
-                                <input type="text" class="form-control" id="talla" name="talla"
-                                       value="<?= htmlspecialchars($datos_antiguos['talla'] ?? $producto['talla'] ?? '') ?>"
-                                       maxlength="50" placeholder="XS, S, M, L, XL, 32, 34...">
+                                <?php
+                                    $talla_actual = $datos_antiguos['talla'] ?? $producto['talla'] ?? '';
+                                    $tallas_predefinidas = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '28', '30', '32', '34', '36', '38', '40', '42', '2', '4', '6', '8', '10', '12', '14', '16', 'Única'];
+                                    $es_talla_otra = !empty($talla_actual) && !in_array($talla_actual, $tallas_predefinidas);
+                                ?>
+                                <select class="form-select" id="talla_select_edit" onchange="toggleTallaOtro(this, 'talla_otro_input_edit')">
+                                    <option value="">Seleccione una talla</option>
+                                    <optgroup label="Tallas Letras">
+                                        <option value="XS" <?= $talla_actual === 'XS' ? 'selected' : '' ?>>XS</option>
+                                        <option value="S" <?= $talla_actual === 'S' ? 'selected' : '' ?>>S</option>
+                                        <option value="M" <?= $talla_actual === 'M' ? 'selected' : '' ?>>M</option>
+                                        <option value="L" <?= $talla_actual === 'L' ? 'selected' : '' ?>>L</option>
+                                        <option value="XL" <?= $talla_actual === 'XL' ? 'selected' : '' ?>>XL</option>
+                                        <option value="XXL" <?= $talla_actual === 'XXL' ? 'selected' : '' ?>>XXL</option>
+                                    </optgroup>
+                                    <optgroup label="Tallas Números">
+                                        <option value="28" <?= $talla_actual === '28' ? 'selected' : '' ?>>28</option>
+                                        <option value="30" <?= $talla_actual === '30' ? 'selected' : '' ?>>30</option>
+                                        <option value="32" <?= $talla_actual === '32' ? 'selected' : '' ?>>32</option>
+                                        <option value="34" <?= $talla_actual === '34' ? 'selected' : '' ?>>34</option>
+                                        <option value="36" <?= $talla_actual === '36' ? 'selected' : '' ?>>36</option>
+                                        <option value="38" <?= $talla_actual === '38' ? 'selected' : '' ?>>38</option>
+                                        <option value="40" <?= $talla_actual === '40' ? 'selected' : '' ?>>40</option>
+                                        <option value="42" <?= $talla_actual === '42' ? 'selected' : '' ?>>42</option>
+                                    </optgroup>
+                                    <optgroup label="Tallas Infantiles">
+                                        <option value="2" <?= $talla_actual === '2' ? 'selected' : '' ?>>2</option>
+                                        <option value="4" <?= $talla_actual === '4' ? 'selected' : '' ?>>4</option>
+                                        <option value="6" <?= $talla_actual === '6' ? 'selected' : '' ?>>6</option>
+                                        <option value="8" <?= $talla_actual === '8' ? 'selected' : '' ?>>8</option>
+                                        <option value="10" <?= $talla_actual === '10' ? 'selected' : '' ?>>10</option>
+                                        <option value="12" <?= $talla_actual === '12' ? 'selected' : '' ?>>12</option>
+                                        <option value="14" <?= $talla_actual === '14' ? 'selected' : '' ?>>14</option>
+                                        <option value="16" <?= $talla_actual === '16' ? 'selected' : '' ?>>16</option>
+                                    </optgroup>
+                                    <option value="Única" <?= $talla_actual === 'Única' ? 'selected' : '' ?>>Única</option>
+                                    <option value="otro" <?= $es_talla_otra ? 'selected' : '' ?>>Otro (escribir manualmente)</option>
+                                </select>
+                                <input type="text" class="form-control mt-2" id="talla_otro_input_edit" name="talla"
+                                       placeholder="Escriba la talla personalizada"
+                                       value="<?= $es_talla_otra ? htmlspecialchars($talla_actual) : '' ?>"
+                                       style="display: <?= $es_talla_otra ? 'block' : 'none' ?>;" maxlength="50">
                             </div>
                         </div>
                     <?php endif; ?>
@@ -296,13 +434,84 @@
                 <div class="row">
                     <div class="col-md-3">
                         <label class="form-label">Color *</label>
-                        <input type="text" class="form-control" name="variantes[${id}][color]"
-                               value="${color}" required maxlength="50" placeholder="Rojo, Azul...">
+                        <select class="form-select variante-color-select" name="variantes[${id}][color]"
+                                id="variante_color_select_${id}"
+                                onchange="toggleColorOtroVariante(${id})" required>
+                            <option value="">Seleccione</option>
+                            <optgroup label="Básicos">
+                                <option value="Blanco" ${color === 'Blanco' ? 'selected' : ''}>Blanco</option>
+                                <option value="Negro" ${color === 'Negro' ? 'selected' : ''}>Negro</option>
+                                <option value="Gris" ${color === 'Gris' ? 'selected' : ''}>Gris</option>
+                                <option value="Beige" ${color === 'Beige' ? 'selected' : ''}>Beige</option>
+                                <option value="Café" ${color === 'Café' ? 'selected' : ''}>Café</option>
+                            </optgroup>
+                            <optgroup label="Vivos">
+                                <option value="Rojo" ${color === 'Rojo' ? 'selected' : ''}>Rojo</option>
+                                <option value="Azul" ${color === 'Azul' ? 'selected' : ''}>Azul</option>
+                                <option value="Verde" ${color === 'Verde' ? 'selected' : ''}>Verde</option>
+                                <option value="Amarillo" ${color === 'Amarillo' ? 'selected' : ''}>Amarillo</option>
+                                <option value="Naranja" ${color === 'Naranja' ? 'selected' : ''}>Naranja</option>
+                                <option value="Rosa" ${color === 'Rosa' ? 'selected' : ''}>Rosa</option>
+                                <option value="Morado" ${color === 'Morado' ? 'selected' : ''}>Morado</option>
+                                <option value="Fucsia" ${color === 'Fucsia' ? 'selected' : ''}>Fucsia</option>
+                            </optgroup>
+                            <optgroup label="Especiales">
+                                <option value="Azul Marino" ${color === 'Azul Marino' ? 'selected' : ''}>Azul Marino</option>
+                                <option value="Vino Tinto" ${color === 'Vino Tinto' ? 'selected' : ''}>Vino Tinto</option>
+                                <option value="Verde Oliva" ${color === 'Verde Oliva' ? 'selected' : ''}>Verde Oliva</option>
+                                <option value="Turquesa" ${color === 'Turquesa' ? 'selected' : ''}>Turquesa</option>
+                                <option value="Dorado" ${color === 'Dorado' ? 'selected' : ''}>Dorado</option>
+                                <option value="Plateado" ${color === 'Plateado' ? 'selected' : ''}>Plateado</option>
+                            </optgroup>
+                            <option value="Multicolor" ${color === 'Multicolor' ? 'selected' : ''}>Multicolor</option>
+                            <option value="otro">Otro (escribir manualmente)</option>
+                        </select>
+                        <input type="text" class="form-control mt-2" id="variante_color_otro_${id}"
+                               name="variantes[${id}][color_otro]"
+                               placeholder="Escriba el color personalizado"
+                               style="display: none;" maxlength="50">
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Talla *</label>
-                        <input type="text" class="form-control" name="variantes[${id}][talla]"
-                               value="${talla}" required maxlength="50" placeholder="S, M, L...">
+                        <select class="form-select variante-talla-select" name="variantes[${id}][talla]"
+                                id="variante_talla_select_${id}"
+                                onchange="toggleTallaOtroVariante(${id})" required>
+                            <option value="">Seleccione</option>
+                            <optgroup label="Letras">
+                                <option value="XS" ${talla === 'XS' ? 'selected' : ''}>XS</option>
+                                <option value="S" ${talla === 'S' ? 'selected' : ''}>S</option>
+                                <option value="M" ${talla === 'M' ? 'selected' : ''}>M</option>
+                                <option value="L" ${talla === 'L' ? 'selected' : ''}>L</option>
+                                <option value="XL" ${talla === 'XL' ? 'selected' : ''}>XL</option>
+                                <option value="XXL" ${talla === 'XXL' ? 'selected' : ''}>XXL</option>
+                            </optgroup>
+                            <optgroup label="Números">
+                                <option value="28" ${talla === '28' ? 'selected' : ''}>28</option>
+                                <option value="30" ${talla === '30' ? 'selected' : ''}>30</option>
+                                <option value="32" ${talla === '32' ? 'selected' : ''}>32</option>
+                                <option value="34" ${talla === '34' ? 'selected' : ''}>34</option>
+                                <option value="36" ${talla === '36' ? 'selected' : ''}>36</option>
+                                <option value="38" ${talla === '38' ? 'selected' : ''}>38</option>
+                                <option value="40" ${talla === '40' ? 'selected' : ''}>40</option>
+                                <option value="42" ${talla === '42' ? 'selected' : ''}>42</option>
+                            </optgroup>
+                            <optgroup label="Infantiles">
+                                <option value="2" ${talla === '2' ? 'selected' : ''}>2</option>
+                                <option value="4" ${talla === '4' ? 'selected' : ''}>4</option>
+                                <option value="6" ${talla === '6' ? 'selected' : ''}>6</option>
+                                <option value="8" ${talla === '8' ? 'selected' : ''}>8</option>
+                                <option value="10" ${talla === '10' ? 'selected' : ''}>10</option>
+                                <option value="12" ${talla === '12' ? 'selected' : ''}>12</option>
+                                <option value="14" ${talla === '14' ? 'selected' : ''}>14</option>
+                                <option value="16" ${talla === '16' ? 'selected' : ''}>16</option>
+                            </optgroup>
+                            <option value="Única" ${talla === 'Única' ? 'selected' : ''}>Única</option>
+                            <option value="otro">Otro (escribir manualmente)</option>
+                        </select>
+                        <input type="text" class="form-control mt-2" id="variante_talla_otro_${id}"
+                               name="variantes[${id}][talla_otro]"
+                               placeholder="Escriba la talla personalizada"
+                               style="display: none;" maxlength="50">
                     </div>
                     <div class="col-md-2">
                         <label class="form-label">Stock *</label>
@@ -362,28 +571,121 @@
         }
     }
 
+    // Función para mostrar/ocultar campo de talla personalizada
+    function toggleTallaOtro(selectElement, inputId) {
+        const inputOtro = document.getElementById(inputId);
+
+        if (selectElement.value === 'otro') {
+            inputOtro.style.display = 'block';
+            inputOtro.required = true;
+            selectElement.removeAttribute('name'); // Remover name del select
+        } else {
+            inputOtro.style.display = 'none';
+            inputOtro.required = false;
+            inputOtro.value = '';
+            selectElement.setAttribute('name', 'talla'); // Restaurar name al select
+        }
+    }
+
+    // Función específica para variantes de talla
+    function toggleTallaOtroVariante(varianteId) {
+        const selectElement = document.getElementById(`variante_talla_select_${varianteId}`);
+        const inputOtro = document.getElementById(`variante_talla_otro_${varianteId}`);
+
+        if (selectElement.value === 'otro') {
+            inputOtro.style.display = 'block';
+            inputOtro.required = true;
+            selectElement.removeAttribute('name'); // Remover name del select
+            inputOtro.setAttribute('name', `variantes[${varianteId}][talla]`); // Agregar name al input
+        } else {
+            inputOtro.style.display = 'none';
+            inputOtro.required = false;
+            inputOtro.value = '';
+            selectElement.setAttribute('name', `variantes[${varianteId}][talla]`); // Restaurar name al select
+            inputOtro.removeAttribute('name'); // Remover name del input
+        }
+    }
+
+    // Función para mostrar/ocultar campo de color personalizado
+    function toggleColorOtro(selectElement, inputId) {
+        const inputOtro = document.getElementById(inputId);
+
+        if (selectElement.value === 'otro') {
+            inputOtro.style.display = 'block';
+            inputOtro.required = true;
+            selectElement.removeAttribute('name'); // Remover name del select
+        } else {
+            inputOtro.style.display = 'none';
+            inputOtro.required = false;
+            inputOtro.value = '';
+            selectElement.setAttribute('name', 'color'); // Restaurar name al select
+        }
+    }
+
+    // Función específica para variantes de color
+    function toggleColorOtroVariante(varianteId) {
+        const selectElement = document.getElementById(`variante_color_select_${varianteId}`);
+        const inputOtro = document.getElementById(`variante_color_otro_${varianteId}`);
+
+        if (selectElement.value === 'otro') {
+            inputOtro.style.display = 'block';
+            inputOtro.required = true;
+            selectElement.removeAttribute('name'); // Remover name del select
+            inputOtro.setAttribute('name', `variantes[${varianteId}][color]`); // Agregar name al input
+        } else {
+            inputOtro.style.display = 'none';
+            inputOtro.required = false;
+            inputOtro.value = '';
+            selectElement.setAttribute('name', `variantes[${varianteId}][color]`); // Restaurar name al select
+            inputOtro.removeAttribute('name'); // Remover name del input
+        }
+    }
+
     // Auto-generar código de producto (solo en modo simple)
     <?php if ($accion === 'crear'): ?>
     const categoriaInput = document.getElementById('categoria');
-    const colorInputSimple = document.getElementById('color');
+    const colorSelectSimple = document.getElementById('color_select');
+    const colorOtroSimple = document.getElementById('color_otro_input');
 
-    if (colorInputSimple) {
+    if (colorSelectSimple) {
         categoriaInput.addEventListener('blur', generarCodigo);
-        colorInputSimple.addEventListener('blur', generarCodigo);
+        colorSelectSimple.addEventListener('change', generarCodigo);
+        colorOtroSimple.addEventListener('blur', generarCodigo);
     }
     <?php else: ?>
     document.getElementById('categoria').addEventListener('blur', generarCodigo);
-    document.getElementById('color').addEventListener('blur', generarCodigo);
+    const colorSelectEdit = document.getElementById('color_select_edit');
+    const colorOtroEdit = document.getElementById('color_otro_input_edit');
+    if (colorSelectEdit) {
+        colorSelectEdit.addEventListener('change', generarCodigo);
+    }
+    if (colorOtroEdit) {
+        colorOtroEdit.addEventListener('blur', generarCodigo);
+    }
     <?php endif; ?>
 
     function generarCodigo() {
         const codigoInput = document.getElementById('codigo_producto');
-        const colorInput = document.getElementById('color');
+
+        <?php if ($accion === 'crear'): ?>
+        const colorSelect = document.getElementById('color_select');
+        const colorOtro = document.getElementById('color_otro_input');
+        <?php else: ?>
+        const colorSelect = document.getElementById('color_select_edit');
+        const colorOtro = document.getElementById('color_otro_input_edit');
+        <?php endif; ?>
 
         // Solo generar si el campo está vacío y no está en modo variantes
-        if (codigoInput.value.trim() === '' && colorInput && !colorInput.disabled) {
+        if (codigoInput && codigoInput.value.trim() === '' && colorSelect) {
             const categoria = document.getElementById('categoria').value.trim();
-            const color = colorInput.value.trim();
+            let color = '';
+
+            // Obtener color del select o del input "otro"
+            if (colorSelect.value === 'otro' && colorOtro && colorOtro.value.trim() !== '') {
+                color = colorOtro.value.trim();
+            } else if (colorSelect.value !== '' && colorSelect.value !== 'otro') {
+                color = colorSelect.value.trim();
+            }
 
             if (categoria && color) {
                 const categoriaCod = categoria.substring(0, 3).toUpperCase();
