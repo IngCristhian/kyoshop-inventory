@@ -120,7 +120,7 @@
 
                                 <div class="col-md-6 mb-3">
                                     <label for="talla" class="form-label">Talla</label>
-                                    <select class="form-select" id="talla" name="talla">
+                                    <select class="form-select" id="talla_select" onchange="toggleTallaOtro(this, 'talla_otro_input')">
                                         <option value="">Seleccione una talla</option>
                                         <optgroup label="Tallas Letras">
                                             <option value="XS" <?= ($datos_antiguos['talla'] ?? '') === 'XS' ? 'selected' : '' ?>>XS</option>
@@ -151,7 +151,11 @@
                                             <option value="16" <?= ($datos_antiguos['talla'] ?? '') === '16' ? 'selected' : '' ?>>16</option>
                                         </optgroup>
                                         <option value="Única" <?= ($datos_antiguos['talla'] ?? '') === 'Única' ? 'selected' : '' ?>>Única</option>
+                                        <option value="otro">Otro (escribir manualmente)</option>
                                     </select>
+                                    <input type="text" class="form-control mt-2" id="talla_otro_input" name="talla"
+                                           placeholder="Escriba la talla personalizada"
+                                           style="display: none;" maxlength="50">
                                 </div>
                             </div>
                         </div>
@@ -182,38 +186,48 @@
 
                             <div class="col-md-6 mb-3">
                                 <label for="talla" class="form-label">Talla</label>
-                                <select class="form-select" id="talla" name="talla">
+                                <?php
+                                    $talla_actual = $datos_antiguos['talla'] ?? $producto['talla'] ?? '';
+                                    $tallas_predefinidas = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '28', '30', '32', '34', '36', '38', '40', '42', '2', '4', '6', '8', '10', '12', '14', '16', 'Única'];
+                                    $es_talla_otra = !empty($talla_actual) && !in_array($talla_actual, $tallas_predefinidas);
+                                ?>
+                                <select class="form-select" id="talla_select_edit" onchange="toggleTallaOtro(this, 'talla_otro_input_edit')">
                                     <option value="">Seleccione una talla</option>
                                     <optgroup label="Tallas Letras">
-                                        <option value="XS" <?= ($datos_antiguos['talla'] ?? $producto['talla'] ?? '') === 'XS' ? 'selected' : '' ?>>XS</option>
-                                        <option value="S" <?= ($datos_antiguos['talla'] ?? $producto['talla'] ?? '') === 'S' ? 'selected' : '' ?>>S</option>
-                                        <option value="M" <?= ($datos_antiguos['talla'] ?? $producto['talla'] ?? '') === 'M' ? 'selected' : '' ?>>M</option>
-                                        <option value="L" <?= ($datos_antiguos['talla'] ?? $producto['talla'] ?? '') === 'L' ? 'selected' : '' ?>>L</option>
-                                        <option value="XL" <?= ($datos_antiguos['talla'] ?? $producto['talla'] ?? '') === 'XL' ? 'selected' : '' ?>>XL</option>
-                                        <option value="XXL" <?= ($datos_antiguos['talla'] ?? $producto['talla'] ?? '') === 'XXL' ? 'selected' : '' ?>>XXL</option>
+                                        <option value="XS" <?= $talla_actual === 'XS' ? 'selected' : '' ?>>XS</option>
+                                        <option value="S" <?= $talla_actual === 'S' ? 'selected' : '' ?>>S</option>
+                                        <option value="M" <?= $talla_actual === 'M' ? 'selected' : '' ?>>M</option>
+                                        <option value="L" <?= $talla_actual === 'L' ? 'selected' : '' ?>>L</option>
+                                        <option value="XL" <?= $talla_actual === 'XL' ? 'selected' : '' ?>>XL</option>
+                                        <option value="XXL" <?= $talla_actual === 'XXL' ? 'selected' : '' ?>>XXL</option>
                                     </optgroup>
                                     <optgroup label="Tallas Números">
-                                        <option value="28" <?= ($datos_antiguos['talla'] ?? $producto['talla'] ?? '') === '28' ? 'selected' : '' ?>>28</option>
-                                        <option value="30" <?= ($datos_antiguos['talla'] ?? $producto['talla'] ?? '') === '30' ? 'selected' : '' ?>>30</option>
-                                        <option value="32" <?= ($datos_antiguos['talla'] ?? $producto['talla'] ?? '') === '32' ? 'selected' : '' ?>>32</option>
-                                        <option value="34" <?= ($datos_antiguos['talla'] ?? $producto['talla'] ?? '') === '34' ? 'selected' : '' ?>>34</option>
-                                        <option value="36" <?= ($datos_antiguos['talla'] ?? $producto['talla'] ?? '') === '36' ? 'selected' : '' ?>>36</option>
-                                        <option value="38" <?= ($datos_antiguos['talla'] ?? $producto['talla'] ?? '') === '38' ? 'selected' : '' ?>>38</option>
-                                        <option value="40" <?= ($datos_antiguos['talla'] ?? $producto['talla'] ?? '') === '40' ? 'selected' : '' ?>>40</option>
-                                        <option value="42" <?= ($datos_antiguos['talla'] ?? $producto['talla'] ?? '') === '42' ? 'selected' : '' ?>>42</option>
+                                        <option value="28" <?= $talla_actual === '28' ? 'selected' : '' ?>>28</option>
+                                        <option value="30" <?= $talla_actual === '30' ? 'selected' : '' ?>>30</option>
+                                        <option value="32" <?= $talla_actual === '32' ? 'selected' : '' ?>>32</option>
+                                        <option value="34" <?= $talla_actual === '34' ? 'selected' : '' ?>>34</option>
+                                        <option value="36" <?= $talla_actual === '36' ? 'selected' : '' ?>>36</option>
+                                        <option value="38" <?= $talla_actual === '38' ? 'selected' : '' ?>>38</option>
+                                        <option value="40" <?= $talla_actual === '40' ? 'selected' : '' ?>>40</option>
+                                        <option value="42" <?= $talla_actual === '42' ? 'selected' : '' ?>>42</option>
                                     </optgroup>
                                     <optgroup label="Tallas Infantiles">
-                                        <option value="2" <?= ($datos_antiguos['talla'] ?? $producto['talla'] ?? '') === '2' ? 'selected' : '' ?>>2</option>
-                                        <option value="4" <?= ($datos_antiguos['talla'] ?? $producto['talla'] ?? '') === '4' ? 'selected' : '' ?>>4</option>
-                                        <option value="6" <?= ($datos_antiguos['talla'] ?? $producto['talla'] ?? '') === '6' ? 'selected' : '' ?>>6</option>
-                                        <option value="8" <?= ($datos_antiguos['talla'] ?? $producto['talla'] ?? '') === '8' ? 'selected' : '' ?>>8</option>
-                                        <option value="10" <?= ($datos_antiguos['talla'] ?? $producto['talla'] ?? '') === '10' ? 'selected' : '' ?>>10</option>
-                                        <option value="12" <?= ($datos_antiguos['talla'] ?? $producto['talla'] ?? '') === '12' ? 'selected' : '' ?>>12</option>
-                                        <option value="14" <?= ($datos_antiguos['talla'] ?? $producto['talla'] ?? '') === '14' ? 'selected' : '' ?>>14</option>
-                                        <option value="16" <?= ($datos_antiguos['talla'] ?? $producto['talla'] ?? '') === '16' ? 'selected' : '' ?>>16</option>
+                                        <option value="2" <?= $talla_actual === '2' ? 'selected' : '' ?>>2</option>
+                                        <option value="4" <?= $talla_actual === '4' ? 'selected' : '' ?>>4</option>
+                                        <option value="6" <?= $talla_actual === '6' ? 'selected' : '' ?>>6</option>
+                                        <option value="8" <?= $talla_actual === '8' ? 'selected' : '' ?>>8</option>
+                                        <option value="10" <?= $talla_actual === '10' ? 'selected' : '' ?>>10</option>
+                                        <option value="12" <?= $talla_actual === '12' ? 'selected' : '' ?>>12</option>
+                                        <option value="14" <?= $talla_actual === '14' ? 'selected' : '' ?>>14</option>
+                                        <option value="16" <?= $talla_actual === '16' ? 'selected' : '' ?>>16</option>
                                     </optgroup>
-                                    <option value="Única" <?= ($datos_antiguos['talla'] ?? $producto['talla'] ?? '') === 'Única' ? 'selected' : '' ?>>Única</option>
+                                    <option value="Única" <?= $talla_actual === 'Única' ? 'selected' : '' ?>>Única</option>
+                                    <option value="otro" <?= $es_talla_otra ? 'selected' : '' ?>>Otro (escribir manualmente)</option>
                                 </select>
+                                <input type="text" class="form-control mt-2" id="talla_otro_input_edit" name="talla"
+                                       placeholder="Escriba la talla personalizada"
+                                       value="<?= $es_talla_otra ? htmlspecialchars($talla_actual) : '' ?>"
+                                       style="display: <?= $es_talla_otra ? 'block' : 'none' ?>;" maxlength="50">
                             </div>
                         </div>
                     <?php endif; ?>
@@ -359,7 +373,9 @@
                     </div>
                     <div class="col-md-3">
                         <label class="form-label">Talla *</label>
-                        <select class="form-select" name="variantes[${id}][talla]" required>
+                        <select class="form-select variante-talla-select" name="variantes[${id}][talla]"
+                                id="variante_talla_select_${id}"
+                                onchange="toggleTallaOtroVariante(${id})" required>
                             <option value="">Seleccione</option>
                             <optgroup label="Letras">
                                 <option value="XS" ${talla === 'XS' ? 'selected' : ''}>XS</option>
@@ -390,7 +406,12 @@
                                 <option value="16" ${talla === '16' ? 'selected' : ''}>16</option>
                             </optgroup>
                             <option value="Única" ${talla === 'Única' ? 'selected' : ''}>Única</option>
+                            <option value="otro">Otro (escribir manualmente)</option>
                         </select>
+                        <input type="text" class="form-control mt-2" id="variante_talla_otro_${id}"
+                               name="variantes[${id}][talla_otro]"
+                               placeholder="Escriba la talla personalizada"
+                               style="display: none;" maxlength="50">
                     </div>
                     <div class="col-md-2">
                         <label class="form-label">Stock *</label>
@@ -447,6 +468,41 @@
             };
 
             reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Función para mostrar/ocultar campo de talla personalizada
+    function toggleTallaOtro(selectElement, inputId) {
+        const inputOtro = document.getElementById(inputId);
+
+        if (selectElement.value === 'otro') {
+            inputOtro.style.display = 'block';
+            inputOtro.required = true;
+            selectElement.removeAttribute('name'); // Remover name del select
+        } else {
+            inputOtro.style.display = 'none';
+            inputOtro.required = false;
+            inputOtro.value = '';
+            selectElement.setAttribute('name', 'talla'); // Restaurar name al select
+        }
+    }
+
+    // Función específica para variantes
+    function toggleTallaOtroVariante(varianteId) {
+        const selectElement = document.getElementById(`variante_talla_select_${varianteId}`);
+        const inputOtro = document.getElementById(`variante_talla_otro_${varianteId}`);
+
+        if (selectElement.value === 'otro') {
+            inputOtro.style.display = 'block';
+            inputOtro.required = true;
+            selectElement.removeAttribute('name'); // Remover name del select
+            inputOtro.setAttribute('name', `variantes[${varianteId}][talla]`); // Agregar name al input
+        } else {
+            inputOtro.style.display = 'none';
+            inputOtro.required = false;
+            inputOtro.value = '';
+            selectElement.setAttribute('name', `variantes[${varianteId}][talla]`); // Restaurar name al select
+            inputOtro.removeAttribute('name'); // Remover name del input
         }
     }
 
