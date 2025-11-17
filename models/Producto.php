@@ -38,8 +38,10 @@ class Producto {
         }
 
         if (!empty($filtros['busqueda'])) {
-            $condiciones[] = '(nombre LIKE :busqueda OR descripcion LIKE :busqueda OR codigo_producto LIKE :busqueda)';
-            $parametros['busqueda'] = '%' . $filtros['busqueda'] . '%';
+            $condiciones[] = '(nombre LIKE :busqueda1 OR descripcion LIKE :busqueda2 OR codigo_producto LIKE :busqueda3)';
+            $parametros['busqueda1'] = '%' . $filtros['busqueda'] . '%';
+            $parametros['busqueda2'] = '%' . $filtros['busqueda'] . '%';
+            $parametros['busqueda3'] = '%' . $filtros['busqueda'] . '%';
         }
 
         if (isset($filtros['stock_bajo']) && $filtros['stock_bajo']) {
@@ -47,15 +49,16 @@ class Producto {
         }
         
         $where = implode(' AND ', $condiciones);
-        
-        $sql = "SELECT * FROM productos 
-                WHERE {$where} 
-                ORDER BY fecha_actualizacion DESC 
-                LIMIT :limite OFFSET :offset";
-        
-        $parametros['limite'] = $limite;
-        $parametros['offset'] = $offset;
-        
+
+        // Convertir límite y offset a enteros
+        $limite = (int)$limite;
+        $offset = (int)$offset;
+
+        $sql = "SELECT * FROM productos
+                WHERE {$where}
+                ORDER BY fecha_actualizacion DESC
+                LIMIT {$limite} OFFSET {$offset}";
+
         return $this->db->fetchAll($sql, $parametros);
     }
     
@@ -83,8 +86,10 @@ class Producto {
         }
 
         if (!empty($filtros['busqueda'])) {
-            $condiciones[] = '(nombre LIKE :busqueda OR descripcion LIKE :busqueda OR codigo_producto LIKE :busqueda)';
-            $parametros['busqueda'] = '%' . $filtros['busqueda'] . '%';
+            $condiciones[] = '(nombre LIKE :busqueda1 OR descripcion LIKE :busqueda2 OR codigo_producto LIKE :busqueda3)';
+            $parametros['busqueda1'] = '%' . $filtros['busqueda'] . '%';
+            $parametros['busqueda2'] = '%' . $filtros['busqueda'] . '%';
+            $parametros['busqueda3'] = '%' . $filtros['busqueda'] . '%';
         }
 
         if (isset($filtros['stock_bajo']) && $filtros['stock_bajo']) {
@@ -231,19 +236,20 @@ class Producto {
      * Buscar productos
      */
     public function buscar($termino, $limite = 20) {
-        $sql = "SELECT * FROM productos 
-                WHERE activo = 1 
-                AND (nombre LIKE :termino 
-                     OR descripcion LIKE :termino 
+        $limite = (int)$limite;
+
+        $sql = "SELECT * FROM productos
+                WHERE activo = 1
+                AND (nombre LIKE :termino
+                     OR descripcion LIKE :termino
                      OR codigo_producto LIKE :termino
                      OR categoria LIKE :termino
                      OR color LIKE :termino)
-                ORDER BY nombre ASC 
-                LIMIT :limite";
-        
+                ORDER BY nombre ASC
+                LIMIT {$limite}";
+
         return $this->db->fetchAll($sql, [
-            'termino' => '%' . $termino . '%',
-            'limite' => $limite
+            'termino' => '%' . $termino . '%'
         ]);
     }
     

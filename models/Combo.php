@@ -157,7 +157,7 @@ class Combo {
             if ($cantidad <= 0) continue;
 
             $condiciones = ['activo = 1', 'tipo = :tipo', 'stock > 0'];
-            $parametros = ['tipo' => $tipo, 'limite' => $cantidad];
+            $parametros = ['tipo' => $tipo];
 
             if ($ubicacion !== 'Mixto') {
                 $condiciones[] = 'ubicacion = :ubicacion';
@@ -166,12 +166,15 @@ class Combo {
 
             $where = implode(' AND ', $condiciones);
 
+            // Convertir cantidad a entero
+            $cantidad = (int)$cantidad;
+
             // Seleccionar productos aleatoriamente
             $sql = "SELECT id, nombre, codigo_producto, tipo, ubicacion
                     FROM productos
                     WHERE {$where}
                     ORDER BY RAND()
-                    LIMIT :limite";
+                    LIMIT {$cantidad}";
 
             $productos = $this->db->fetchAll($sql, $parametros);
 
