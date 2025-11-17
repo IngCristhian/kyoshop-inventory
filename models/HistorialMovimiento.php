@@ -71,6 +71,10 @@ class HistorialMovimiento {
 
         $whereClause = implode(' AND ', $where);
 
+        // Convertir límite y offset a enteros
+        $limite = (int)$limite;
+        $offset = (int)$offset;
+
         $sql = "SELECT
                     h.*,
                     p.nombre as producto_nombre,
@@ -82,10 +86,7 @@ class HistorialMovimiento {
                 LEFT JOIN usuarios u ON h.usuario_id = u.id
                 WHERE {$whereClause}
                 ORDER BY h.fecha_movimiento DESC
-                LIMIT :limite OFFSET :offset";
-
-        $params['limite'] = $limite;
-        $params['offset'] = $offset;
+                LIMIT {$limite} OFFSET {$offset}";
 
         return $this->db->fetchAll($sql, $params);
     }
@@ -156,6 +157,8 @@ class HistorialMovimiento {
      * Obtener últimos movimientos (para dashboard)
      */
     public function obtenerUltimosMovimientos($limite = 10) {
+        $limite = (int)$limite;
+
         $sql = "SELECT
                     h.*,
                     p.nombre as producto_nombre,
@@ -165,9 +168,9 @@ class HistorialMovimiento {
                 LEFT JOIN productos p ON h.producto_id = p.id
                 LEFT JOIN usuarios u ON h.usuario_id = u.id
                 ORDER BY h.fecha_movimiento DESC
-                LIMIT :limite";
+                LIMIT {$limite}";
 
-        return $this->db->fetchAll($sql, ['limite' => $limite]);
+        return $this->db->fetchAll($sql);
     }
 }
 ?>
