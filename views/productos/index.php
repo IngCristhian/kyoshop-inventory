@@ -109,10 +109,12 @@
                     <!-- Imagen del producto -->
                     <div class="position-relative">
                         <?php if ($producto['imagen']): ?>
-                            <img src="<?= APP_URL ?>/uploads/<?= $producto['imagen'] ?>" 
-                                 class="card-img-top" style="height: 200px; object-fit: cover;">
+                            <img src="<?= APP_URL ?>/uploads/<?= $producto['imagen'] ?>"
+                                 class="card-img-top"
+                                 style="height: 200px; object-fit: cover; cursor: pointer;"
+                                 onclick="abrirVistaPrevia('<?= APP_URL ?>/uploads/<?= $producto['imagen'] ?>', '<?= htmlspecialchars($producto['nombre']) ?>', '<?= htmlspecialchars($producto['codigo_producto']) ?>', '<?= formatPrice($producto['precio']) ?>', '<?= $producto['stock'] ?>', '<?= htmlspecialchars($producto['categoria']) ?>', '<?= htmlspecialchars($producto['talla'] ?? '') ?>', '<?= htmlspecialchars($producto['color'] ?? '') ?>')">
                         <?php else: ?>
-                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" 
+                            <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
                                  style="height: 200px;">
                                 <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
                             </div>
@@ -246,3 +248,88 @@
         </nav>
     <?php endif; ?>
 <?php endif; ?>
+
+<!-- Modal de Vista Previa de Imagen -->
+<div class="modal fade" id="modalVistaPrevia" tabindex="-1" aria-labelledby="modalVistaPreviaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalVistaPreviaLabel">Vista Previa del Producto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-7">
+                        <img id="imagenPreview" src="" class="img-fluid rounded" alt="Imagen del producto">
+                    </div>
+                    <div class="col-md-5">
+                        <h4 id="nombrePreview" class="mb-3 text-dark"></h4>
+                        <div class="mb-2">
+                            <small class="text-muted">Código:</small>
+                            <p id="codigoPreview" class="mb-0 text-dark"></p>
+                        </div>
+                        <div class="mb-2">
+                            <small class="text-muted">Precio:</small>
+                            <h5 id="precioPreview" class="text-primary mb-0"></h5>
+                        </div>
+                        <div class="mb-2">
+                            <small class="text-muted">Stock:</small>
+                            <p id="stockPreview" class="mb-0 text-dark"></p>
+                        </div>
+                        <div class="mb-2">
+                            <small class="text-muted">Categoría:</small>
+                            <p id="categoriaPreview" class="mb-0 text-dark"></p>
+                        </div>
+                        <div class="row" id="detallesExtras">
+                            <div class="col-6 mb-2" id="tallaContainer" style="display: none;">
+                                <small class="text-muted">Talla:</small>
+                                <p id="tallaPreview" class="mb-0 text-dark"></p>
+                            </div>
+                            <div class="col-6 mb-2" id="colorContainer" style="display: none;">
+                                <small class="text-muted">Color:</small>
+                                <p id="colorPreview" class="mb-0 text-dark"></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+function abrirVistaPrevia(imagenUrl, nombre, codigo, precio, stock, categoria, talla, color) {
+    // Actualizar imagen
+    document.getElementById('imagenPreview').src = imagenUrl;
+
+    // Actualizar información del producto
+    document.getElementById('nombrePreview').textContent = nombre;
+    document.getElementById('codigoPreview').textContent = codigo;
+    document.getElementById('precioPreview').textContent = precio;
+    document.getElementById('stockPreview').textContent = stock + ' unidades';
+    document.getElementById('categoriaPreview').textContent = categoria;
+
+    // Mostrar talla si existe
+    if (talla && talla.trim() !== '') {
+        document.getElementById('tallaPreview').textContent = talla;
+        document.getElementById('tallaContainer').style.display = 'block';
+    } else {
+        document.getElementById('tallaContainer').style.display = 'none';
+    }
+
+    // Mostrar color si existe
+    if (color && color.trim() !== '') {
+        document.getElementById('colorPreview').textContent = color;
+        document.getElementById('colorContainer').style.display = 'block';
+    } else {
+        document.getElementById('colorContainer').style.display = 'none';
+    }
+
+    // Abrir modal
+    const modal = new bootstrap.Modal(document.getElementById('modalVistaPrevia'));
+    modal.show();
+}
+</script>
