@@ -253,48 +253,63 @@
 <div class="modal fade" id="modalVistaPrevia" tabindex="-1" aria-labelledby="modalVistaPreviaLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="modalVistaPreviaLabel">Vista Previa del Producto</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            <div class="modal-header bg-primary text-white">
+                <h5 class="modal-title" id="modalVistaPreviaLabel">
+                    <i class="bi bi-eye"></i> Vista Previa del Producto
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
-            <div class="modal-body">
-                <div class="row">
+            <div class="modal-body p-4">
+                <div class="row g-4">
                     <div class="col-md-7">
-                        <img id="imagenPreview" src="" class="img-fluid rounded" alt="Imagen del producto">
+                        <div class="border rounded p-2 bg-light">
+                            <img id="imagenPreview" src="" class="img-fluid rounded shadow-sm" alt="Imagen del producto">
+                        </div>
                     </div>
                     <div class="col-md-5">
-                        <h4 id="nombrePreview" class="mb-3 text-dark"></h4>
-                        <div class="mb-2">
-                            <small class="text-muted">Código:</small>
-                            <p id="codigoPreview" class="mb-0 text-dark"></p>
+                        <h4 id="nombrePreview" class="mb-3 text-dark fw-bold"></h4>
+
+                        <div class="mb-3 p-2 bg-light rounded">
+                            <small class="text-muted d-block mb-1"><i class="bi bi-upc-scan"></i> Código:</small>
+                            <p id="codigoPreview" class="mb-0 text-dark fw-semibold"></p>
                         </div>
-                        <div class="mb-2">
-                            <small class="text-muted">Precio:</small>
-                            <h5 id="precioPreview" class="text-primary mb-0"></h5>
+
+                        <div class="mb-3 p-2 bg-primary bg-opacity-10 rounded border border-primary">
+                            <small class="text-muted d-block mb-1"><i class="bi bi-tag"></i> Precio:</small>
+                            <h5 id="precioPreview" class="text-primary mb-0 fw-bold"></h5>
                         </div>
-                        <div class="mb-2">
-                            <small class="text-muted">Stock:</small>
-                            <p id="stockPreview" class="mb-0 text-dark"></p>
+
+                        <div class="mb-3 p-2 bg-light rounded">
+                            <small class="text-muted d-block mb-1"><i class="bi bi-box-seam"></i> Stock:</small>
+                            <p id="stockPreview" class="mb-0 text-dark fw-semibold"></p>
                         </div>
-                        <div class="mb-2">
-                            <small class="text-muted">Categoría:</small>
-                            <p id="categoriaPreview" class="mb-0 text-dark"></p>
+
+                        <div class="mb-3 p-2 bg-light rounded">
+                            <small class="text-muted d-block mb-1"><i class="bi bi-folder"></i> Categoría:</small>
+                            <p id="categoriaPreview" class="mb-0 text-dark fw-semibold"></p>
                         </div>
-                        <div class="row" id="detallesExtras">
-                            <div class="col-6 mb-2" id="tallaContainer" style="display: none;">
-                                <small class="text-muted">Talla:</small>
-                                <p id="tallaPreview" class="mb-0 text-dark"></p>
+
+                        <div class="row g-2" id="detallesExtras">
+                            <div class="col-6" id="tallaContainer" style="display: none;">
+                                <div class="p-2 bg-light rounded h-100">
+                                    <small class="text-muted d-block mb-1"><i class="bi bi-rulers"></i> Talla:</small>
+                                    <p id="tallaPreview" class="mb-0 text-dark fw-semibold"></p>
+                                </div>
                             </div>
-                            <div class="col-6 mb-2" id="colorContainer" style="display: none;">
-                                <small class="text-muted">Color:</small>
-                                <p id="colorPreview" class="mb-0 text-dark"></p>
+                            <div class="col-6" id="colorContainer" style="display: none;">
+                                <div class="p-2 bg-light rounded h-100">
+                                    <small class="text-muted d-block mb-1"><i class="bi bi-palette"></i> Color:</small>
+                                    <p id="colorPreview" class="mb-0 text-dark fw-semibold"></p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            <div class="modal-footer bg-light border-top">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                    <i class="bi bi-x-circle"></i> Cerrar
+                </button>
             </div>
         </div>
     </div>
