@@ -263,31 +263,31 @@
                         <img id="imagenPreview" src="" class="img-fluid rounded" alt="Imagen del producto">
                     </div>
                     <div class="col-md-5">
-                        <h4 id="nombrePreview" class="mb-3"></h4>
+                        <h4 id="nombrePreview" class="mb-3 text-dark"></h4>
                         <div class="mb-2">
                             <small class="text-muted">Código:</small>
-                            <p id="codigoPreview" class="mb-0"></p>
+                            <p id="codigoPreview" class="mb-0 text-dark"></p>
                         </div>
                         <div class="mb-2">
                             <small class="text-muted">Precio:</small>
-                            <h5 id="precioPreview" class="text-primary"></h5>
+                            <h5 id="precioPreview" class="text-primary mb-0"></h5>
                         </div>
                         <div class="mb-2">
                             <small class="text-muted">Stock:</small>
-                            <p id="stockPreview" class="mb-0"></p>
+                            <p id="stockPreview" class="mb-0 text-dark"></p>
                         </div>
                         <div class="mb-2">
                             <small class="text-muted">Categoría:</small>
-                            <p id="categoriaPreview" class="mb-0"></p>
+                            <p id="categoriaPreview" class="mb-0 text-dark"></p>
                         </div>
                         <div class="row" id="detallesExtras">
                             <div class="col-6 mb-2" id="tallaContainer" style="display: none;">
                                 <small class="text-muted">Talla:</small>
-                                <p id="tallaPreview" class="mb-0"></p>
+                                <p id="tallaPreview" class="mb-0 text-dark"></p>
                             </div>
                             <div class="col-6 mb-2" id="colorContainer" style="display: none;">
                                 <small class="text-muted">Color:</small>
-                                <p id="colorPreview" class="mb-0"></p>
+                                <p id="colorPreview" class="mb-0 text-dark"></p>
                             </div>
                         </div>
                     </div>
