@@ -114,6 +114,27 @@ class Database {
     public function execute($sql, $params = []) {
         return $this->query($sql, $params)->rowCount();
     }
+
+    /**
+     * Iniciar transacción
+     */
+    public function beginTransaction() {
+        return $this->pdo->beginTransaction();
+    }
+
+    /**
+     * Confirmar transacción
+     */
+    public function commit() {
+        return $this->pdo->commit();
+    }
+
+    /**
+     * Revertir transacción
+     */
+    public function rollBack() {
+        return $this->pdo->rollBack();
+    }
 }
 
 // Función helper para obtener la conexión fácilmente
