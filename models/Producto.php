@@ -38,8 +38,10 @@ class Producto {
         }
 
         if (!empty($filtros['busqueda'])) {
-            $condiciones[] = '(nombre LIKE :busqueda OR descripcion LIKE :busqueda OR codigo_producto LIKE :busqueda)';
-            $parametros['busqueda'] = '%' . $filtros['busqueda'] . '%';
+            $condiciones[] = '(nombre LIKE :busqueda1 OR descripcion LIKE :busqueda2 OR codigo_producto LIKE :busqueda3)';
+            $parametros['busqueda1'] = '%' . $filtros['busqueda'] . '%';
+            $parametros['busqueda2'] = '%' . $filtros['busqueda'] . '%';
+            $parametros['busqueda3'] = '%' . $filtros['busqueda'] . '%';
         }
 
         if (isset($filtros['stock_bajo']) && $filtros['stock_bajo']) {
@@ -84,8 +86,10 @@ class Producto {
         }
 
         if (!empty($filtros['busqueda'])) {
-            $condiciones[] = '(nombre LIKE :busqueda OR descripcion LIKE :busqueda OR codigo_producto LIKE :busqueda)';
-            $parametros['busqueda'] = '%' . $filtros['busqueda'] . '%';
+            $condiciones[] = '(nombre LIKE :busqueda1 OR descripcion LIKE :busqueda2 OR codigo_producto LIKE :busqueda3)';
+            $parametros['busqueda1'] = '%' . $filtros['busqueda'] . '%';
+            $parametros['busqueda2'] = '%' . $filtros['busqueda'] . '%';
+            $parametros['busqueda3'] = '%' . $filtros['busqueda'] . '%';
         }
 
         if (isset($filtros['stock_bajo']) && $filtros['stock_bajo']) {
