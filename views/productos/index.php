@@ -253,7 +253,7 @@
 <div class="modal fade" id="modalVistaPrevia" tabindex="-1" aria-labelledby="modalVistaPreviaLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered modal-lg">
         <div class="modal-content">
-            <div class="modal-header bg-primary text-white">
+            <div class="modal-header text-white" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
                 <h5 class="modal-title" id="modalVistaPreviaLabel">
                     <i class="bi bi-eye"></i> Vista Previa del Producto
                 </h5>
@@ -274,9 +274,9 @@
                             <p id="codigoPreview" class="mb-0 text-dark fw-semibold"></p>
                         </div>
 
-                        <div class="mb-3 p-2 bg-primary bg-opacity-10 rounded border border-primary">
+                        <div class="mb-3 p-2 rounded border" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%); border-color: #667eea !important;">
                             <small class="text-muted d-block mb-1"><i class="bi bi-tag"></i> Precio:</small>
-                            <h5 id="precioPreview" class="text-primary mb-0 fw-bold"></h5>
+                            <h5 id="precioPreview" class="mb-0 fw-bold" style="color: #667eea;"></h5>
                         </div>
 
                         <div class="mb-3 p-2 bg-light rounded">
