@@ -113,7 +113,7 @@
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="color" class="form-label">Color</label>
-                                    <select class="form-select" id="color_select" onchange="toggleColorOtro(this, 'color_otro_input')">
+                                    <select class="form-select" id="color_select" name="color" onchange="toggleColorOtro(this, 'color_otro_input')">
                                         <option value="">Seleccione un color</option>
                                         <optgroup label="Colores Básicos">
                                             <option value="Blanco" <?= ($datos_antiguos['color'] ?? '') === 'Blanco' ? 'selected' : '' ?>>Blanco</option>
@@ -150,7 +150,7 @@
 
                                 <div class="col-md-6 mb-3">
                                     <label for="talla" class="form-label">Talla</label>
-                                    <select class="form-select" id="talla_select" onchange="toggleTallaOtro(this, 'talla_otro_input')">
+                                    <select class="form-select" id="talla_select" name="talla" onchange="toggleTallaOtro(this, 'talla_otro_input')">
                                         <option value="">Seleccione una talla</option>
                                         <optgroup label="Tallas Letras">
                                             <option value="XS" <?= ($datos_antiguos['talla'] ?? '') === 'XS' ? 'selected' : '' ?>>XS</option>
@@ -214,7 +214,7 @@
                                     $colores_predefinidos = ['Blanco', 'Negro', 'Gris', 'Beige', 'Café', 'Rojo', 'Azul', 'Verde', 'Amarillo', 'Naranja', 'Rosa', 'Morado', 'Fucsia', 'Azul Marino', 'Vino Tinto', 'Verde Oliva', 'Turquesa', 'Dorado', 'Plateado', 'Multicolor'];
                                     $es_color_otro = !empty($color_actual) && !in_array($color_actual, $colores_predefinidos);
                                 ?>
-                                <select class="form-select" id="color_select_edit" onchange="toggleColorOtro(this, 'color_otro_input_edit')">
+                                <select class="form-select" id="color_select_edit" name="color" onchange="toggleColorOtro(this, 'color_otro_input_edit')">
                                     <option value="">Seleccione un color</option>
                                     <optgroup label="Colores Básicos">
                                         <option value="Blanco" <?= $color_actual === 'Blanco' ? 'selected' : '' ?>>Blanco</option>
@@ -257,7 +257,7 @@
                                     $tallas_predefinidas = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '28', '30', '32', '34', '36', '38', '40', '42', '2', '4', '6', '8', '10', '12', '14', '16', 'Única'];
                                     $es_talla_otra = !empty($talla_actual) && !in_array($talla_actual, $tallas_predefinidas);
                                 ?>
-                                <select class="form-select" id="talla_select_edit" onchange="toggleTallaOtro(this, 'talla_otro_input_edit')">
+                                <select class="form-select" id="talla_select_edit" name="talla" onchange="toggleTallaOtro(this, 'talla_otro_input_edit')">
                                     <option value="">Seleccione una talla</option>
                                     <optgroup label="Tallas Letras">
                                         <option value="XS" <?= $talla_actual === 'XS' ? 'selected' : '' ?>>XS</option>
@@ -579,11 +579,13 @@
             inputOtro.style.display = 'block';
             inputOtro.required = true;
             selectElement.removeAttribute('name'); // Remover name del select
+            inputOtro.setAttribute('name', 'talla'); // Agregar name al input
         } else {
             inputOtro.style.display = 'none';
             inputOtro.required = false;
             inputOtro.value = '';
             selectElement.setAttribute('name', 'talla'); // Restaurar name al select
+            inputOtro.removeAttribute('name'); // Remover name del input
         }
     }
 
@@ -614,11 +616,13 @@
             inputOtro.style.display = 'block';
             inputOtro.required = true;
             selectElement.removeAttribute('name'); // Remover name del select
+            inputOtro.setAttribute('name', 'color'); // Agregar name al input
         } else {
             inputOtro.style.display = 'none';
             inputOtro.required = false;
             inputOtro.value = '';
             selectElement.setAttribute('name', 'color'); // Restaurar name al select
+            inputOtro.removeAttribute('name'); // Remover name del input
         }
     }
 
