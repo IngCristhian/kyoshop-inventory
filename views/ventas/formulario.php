@@ -174,23 +174,23 @@
             <div class="modal-body">
                 <form id="formNuevoCliente">
                     <div class="mb-3">
-                        <label for="nuevo_nombre" class="form-label fw-bold">Nombre Completo *</label>
+                        <label for="nuevo_nombre" class="form-label fw-bold text-dark">Nombre Completo *</label>
                         <input type="text" class="form-control" id="nuevo_nombre" required>
                     </div>
                     <div class="mb-3">
-                        <label for="nuevo_telefono" class="form-label fw-bold">Teléfono *</label>
+                        <label for="nuevo_telefono" class="form-label fw-bold text-dark">Teléfono *</label>
                         <input type="tel" class="form-control" id="nuevo_telefono" required>
                     </div>
                     <div class="mb-3">
-                        <label for="nuevo_email" class="form-label">Email</label>
+                        <label for="nuevo_email" class="form-label text-dark">Email</label>
                         <input type="email" class="form-control" id="nuevo_email">
                     </div>
                     <div class="mb-3">
-                        <label for="nuevo_direccion" class="form-label">Dirección</label>
+                        <label for="nuevo_direccion" class="form-label text-dark">Dirección</label>
                         <textarea class="form-control" id="nuevo_direccion" rows="2"></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="nuevo_ciudad" class="form-label fw-bold">Ciudad</label>
+                        <label for="nuevo_ciudad" class="form-label fw-bold text-dark">Ciudad</label>
                         <select class="form-select" id="nuevo_ciudad">
                             <option value="Medellín" selected>Medellín</option>
                             <option value="Bogotá">Bogotá</option>
