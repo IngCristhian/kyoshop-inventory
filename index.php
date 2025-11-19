@@ -153,6 +153,120 @@ switch ($path) {
         $controller->activar($matches[1]);
         break;
 
+    // Rutas de clientes
+    case 'clientes':
+        requiereAuth();
+        require_once 'controllers/ClienteController.php';
+        $controller = new ClienteController();
+        $controller->index();
+        break;
+
+    case 'clientes/crear':
+        requiereAuth();
+        require_once 'controllers/ClienteController.php';
+        $controller = new ClienteController();
+        $controller->crear();
+        break;
+
+    case 'clientes/guardar':
+        requiereAuth();
+        require_once 'controllers/ClienteController.php';
+        $controller = new ClienteController();
+        $controller->guardar();
+        break;
+
+    case (preg_match('/clientes\/editar\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/ClienteController.php';
+        $controller = new ClienteController();
+        $controller->editar($matches[1]);
+        break;
+
+    case (preg_match('/clientes\/actualizar\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/ClienteController.php';
+        $controller = new ClienteController();
+        $controller->actualizar($matches[1]);
+        break;
+
+    case (preg_match('/clientes\/eliminar\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/ClienteController.php';
+        $controller = new ClienteController();
+        $controller->eliminar($matches[1]);
+        break;
+
+    // Rutas de ventas
+    case 'ventas':
+        requiereAuth();
+        require_once 'controllers/VentaController.php';
+        $controller = new VentaController();
+        $controller->index();
+        break;
+
+    case 'ventas/crear':
+        requiereAuth();
+        require_once 'controllers/VentaController.php';
+        $controller = new VentaController();
+        $controller->crear();
+        break;
+
+    case 'ventas/guardar':
+        requiereAuth();
+        require_once 'controllers/VentaController.php';
+        $controller = new VentaController();
+        $controller->guardar();
+        break;
+
+    case (preg_match('/ventas\/ver\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/VentaController.php';
+        $controller = new VentaController();
+        $controller->ver($matches[1]);
+        break;
+
+    case (preg_match('/ventas\/actualizarEstadoPago\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/VentaController.php';
+        $controller = new VentaController();
+        $controller->actualizarEstadoPago($matches[1]);
+        break;
+
+    case (preg_match('/ventas\/cancelar\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/VentaController.php';
+        $controller = new VentaController();
+        $controller->cancelar($matches[1]);
+        break;
+
+    case (preg_match('/ventas\/factura\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/VentaController.php';
+        $controller = new VentaController();
+        $controller->factura($matches[1]);
+        break;
+
+    case 'ventas/buscarCliente':
+        requiereAuth();
+        require_once 'controllers/VentaController.php';
+        $controller = new VentaController();
+        $controller->buscarCliente();
+        break;
+
+    case 'ventas/buscarProducto':
+        requiereAuth();
+        require_once 'controllers/VentaController.php';
+        $controller = new VentaController();
+        $controller->buscarProducto();
+        break;
+
+    case 'ventas/crearCliente':
+        requiereAuth();
+        require_once 'controllers/VentaController.php';
+        $controller = new VentaController();
+        $controller->crearCliente();
+        break;
+
     // Rutas de historial
     case 'historial':
         requiereAuth();

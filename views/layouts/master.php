@@ -233,6 +233,18 @@
                     </li>
 
                     <li class="nav-item">
+                        <a class="nav-link <?= (strpos($_SERVER['REQUEST_URI'], 'clientes') !== false) ? 'active' : '' ?>" href="<?= APP_URL ?>/clientes">
+                            <i class="bi bi-people"></i> Clientes
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
+                        <a class="nav-link <?= (strpos($_SERVER['REQUEST_URI'], 'ventas') !== false) ? 'active' : '' ?>" href="<?= APP_URL ?>/ventas">
+                            <i class="bi bi-cart-check"></i> Ventas
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
                         <a class="nav-link <?= (strpos($_SERVER['REQUEST_URI'], 'historial') !== false) ? 'active' : '' ?>" href="<?= APP_URL ?>/historial">
                             <i class="bi bi-clock-history"></i> Historial
                         </a>
@@ -315,6 +327,18 @@
                             echo '<i class="bi bi-eye"></i> Detalle de Combo';
                         } elseif (strpos($rutaActual, 'combos') !== false) {
                             echo '<i class="bi bi-box-seam"></i> Combos';
+                        } elseif (strpos($rutaActual, 'clientes/crear') !== false) {
+                            echo '<i class="bi bi-person-plus"></i> Nuevo Cliente';
+                        } elseif (strpos($rutaActual, 'clientes/editar') !== false) {
+                            echo '<i class="bi bi-pencil-square"></i> Editar Cliente';
+                        } elseif (strpos($rutaActual, 'clientes') !== false) {
+                            echo '<i class="bi bi-people"></i> Clientes';
+                        } elseif (strpos($rutaActual, 'ventas/crear') !== false) {
+                            echo '<i class="bi bi-cart-plus"></i> Nueva Venta';
+                        } elseif (strpos($rutaActual, 'ventas/ver') !== false) {
+                            echo '<i class="bi bi-receipt"></i> Detalle de Venta';
+                        } elseif (strpos($rutaActual, 'ventas') !== false) {
+                            echo '<i class="bi bi-cart-check"></i> Ventas';
                         } elseif (strpos($rutaActual, 'historial') !== false) {
                             echo '<i class="bi bi-clock-history"></i> Historial de Movimientos';
                         }
