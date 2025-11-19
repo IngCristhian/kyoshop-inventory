@@ -212,8 +212,12 @@ class VentaController {
 
         $termino = $_POST['termino'] ?? '';
 
+        // Si no hay término de búsqueda, devolver todos los clientes
         if (empty($termino)) {
-            $this->enviarJSON(['clientes' => []]);
+            $clientes = $this->cliente->obtenerTodos([
+                'limite' => 50
+            ]);
+            $this->enviarJSON(['clientes' => $clientes]);
             return;
         }
 
@@ -232,8 +236,10 @@ class VentaController {
 
         $termino = $_POST['termino'] ?? '';
 
+        // Si no hay término de búsqueda, devolver todos los productos con stock
         if (empty($termino)) {
-            $this->enviarJSON(['productos' => []]);
+            $productos = $this->producto->obtenerTodos(1, 50, ['stock_minimo' => 1]);
+            $this->enviarJSON(['productos' => $productos]);
             return;
         }
 

@@ -245,42 +245,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Cargar todos los clientes
 function cargarClientes() {
-    fetch('<?= APP_URL ?>/clientes')
-        .then(response => response.text())
-        .then(html => {
-            // Parsear la respuesta para extraer los clientes
-            // Mejor hacemos una petición AJAX específica
-            fetch('<?= APP_URL ?>/ventas/buscarCliente', {
-                method: 'POST',
-                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                body: 'termino=a' // Buscar con 'a' para obtener todos
-            })
-            .then(r => r.json())
-            .then(data => {
-                // Cargar más clientes con otras letras comunes
-                Promise.all([
-                    fetch('<?= APP_URL ?>/ventas/buscarCliente', {
-                        method: 'POST',
-                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
-                        body: 'termino='
-                    }).then(r => r.json())
-                ]).then(results => {
-                    // Por ahora usar esta solución temporal
-                    // Mejor crear un endpoint específico
-                    mostrarTodosLosClientes([]);
-                });
-            });
-        })
-        .catch(error => {
-            console.error('Error:', error);
-            document.getElementById('listaClientes').innerHTML = '<div class="list-group-item text-danger">Error al cargar clientes</div>';
-        });
+    // Cargar clientes al inicio (sin término de búsqueda)
+    const formData = new FormData();
+    formData.append('termino', '');
 
-    // Solución temporal: cargar con búsqueda vacía
-    setTimeout(() => {
-        todosLosClientes = []; // Se llenará cuando el usuario busque
-        mostrarTodosLosClientes([]);
-    }, 100);
+    fetch('<?= APP_URL ?>/ventas/buscarCliente', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        mostrarTodosLosClientes(data.clientes || []);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('listaClientes').innerHTML = '<div class="list-group-item text-danger">Error al cargar clientes</div>';
+    });
 }
 
 function mostrarTodosLosClientes(clientes) {
@@ -355,10 +335,22 @@ function escapeHtml(text) {
 
 // Cargar todos los productos
 function cargarProductos() {
-    // Similar a clientes, mostrar mensaje inicial
-    setTimeout(() => {
-        document.getElementById('listaProductos').innerHTML = '<div class="list-group-item text-muted text-center">Escriba para buscar productos...</div>';
-    }, 100);
+    // Cargar productos al inicio (sin término de búsqueda)
+    const formData = new FormData();
+    formData.append('termino', '');
+
+    fetch('<?= APP_URL ?>/ventas/buscarProducto', {
+        method: 'POST',
+        body: formData
+    })
+    .then(response => response.json())
+    .then(data => {
+        mostrarTodosLosProductos(data.productos || []);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        document.getElementById('listaProductos').innerHTML = '<div class="list-group-item text-danger">Error al cargar productos</div>';
+    });
 }
 
 // Filtrar productos mientras se escribe

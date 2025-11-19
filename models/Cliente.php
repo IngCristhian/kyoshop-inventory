@@ -40,6 +40,11 @@ class Cliente {
                 WHERE {$where}
                 ORDER BY nombre ASC";
 
+        // Aplicar límite si se especifica
+        if (!empty($filtros['limite'])) {
+            $sql .= " LIMIT " . (int)$filtros['limite'];
+        }
+
         return $this->db->fetchAll($sql, $parametros);
     }
 

@@ -47,7 +47,13 @@ class Producto {
         if (isset($filtros['stock_bajo']) && $filtros['stock_bajo']) {
             $condiciones[] = 'stock <= 5';
         }
-        
+
+        // Filtro por stock mínimo
+        if (isset($filtros['stock_minimo'])) {
+            $condiciones[] = 'stock >= :stock_minimo';
+            $parametros['stock_minimo'] = (int)$filtros['stock_minimo'];
+        }
+
         $where = implode(' AND ', $condiciones);
 
         // Convertir límite y offset a enteros
