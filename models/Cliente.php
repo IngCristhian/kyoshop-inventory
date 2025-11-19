@@ -133,7 +133,7 @@ class Cliente {
     public function eliminar($id) {
         $sql = "UPDATE clientes
                 SET activo = 0, fecha_actualizacion = CURRENT_TIMESTAMP
-                WHERE id = :id";
+                WHERE id = :id AND activo = 1";
         return $this->db->execute($sql, ['id' => $id]);
     }
 

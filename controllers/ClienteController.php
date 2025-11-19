@@ -153,11 +153,17 @@ class ClienteController {
         }
 
         try {
-            $this->cliente->eliminar($id);
-            redirect('clientes', 'Cliente eliminado exitosamente', 'success');
+            $filasAfectadas = $this->cliente->eliminar($id);
+
+            if ($filasAfectadas > 0) {
+                redirect('clientes', 'Cliente eliminado exitosamente', 'success');
+            } else {
+                error_log("No se pudo eliminar el cliente ID: {$id}. Filas afectadas: 0");
+                redirect('clientes', 'Cliente no encontrado o ya eliminado', 'warning');
+            }
         } catch (Exception $e) {
-            error_log("Error al eliminar cliente: " . $e->getMessage());
-            redirect('clientes', 'Error al eliminar el cliente', 'error');
+            error_log("Error al eliminar cliente ID {$id}: " . $e->getMessage());
+            redirect('clientes', 'Error al eliminar el cliente: ' . $e->getMessage(), 'error');
         }
     }
 
