@@ -347,4 +347,22 @@ function abrirVistaPrevia(imagenUrl, nombre, codigo, precio, stock, categoria, t
     const modal = new bootstrap.Modal(document.getElementById('modalVistaPrevia'));
     modal.show();
 }
+
+// Función para confirmar eliminación de producto
+function confirmarEliminacion(id, nombre) {
+    if (confirm(`¿Estás seguro de que deseas eliminar el producto "${nombre}"?\n\nEsta acción no se puede deshacer.`)) {
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = `<?= APP_URL ?>/productos/eliminar/${id}`;
+
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = 'csrf_token';
+        csrfToken.value = '<?= generateCSRFToken() ?>';
+        form.appendChild(csrfToken);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
 </script>
