@@ -129,12 +129,51 @@ class Cliente {
 
     /**
      * Eliminar cliente (soft delete)
+     * @param int $id ID del cliente
+     * @return array ['success' => bool, 'message' => string, 'rows' => int]
      */
     public function eliminar($id) {
-        $sql = "UPDATE clientes
-                SET activo = 0, fecha_actualizacion = CURRENT_TIMESTAMP
-                WHERE id = :id";
-        return $this->db->execute($sql, ['id' => $id]);
+        try {
+            // Primero verificar que el cliente existe y está activo
+            $sqlCheck = "SELECT id, nombre, activo FROM clientes WHERE id = :id";
+            $cliente = $this->db->fetch($sqlCheck, ['id' => $id]);
+
+            if (!$cliente) {
+                return [
+                    'success' => false,
+                    'message' => 'Cliente no encontrado',
+                    'rows' => 0
+                ];
+            }
+
+            if ($cliente['activo'] == 0) {
+                return [
+                    'success' => false,
+                    'message' => 'El cliente ya está eliminado',
+                    'rows' => 0
+                ];
+            }
+
+            // Realizar soft delete
+            $sqlUpdate = "UPDATE clientes
+                         SET activo = 0, fecha_actualizacion = CURRENT_TIMESTAMP
+                         WHERE id = :id";
+            $rows = $this->db->execute($sqlUpdate, ['id' => $id]);
+
+            return [
+                'success' => true,
+                'message' => 'Cliente eliminado correctamente',
+                'rows' => $rows
+            ];
+
+        } catch (Exception $e) {
+            error_log("Error en Cliente::eliminar() - ID: {$id} - " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Error al eliminar: ' . $e->getMessage(),
+                'rows' => 0
+            ];
+        }
     }
 
     /**

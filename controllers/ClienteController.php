@@ -143,21 +143,33 @@ class ClienteController {
      * Eliminar cliente (soft delete)
      */
     public function eliminar($id) {
+        // Logging para debugging
+        error_log("ClienteController::eliminar() - Iniciando eliminación del cliente ID: {$id}");
+        error_log("Request Method: " . $_SERVER['REQUEST_METHOD']);
+        error_log("CSRF Token presente: " . (isset($_POST['csrf_token']) ? 'SI' : 'NO'));
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            redirect('clientes');
+            error_log("ClienteController::eliminar() - Método no permitido");
+            redirect('clientes', 'Método no permitido', 'error');
+            return;
         }
 
         // Validar token CSRF
         if (!validateCSRFToken($_POST['csrf_token'] ?? '')) {
+            error_log("ClienteController::eliminar() - Token CSRF inválido");
             redirect('clientes', 'Token de seguridad inválido', 'error');
+            return;
         }
 
-        try {
-            $this->cliente->eliminar($id);
-            redirect('clientes', 'Cliente eliminado exitosamente', 'success');
-        } catch (Exception $e) {
-            error_log("Error al eliminar cliente: " . $e->getMessage());
-            redirect('clientes', 'Error al eliminar el cliente', 'error');
+        // Ejecutar eliminación
+        $resultado = $this->cliente->eliminar($id);
+
+        error_log("ClienteController::eliminar() - Resultado: " . json_encode($resultado));
+
+        if ($resultado['success']) {
+            redirect('clientes', $resultado['message'], 'success');
+        } else {
+            redirect('clientes', $resultado['message'], 'error');
         }
     }
 

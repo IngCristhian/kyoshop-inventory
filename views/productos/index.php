@@ -193,8 +193,8 @@
                                    class="btn btn-outline-primary btn-sm">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <button type="button" class="btn btn-outline-danger btn-sm" 
-                                        onclick="confirmarEliminacion(<?= $producto['id'] ?>, '<?= htmlspecialchars($producto['nombre']) ?>')">
+                                <button type="button" class="btn btn-outline-danger btn-sm"
+                                        onclick="confirmarEliminacionProducto(<?= $producto['id'] ?>, '<?= htmlspecialchars($producto['nombre']) ?>')">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </div>
@@ -346,5 +346,41 @@ function abrirVistaPrevia(imagenUrl, nombre, codigo, precio, stock, categoria, t
     // Abrir modal
     const modal = new bootstrap.Modal(document.getElementById('modalVistaPrevia'));
     modal.show();
+}
+
+// Función ESPECÍFICA para eliminar PRODUCTOS
+function confirmarEliminacionProducto(id, nombre) {
+    console.log('=== CONFIRMACIÓN DE ELIMINACIÓN DE PRODUCTO ===');
+    console.log('Producto ID:', id);
+    console.log('Producto Nombre:', nombre);
+    console.log('Módulo: PRODUCTOS');
+
+    if (confirm(`¿Estás seguro de que deseas eliminar el producto "${nombre}"?\n\nEsta acción no se puede deshacer.`)) {
+        console.log('Usuario confirmó eliminación de PRODUCTO');
+
+        const appUrl = '<?= APP_URL ?>';
+        const url = `${appUrl}/productos/eliminar/${id}`;
+
+        console.log('URL de eliminación:', url);
+        console.log('Esperado: debe contener "/productos/eliminar/"');
+
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = url;
+
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = 'csrf_token';
+        csrfToken.value = '<?= generateCSRFToken() ?>';
+        form.appendChild(csrfToken);
+
+        console.log('CSRF Token:', csrfToken.value);
+        console.log('Formulario creado para PRODUCTO, enviando...');
+
+        document.body.appendChild(form);
+        form.submit();
+    } else {
+        console.log('Usuario canceló eliminación de PRODUCTO');
+    }
 }
 </script>
