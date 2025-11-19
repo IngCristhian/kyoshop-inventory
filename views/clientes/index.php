@@ -139,7 +139,7 @@
                                         </a>
                                         <button type="button"
                                                 class="btn btn-outline-danger"
-                                                onclick="confirmarEliminacion(<?= $cliente['id'] ?>, '<?= htmlspecialchars($cliente['nombre'], ENT_QUOTES) ?>')"
+                                                onclick="confirmarEliminacionCliente(<?= $cliente['id'] ?>, '<?= htmlspecialchars($cliente['nombre'], ENT_QUOTES) ?>')"
                                                 title="Eliminar">
                                             <i class="bi bi-trash"></i>
                                         </button>
@@ -155,19 +155,21 @@
 </div>
 
 <script>
-function confirmarEliminacion(id, nombre) {
-    console.log('=== CONFIRMACIÓN DE ELIMINACIÓN ===');
+// Función ESPECÍFICA para eliminar CLIENTES
+function confirmarEliminacionCliente(id, nombre) {
+    console.log('=== CONFIRMACIÓN DE ELIMINACIÓN DE CLIENTE ===');
     console.log('Cliente ID:', id);
     console.log('Cliente Nombre:', nombre);
-    console.log('Tipo de confirmación: CLIENTE');
+    console.log('Módulo: CLIENTES');
 
     if (confirm(`¿Estás seguro de que deseas eliminar al cliente "${nombre}"?\n\nEsta acción no se puede deshacer.`)) {
-        console.log('Usuario confirmó eliminación');
+        console.log('Usuario confirmó eliminación de CLIENTE');
 
         const appUrl = '<?= APP_URL ?>';
         const url = `${appUrl}/clientes/eliminar/${id}`;
 
         console.log('URL de eliminación:', url);
+        console.log('Esperado: debe contener "/clientes/eliminar/"');
 
         const form = document.createElement('form');
         form.method = 'POST';
@@ -180,12 +182,12 @@ function confirmarEliminacion(id, nombre) {
         form.appendChild(csrfToken);
 
         console.log('CSRF Token:', csrfToken.value);
-        console.log('Formulario creado, enviando...');
+        console.log('Formulario creado para CLIENTE, enviando...');
 
         document.body.appendChild(form);
         form.submit();
     } else {
-        console.log('Usuario canceló eliminación');
+        console.log('Usuario canceló eliminación de CLIENTE');
     }
 }
 </script>

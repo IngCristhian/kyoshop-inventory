@@ -193,8 +193,8 @@
                                    class="btn btn-outline-primary btn-sm">
                                     <i class="bi bi-pencil"></i>
                                 </a>
-                                <button type="button" class="btn btn-outline-danger btn-sm" 
-                                        onclick="confirmarEliminacion(<?= $producto['id'] ?>, '<?= htmlspecialchars($producto['nombre']) ?>')">
+                                <button type="button" class="btn btn-outline-danger btn-sm"
+                                        onclick="confirmarEliminacionProducto(<?= $producto['id'] ?>, '<?= htmlspecialchars($producto['nombre']) ?>')">
                                     <i class="bi bi-trash"></i>
                                 </button>
                             </div>
@@ -348,20 +348,21 @@ function abrirVistaPrevia(imagenUrl, nombre, codigo, precio, stock, categoria, t
     modal.show();
 }
 
-// Función para confirmar eliminación de producto
-function confirmarEliminacion(id, nombre) {
-    console.log('=== CONFIRMACIÓN DE ELIMINACIÓN ===');
+// Función ESPECÍFICA para eliminar PRODUCTOS
+function confirmarEliminacionProducto(id, nombre) {
+    console.log('=== CONFIRMACIÓN DE ELIMINACIÓN DE PRODUCTO ===');
     console.log('Producto ID:', id);
     console.log('Producto Nombre:', nombre);
-    console.log('Tipo de confirmación: PRODUCTO');
+    console.log('Módulo: PRODUCTOS');
 
     if (confirm(`¿Estás seguro de que deseas eliminar el producto "${nombre}"?\n\nEsta acción no se puede deshacer.`)) {
-        console.log('Usuario confirmó eliminación');
+        console.log('Usuario confirmó eliminación de PRODUCTO');
 
         const appUrl = '<?= APP_URL ?>';
         const url = `${appUrl}/productos/eliminar/${id}`;
 
         console.log('URL de eliminación:', url);
+        console.log('Esperado: debe contener "/productos/eliminar/"');
 
         const form = document.createElement('form');
         form.method = 'POST';
@@ -374,12 +375,12 @@ function confirmarEliminacion(id, nombre) {
         form.appendChild(csrfToken);
 
         console.log('CSRF Token:', csrfToken.value);
-        console.log('Formulario creado, enviando...');
+        console.log('Formulario creado para PRODUCTO, enviando...');
 
         document.body.appendChild(form);
         form.submit();
     } else {
-        console.log('Usuario canceló eliminación');
+        console.log('Usuario canceló eliminación de PRODUCTO');
     }
 }
 </script>
