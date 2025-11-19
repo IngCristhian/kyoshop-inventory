@@ -156,10 +156,22 @@
 
 <script>
 function confirmarEliminacion(id, nombre) {
+    console.log('=== CONFIRMACIÓN DE ELIMINACIÓN ===');
+    console.log('Cliente ID:', id);
+    console.log('Cliente Nombre:', nombre);
+    console.log('Tipo de confirmación: CLIENTE');
+
     if (confirm(`¿Estás seguro de que deseas eliminar al cliente "${nombre}"?\n\nEsta acción no se puede deshacer.`)) {
+        console.log('Usuario confirmó eliminación');
+
+        const appUrl = '<?= APP_URL ?>';
+        const url = `${appUrl}/clientes/eliminar/${id}`;
+
+        console.log('URL de eliminación:', url);
+
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = `<?= APP_URL ?>/clientes/eliminar/${id}`;
+        form.action = url;
 
         const csrfToken = document.createElement('input');
         csrfToken.type = 'hidden';
@@ -167,8 +179,13 @@ function confirmarEliminacion(id, nombre) {
         csrfToken.value = '<?= generateCSRFToken() ?>';
         form.appendChild(csrfToken);
 
+        console.log('CSRF Token:', csrfToken.value);
+        console.log('Formulario creado, enviando...');
+
         document.body.appendChild(form);
         form.submit();
+    } else {
+        console.log('Usuario canceló eliminación');
     }
 }
 </script>

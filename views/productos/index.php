@@ -350,10 +350,22 @@ function abrirVistaPrevia(imagenUrl, nombre, codigo, precio, stock, categoria, t
 
 // Función para confirmar eliminación de producto
 function confirmarEliminacion(id, nombre) {
+    console.log('=== CONFIRMACIÓN DE ELIMINACIÓN ===');
+    console.log('Producto ID:', id);
+    console.log('Producto Nombre:', nombre);
+    console.log('Tipo de confirmación: PRODUCTO');
+
     if (confirm(`¿Estás seguro de que deseas eliminar el producto "${nombre}"?\n\nEsta acción no se puede deshacer.`)) {
+        console.log('Usuario confirmó eliminación');
+
+        const appUrl = '<?= APP_URL ?>';
+        const url = `${appUrl}/productos/eliminar/${id}`;
+
+        console.log('URL de eliminación:', url);
+
         const form = document.createElement('form');
         form.method = 'POST';
-        form.action = `<?= APP_URL ?>/productos/eliminar/${id}`;
+        form.action = url;
 
         const csrfToken = document.createElement('input');
         csrfToken.type = 'hidden';
@@ -361,8 +373,13 @@ function confirmarEliminacion(id, nombre) {
         csrfToken.value = '<?= generateCSRFToken() ?>';
         form.appendChild(csrfToken);
 
+        console.log('CSRF Token:', csrfToken.value);
+        console.log('Formulario creado, enviando...');
+
         document.body.appendChild(form);
         form.submit();
+    } else {
+        console.log('Usuario canceló eliminación');
     }
 }
 </script>
