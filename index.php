@@ -153,6 +153,49 @@ switch ($path) {
         $controller->activar($matches[1]);
         break;
 
+    // Rutas de clientes
+    case 'clientes':
+        requiereAuth();
+        require_once 'controllers/ClienteController.php';
+        $controller = new ClienteController();
+        $controller->index();
+        break;
+
+    case 'clientes/crear':
+        requiereAuth();
+        require_once 'controllers/ClienteController.php';
+        $controller = new ClienteController();
+        $controller->crear();
+        break;
+
+    case 'clientes/guardar':
+        requiereAuth();
+        require_once 'controllers/ClienteController.php';
+        $controller = new ClienteController();
+        $controller->guardar();
+        break;
+
+    case (preg_match('/clientes\/editar\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/ClienteController.php';
+        $controller = new ClienteController();
+        $controller->editar($matches[1]);
+        break;
+
+    case (preg_match('/clientes\/actualizar\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/ClienteController.php';
+        $controller = new ClienteController();
+        $controller->actualizar($matches[1]);
+        break;
+
+    case (preg_match('/clientes\/eliminar\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/ClienteController.php';
+        $controller = new ClienteController();
+        $controller->eliminar($matches[1]);
+        break;
+
     // Rutas de ventas
     case 'ventas':
         requiereAuth();

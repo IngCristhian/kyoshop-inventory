@@ -214,6 +214,7 @@ class VentaController {
 
         if (empty($termino)) {
             $this->enviarJSON(['clientes' => []]);
+            return;
         }
 
         $clientes = $this->cliente->buscar($termino, 10);
@@ -233,6 +234,7 @@ class VentaController {
 
         if (empty($termino)) {
             $this->enviarJSON(['productos' => []]);
+            return;
         }
 
         // Buscar productos que tengan stock disponible
