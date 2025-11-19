@@ -137,7 +137,7 @@
                         <div class="col-12">
                             <div class="mb-3">
                                 <label for="observaciones" class="form-label fw-bold">Observaciones</label>
-                                <textarea class="form-control" id="observaciones" name="observaciones" rows="3" placeholder="Notas adicionales sobre la venta..."></textarea>
+                                <textarea class="form-control" id="observaciones" name="observaciones" rows="3" placeholder="Ej: Cliente solicitó entrega a domicilio, dirección especial, etc."></textarea>
                             </div>
                         </div>
                     </div>
