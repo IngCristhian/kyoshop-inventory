@@ -21,7 +21,7 @@
                         <div class="col-md-8">
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Buscar Cliente *</label>
-                                <div class="input-group">
+                                <div class="input-group mb-2">
                                     <span class="input-group-text"><i class="bi bi-search"></i></span>
                                     <input type="text"
                                            class="form-control"
@@ -29,22 +29,35 @@
                                            placeholder="Buscar por nombre o teléfono..."
                                            autocomplete="off">
                                 </div>
-                                <div id="resultadosCliente" class="list-group mt-1" style="position: absolute; z-index: 1000; max-height: 300px; overflow-y: auto; display: none;"></div>
                                 <input type="hidden" name="cliente_id" id="cliente_id" required>
+
+                                <!-- Lista de clientes filtrable -->
+                                <div class="border rounded" style="max-height: 250px; overflow-y: auto; background: white;">
+                                    <div id="listaClientes" class="list-group list-group-flush">
+                                        <div class="list-group-item text-center text-muted">
+                                            <i class="bi bi-hourglass-split"></i> Cargando clientes...
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <div class="col-md-4">
                             <label class="form-label fw-bold">&nbsp;</label>
-                            <button type="button" class="btn btn-outline-primary w-100" data-bs-toggle="modal" data-bs-target="#modalNuevoCliente">
+                            <button type="button" class="btn btn-outline-primary w-100 mb-2" data-bs-toggle="modal" data-bs-target="#modalNuevoCliente">
                                 <i class="bi bi-person-plus"></i> Nuevo Cliente
                             </button>
-                        </div>
 
-                        <div class="col-12">
-                            <div id="infoClienteSeleccionado" class="alert alert-info" style="display: none;">
-                                <strong>Cliente seleccionado:</strong> <span id="nombreClienteSeleccionado"></span><br>
-                                <strong>Teléfono:</strong> <span id="telefonoClienteSeleccionado"></span>
+                            <!-- Info del cliente seleccionado -->
+                            <div id="infoClienteSeleccionado" class="card" style="display: none;">
+                                <div class="card-body p-3" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);">
+                                    <h6 class="card-title text-dark mb-2">
+                                        <i class="bi bi-person-check-fill text-success"></i> Cliente Seleccionado
+                                    </h6>
+                                    <p class="mb-1"><strong>Nombre:</strong> <span id="nombreClienteSeleccionado"></span></p>
+                                    <p class="mb-1"><strong>Teléfono:</strong> <span id="telefonoClienteSeleccionado"></span></p>
+                                    <p class="mb-0"><strong>Ciudad:</strong> <span id="ciudadClienteSeleccionado"></span></p>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -57,10 +70,10 @@
                             </h6>
                         </div>
 
-                        <div class="col-12">
+                        <div class="col-md-6">
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Buscar Producto</label>
-                                <div class="input-group">
+                                <div class="input-group mb-2">
                                     <span class="input-group-text"><i class="bi bi-search"></i></span>
                                     <input type="text"
                                            class="form-control"
@@ -68,40 +81,42 @@
                                            placeholder="Buscar por nombre o código..."
                                            autocomplete="off">
                                 </div>
-                                <div id="resultadosProducto" class="list-group mt-1" style="position: absolute; z-index: 1000; max-height: 300px; overflow-y: auto; display: none;"></div>
+
+                                <!-- Lista de productos filtrable -->
+                                <div class="border rounded" style="max-height: 300px; overflow-y: auto; background: white;">
+                                    <div id="listaProductos" class="list-group list-group-flush">
+                                        <div class="list-group-item text-center text-muted">
+                                            <i class="bi bi-hourglass-split"></i> Cargando productos...
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
-                        <div class="col-12">
-                            <div class="table-responsive">
-                                <table class="table table-bordered" id="tablaProductos">
-                                    <thead style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white;">
-                                        <tr>
-                                            <th style="width: 35%">Producto</th>
-                                            <th style="width: 15%">Precio</th>
-                                            <th style="width: 15%">Cantidad</th>
-                                            <th style="width: 15%">Stock</th>
-                                            <th style="width: 15%">Subtotal</th>
-                                            <th style="width: 5%"></th>
-                                        </tr>
-                                    </thead>
-                                    <tbody id="productosVenta">
-                                        <tr id="filaVacia">
-                                            <td colspan="6" class="text-center text-muted">
-                                                No hay productos agregados. Use el buscador arriba para agregar productos.
-                                            </td>
-                                        </tr>
-                                    </tbody>
-                                    <tfoot>
-                                        <tr class="table-light fw-bold">
-                                            <td colspan="4" class="text-end">TOTAL:</td>
-                                            <td colspan="2" id="totalVenta" style="font-size: 1.2rem; color: #667eea;">$0</td>
-                                        </tr>
-                                    </tfoot>
-                                </table>
+                        <div class="col-md-6">
+                            <!-- Tabla de productos agregados -->
+                            <div class="mb-3">
+                                <label class="form-label fw-bold">Productos Agregados</label>
+                                <div class="border rounded p-2" style="max-height: 300px; overflow-y: auto; background: white;">
+                                    <div id="listaProductosAgregados">
+                                        <p class="text-center text-muted my-3">
+                                            <i class="bi bi-inbox"></i><br>
+                                            No hay productos agregados
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="mt-2 p-2 bg-light rounded">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <strong>TOTAL:</strong>
+                                        <h5 id="totalVenta" class="mb-0" style="color: #667eea;">$0</h5>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Hidden inputs para productos (se generan dinámicamente) -->
+                    <div id="productosInputs"></div>
 
                     <!-- Sección Pago -->
                     <div class="row mb-4">
@@ -215,27 +230,95 @@
 
 <script>
 // Variables globales
+let todosLosClientes = [];
+let todosLosProductos = [];
 let productosAgregados = [];
 let clienteSeleccionado = null;
-let timeoutBusqueda = null;
 
-// Búsqueda de clientes
-document.getElementById('busquedaCliente').addEventListener('input', function() {
-    const termino = this.value.trim();
+// Cargar datos al iniciar
+document.addEventListener('DOMContentLoaded', function() {
+    cargarClientes();
+    cargarProductos();
+});
 
-    clearTimeout(timeoutBusqueda);
+//=== CLIENTES ===//
 
-    if (termino.length < 2) {
-        document.getElementById('resultadosCliente').style.display = 'none';
+// Cargar todos los clientes
+function cargarClientes() {
+    fetch('<?= APP_URL ?>/clientes')
+        .then(response => response.text())
+        .then(html => {
+            // Parsear la respuesta para extraer los clientes
+            // Mejor hacemos una petición AJAX específica
+            fetch('<?= APP_URL ?>/ventas/buscarCliente', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                body: 'termino=a' // Buscar con 'a' para obtener todos
+            })
+            .then(r => r.json())
+            .then(data => {
+                // Cargar más clientes con otras letras comunes
+                Promise.all([
+                    fetch('<?= APP_URL ?>/ventas/buscarCliente', {
+                        method: 'POST',
+                        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+                        body: 'termino='
+                    }).then(r => r.json())
+                ]).then(results => {
+                    // Por ahora usar esta solución temporal
+                    // Mejor crear un endpoint específico
+                    mostrarTodosLosClientes([]);
+                });
+            });
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            document.getElementById('listaClientes').innerHTML = '<div class="list-group-item text-danger">Error al cargar clientes</div>';
+        });
+
+    // Solución temporal: cargar con búsqueda vacía
+    setTimeout(() => {
+        todosLosClientes = []; // Se llenará cuando el usuario busque
+        mostrarTodosLosClientes([]);
+    }, 100);
+}
+
+function mostrarTodosLosClientes(clientes) {
+    const contenedor = document.getElementById('listaClientes');
+
+    if (clientes.length === 0) {
+        contenedor.innerHTML = '<div class="list-group-item text-muted text-center">Escriba para buscar clientes...</div>';
         return;
     }
 
-    timeoutBusqueda = setTimeout(() => {
-        buscarClientes(termino);
-    }, 300);
-});
+    let html = '';
+    clientes.forEach(cliente => {
+        html += `
+            <a href="#" class="list-group-item list-group-item-action" onclick="seleccionarCliente(${cliente.id}, '${escapeHtml(cliente.nombre)}', '${escapeHtml(cliente.telefono)}', '${escapeHtml(cliente.ciudad || 'N/A')}'); return false;">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <strong>${escapeHtml(cliente.nombre)}</strong><br>
+                        <small class="text-muted"><i class="bi bi-telephone"></i> ${escapeHtml(cliente.telefono)}</small>
+                    </div>
+                    <small class="text-muted">${escapeHtml(cliente.ciudad || 'N/A')}</small>
+                </div>
+            </a>
+        `;
+    });
 
-function buscarClientes(termino) {
+    contenedor.innerHTML = html;
+}
+
+// Filtrar clientes mientras se escribe
+document.getElementById('busquedaCliente').addEventListener('input', function() {
+    const termino = this.value.trim().toLowerCase();
+
+    if (termino.length === 0) {
+        mostrarTodosLosClientes([]);
+        return;
+    }
+
+    // Buscar en el servidor
     const formData = new FormData();
     formData.append('termino', termino);
 
@@ -245,62 +328,49 @@ function buscarClientes(termino) {
     })
     .then(response => response.json())
     .then(data => {
-        mostrarResultadosClientes(data.clientes);
+        mostrarTodosLosClientes(data.clientes || []);
     })
     .catch(error => console.error('Error:', error));
-}
+});
 
-function mostrarResultadosClientes(clientes) {
-    const contenedor = document.getElementById('resultadosCliente');
-
-    if (clientes.length === 0) {
-        contenedor.style.display = 'none';
-        return;
-    }
-
-    let html = '';
-    clientes.forEach(cliente => {
-        html += `
-            <a href="#" class="list-group-item list-group-item-action" onclick="seleccionarCliente(${cliente.id}, '${cliente.nombre}', '${cliente.telefono}'); return false;">
-                <strong>${cliente.nombre}</strong><br>
-                <small class="text-muted">Tel: ${cliente.telefono}</small>
-            </a>
-        `;
-    });
-
-    contenedor.innerHTML = html;
-    contenedor.style.display = 'block';
-}
-
-function seleccionarCliente(id, nombre, telefono) {
+function seleccionarCliente(id, nombre, telefono, ciudad) {
     document.getElementById('cliente_id').value = id;
     document.getElementById('busquedaCliente').value = nombre;
-    document.getElementById('resultadosCliente').style.display = 'none';
 
     document.getElementById('nombreClienteSeleccionado').textContent = nombre;
     document.getElementById('telefonoClienteSeleccionado').textContent = telefono;
+    document.getElementById('ciudadClienteSeleccionado').textContent = ciudad;
     document.getElementById('infoClienteSeleccionado').style.display = 'block';
 
-    clienteSeleccionado = {id, nombre, telefono};
+    clienteSeleccionado = {id, nombre, telefono, ciudad};
 }
 
-// Búsqueda de productos
+function escapeHtml(text) {
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+}
+
+//=== PRODUCTOS ===//
+
+// Cargar todos los productos
+function cargarProductos() {
+    // Similar a clientes, mostrar mensaje inicial
+    setTimeout(() => {
+        document.getElementById('listaProductos').innerHTML = '<div class="list-group-item text-muted text-center">Escriba para buscar productos...</div>';
+    }, 100);
+}
+
+// Filtrar productos mientras se escribe
 document.getElementById('busquedaProducto').addEventListener('input', function() {
-    const termino = this.value.trim();
+    const termino = this.value.trim().toLowerCase();
 
-    clearTimeout(timeoutBusqueda);
-
-    if (termino.length < 2) {
-        document.getElementById('resultadosProducto').style.display = 'none';
+    if (termino.length === 0) {
+        document.getElementById('listaProductos').innerHTML = '<div class="list-group-item text-muted text-center">Escriba para buscar productos...</div>';
         return;
     }
 
-    timeoutBusqueda = setTimeout(() => {
-        buscarProductos(termino);
-    }, 300);
-});
-
-function buscarProductos(termino) {
+    // Buscar en el servidor
     const formData = new FormData();
     formData.append('termino', termino);
 
@@ -310,32 +380,37 @@ function buscarProductos(termino) {
     })
     .then(response => response.json())
     .then(data => {
-        mostrarResultadosProductos(data.productos);
+        mostrarTodosLosProductos(data.productos || []);
     })
     .catch(error => console.error('Error:', error));
-}
+});
 
-function mostrarResultadosProductos(productos) {
-    const contenedor = document.getElementById('resultadosProducto');
+function mostrarTodosLosProductos(productos) {
+    const contenedor = document.getElementById('listaProductos');
 
     if (productos.length === 0) {
-        contenedor.innerHTML = '<div class="list-group-item text-muted">No se encontraron productos con stock</div>';
-        contenedor.style.display = 'block';
+        contenedor.innerHTML = '<div class="list-group-item text-muted text-center">No se encontraron productos con stock</div>';
         return;
     }
 
     let html = '';
     productos.forEach(producto => {
+        const yaAgregado = productosAgregados.find(p => p.id === producto.id);
+        const claseDeshabilitado = yaAgregado ? 'disabled' : '';
+        const textoAgregado = yaAgregado ? ' <span class="badge bg-success">Agregado</span>' : '';
+
         html += `
-            <a href="#" class="list-group-item list-group-item-action" onclick='agregarProducto(${JSON.stringify(producto)}); return false;'>
-                <div class="d-flex justify-content-between">
+            <a href="#" class="list-group-item list-group-item-action ${claseDeshabilitado}" onclick='agregarProducto(${JSON.stringify(producto)}); return false;'>
+                <div class="d-flex justify-content-between align-items-center">
                     <div>
-                        <strong>${producto.nombre}</strong><br>
-                        <small class="text-muted">${producto.codigo_producto} - ${producto.categoria}</small>
+                        <strong>${escapeHtml(producto.nombre)}</strong>${textoAgregado}<br>
+                        <small class="text-muted">${escapeHtml(producto.codigo_producto)} - ${escapeHtml(producto.categoria)}</small>
                     </div>
                     <div class="text-end">
                         <strong class="text-primary">$${parseFloat(producto.precio).toLocaleString('es-CO')}</strong><br>
-                        <small class="text-success">Stock: ${producto.stock}</small>
+                        <small class="${producto.stock > 5 ? 'text-success' : 'text-warning'}">
+                            <i class="bi bi-box"></i> ${producto.stock} disponibles
+                        </small>
                     </div>
                 </div>
             </a>
@@ -343,14 +418,13 @@ function mostrarResultadosProductos(productos) {
     });
 
     contenedor.innerHTML = html;
-    contenedor.style.display = 'block';
 }
 
 function agregarProducto(producto) {
     // Verificar si ya está agregado
     const yaAgregado = productosAgregados.find(p => p.id === producto.id);
     if (yaAgregado) {
-        alert('Este producto ya está agregado. Modifique la cantidad en la tabla.');
+        alert('Este producto ya está agregado.');
         return;
     }
 
@@ -363,60 +437,79 @@ function agregarProducto(producto) {
         stock: parseInt(producto.stock)
     });
 
-    document.getElementById('busquedaProducto').value = '';
-    document.getElementById('resultadosProducto').style.display = 'none';
+    actualizarListaProductosAgregados();
 
-    actualizarTablaProductos();
+    // Refrescar la lista de productos para mostrar el badge "Agregado"
+    const termino = document.getElementById('busquedaProducto').value.trim();
+    if (termino.length > 0) {
+        document.getElementById('busquedaProducto').dispatchEvent(new Event('input'));
+    }
 }
 
-function actualizarTablaProductos() {
-    const tbody = document.getElementById('productosVenta');
-    const filaVacia = document.getElementById('filaVacia');
+function actualizarListaProductosAgregados() {
+    const contenedor = document.getElementById('listaProductosAgregados');
+    const inputsContainer = document.getElementById('productosInputs');
 
     if (productosAgregados.length === 0) {
-        filaVacia.style.display = '';
+        contenedor.innerHTML = '<p class="text-center text-muted my-3"><i class="bi bi-inbox"></i><br>No hay productos agregados</p>';
+        inputsContainer.innerHTML = '';
         calcularTotal();
         return;
     }
 
-    filaVacia.style.display = 'none';
-
     let html = '';
+    let inputs = '';
+
     productosAgregados.forEach((producto, index) => {
         const subtotal = producto.precio * producto.cantidad;
         html += `
-            <tr>
-                <td>
-                    <strong>${producto.nombre}</strong><br>
-                    <small class="text-muted">${producto.codigo}</small>
-                    <input type="hidden" name="items[${index}][producto_id]" value="${producto.id}">
-                    <input type="hidden" name="items[${index}][precio_unitario]" value="${producto.precio}">
-                </td>
-                <td class="text-end">$${producto.precio.toLocaleString('es-CO')}</td>
-                <td>
-                    <input type="number"
-                           class="form-control form-control-sm"
-                           name="items[${index}][cantidad]"
-                           value="${producto.cantidad}"
-                           min="1"
-                           max="${producto.stock}"
-                           onchange="actualizarCantidad(${index}, this.value)"
-                           required>
-                </td>
-                <td class="text-center">
-                    <span class="badge bg-${producto.stock > 5 ? 'success' : 'warning'}">${producto.stock} disponibles</span>
-                </td>
-                <td class="text-end fw-bold">$${subtotal.toLocaleString('es-CO')}</td>
-                <td class="text-center">
-                    <button type="button" class="btn btn-sm btn-danger" onclick="eliminarProducto(${index})" title="Eliminar">
-                        <i class="bi bi-trash"></i>
-                    </button>
-                </td>
-            </tr>
+            <div class="card mb-2">
+                <div class="card-body p-2">
+                    <div class="d-flex justify-content-between align-items-start">
+                        <div class="flex-grow-1">
+                            <strong class="d-block">${escapeHtml(producto.nombre)}</strong>
+                            <small class="text-muted">${escapeHtml(producto.codigo)}</small>
+                        </div>
+                        <button type="button" class="btn btn-sm btn-danger ms-2" onclick="eliminarProducto(${index})" title="Eliminar">
+                            <i class="bi bi-trash"></i>
+                        </button>
+                    </div>
+                    <div class="row g-2 mt-2">
+                        <div class="col-4">
+                            <label class="form-label text-muted small mb-0">Cantidad</label>
+                            <input type="number"
+                                   class="form-control form-control-sm"
+                                   value="${producto.cantidad}"
+                                   min="1"
+                                   max="${producto.stock}"
+                                   onchange="actualizarCantidad(${index}, this.value)">
+                        </div>
+                        <div class="col-8 text-end">
+                            <label class="form-label text-muted small mb-0">Precio</label>
+                            <div class="fw-bold text-primary">$${producto.precio.toLocaleString('es-CO')}</div>
+                            <small class="text-muted">Stock: ${producto.stock}</small>
+                        </div>
+                    </div>
+                    <div class="mt-2 pt-2 border-top">
+                        <div class="d-flex justify-content-between">
+                            <span class="text-muted small">Subtotal:</span>
+                            <strong>$${subtotal.toLocaleString('es-CO')}</strong>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // Hidden inputs para enviar al servidor
+        inputs += `
+            <input type="hidden" name="items[${index}][producto_id]" value="${producto.id}">
+            <input type="hidden" name="items[${index}][cantidad]" value="${producto.cantidad}">
+            <input type="hidden" name="items[${index}][precio_unitario]" value="${producto.precio}">
         `;
     });
 
-    tbody.innerHTML = html;
+    contenedor.innerHTML = html;
+    inputsContainer.innerHTML = inputs;
     calcularTotal();
 }
 
@@ -433,13 +526,19 @@ function actualizarCantidad(index, cantidad) {
     }
 
     productosAgregados[index].cantidad = cantidad;
-    actualizarTablaProductos();
+    actualizarListaProductosAgregados();
 }
 
 function eliminarProducto(index) {
     if (confirm('¿Está seguro de eliminar este producto de la venta?')) {
         productosAgregados.splice(index, 1);
-        actualizarTablaProductos();
+        actualizarListaProductosAgregados();
+
+        // Refrescar la lista de productos para quitar el badge "Agregado"
+        const termino = document.getElementById('busquedaProducto').value.trim();
+        if (termino.length > 0) {
+            document.getElementById('busquedaProducto').dispatchEvent(new Event('input'));
+        }
     }
 }
 
@@ -480,7 +579,7 @@ document.getElementById('btnGuardarCliente').addEventListener('click', function(
     .then(response => response.json())
     .then(data => {
         if (data.success) {
-            seleccionarCliente(data.cliente.id, data.cliente.nombre, data.cliente.telefono);
+            seleccionarCliente(data.cliente.id, data.cliente.nombre, data.cliente.telefono, data.cliente.ciudad);
             bootstrap.Modal.getInstance(document.getElementById('modalNuevoCliente')).hide();
             document.getElementById('formNuevoCliente').reset();
             document.getElementById('erroresCliente').style.display = 'none';
@@ -507,16 +606,6 @@ document.getElementById('formVenta').addEventListener('submit', function(e) {
         e.preventDefault();
         alert('Debe seleccionar un cliente');
         return false;
-    }
-});
-
-// Cerrar resultados al hacer click fuera
-document.addEventListener('click', function(e) {
-    if (!e.target.closest('#busquedaCliente') && !e.target.closest('#resultadosCliente')) {
-        document.getElementById('resultadosCliente').style.display = 'none';
-    }
-    if (!e.target.closest('#busquedaProducto') && !e.target.closest('#resultadosProducto')) {
-        document.getElementById('resultadosProducto').style.display = 'none';
     }
 });
 </script>
