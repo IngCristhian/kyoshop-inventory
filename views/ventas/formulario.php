@@ -23,16 +23,14 @@
                                 <label class="form-label fw-bold">Buscar Cliente *</label>
                                 <div class="input-group mb-2">
                                     <span class="input-group-text"><i class="bi bi-search"></i></span>
-                                    <input type="text"
-                                           class="form-control"
-                                           id="busquedaCliente"
-                                           placeholder="Buscar por nombre o teléfono..."
-                                           autocomplete="off">
+                                    <input type="text" class="form-control" id="busquedaCliente"
+                                        placeholder="Buscar por nombre o teléfono..." autocomplete="off">
                                 </div>
                                 <input type="hidden" name="cliente_id" id="cliente_id" required>
 
                                 <!-- Lista de clientes filtrable -->
-                                <div class="border rounded" style="max-height: 250px; overflow-y: auto; background: white;">
+                                <div class="border rounded"
+                                    style="max-height: 250px; overflow-y: auto; background: white;">
                                     <div id="listaClientes" class="list-group list-group-flush">
                                         <div class="list-group-item text-center text-muted">
                                             <i class="bi bi-hourglass-split"></i> Cargando clientes...
@@ -44,19 +42,24 @@
 
                         <div class="col-md-4">
                             <label class="form-label fw-bold">&nbsp;</label>
-                            <button type="button" class="btn btn-outline-primary w-100 mb-2" data-bs-toggle="modal" data-bs-target="#modalNuevoCliente">
+                            <button type="button" class="btn btn-outline-primary w-100 mb-2" data-bs-toggle="modal"
+                                data-bs-target="#modalNuevoCliente">
                                 <i class="bi bi-person-plus"></i> Nuevo Cliente
                             </button>
 
                             <!-- Info del cliente seleccionado -->
                             <div id="infoClienteSeleccionado" class="card" style="display: none;">
-                                <div class="card-body p-3" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);">
+                                <div class="card-body p-3"
+                                    style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);">
                                     <h6 class="card-title text-dark mb-2">
                                         <i class="bi bi-person-check-fill text-success"></i> Cliente Seleccionado
                                     </h6>
-                                    <p class="mb-1"><strong>Nombre:</strong> <span id="nombreClienteSeleccionado"></span></p>
-                                    <p class="mb-1"><strong>Teléfono:</strong> <span id="telefonoClienteSeleccionado"></span></p>
-                                    <p class="mb-0"><strong>Ciudad:</strong> <span id="ciudadClienteSeleccionado"></span></p>
+                                    <p class="mb-1"><strong>Nombre:</strong> <span
+                                            id="nombreClienteSeleccionado"></span></p>
+                                    <p class="mb-1"><strong>Teléfono:</strong> <span
+                                            id="telefonoClienteSeleccionado"></span></p>
+                                    <p class="mb-0"><strong>Ciudad:</strong> <span
+                                            id="ciudadClienteSeleccionado"></span></p>
                                 </div>
                             </div>
                         </div>
@@ -75,15 +78,13 @@
                                 <label class="form-label fw-bold">Buscar Producto</label>
                                 <div class="input-group mb-2">
                                     <span class="input-group-text"><i class="bi bi-search"></i></span>
-                                    <input type="text"
-                                           class="form-control"
-                                           id="busquedaProducto"
-                                           placeholder="Buscar por nombre o código..."
-                                           autocomplete="off">
+                                    <input type="text" class="form-control" id="busquedaProducto"
+                                        placeholder="Buscar por nombre o código..." autocomplete="off">
                                 </div>
 
                                 <!-- Lista de productos filtrable -->
-                                <div class="border rounded" style="max-height: 300px; overflow-y: auto; background: white;">
+                                <div class="border rounded"
+                                    style="max-height: 300px; overflow-y: auto; background: white;">
                                     <div id="listaProductos" class="list-group list-group-flush">
                                         <div class="list-group-item text-center text-muted">
                                             <i class="bi bi-hourglass-split"></i> Cargando productos...
@@ -97,7 +98,8 @@
                             <!-- Tabla de productos agregados -->
                             <div class="mb-3">
                                 <label class="form-label fw-bold">Productos Agregados</label>
-                                <div class="border rounded p-2" style="max-height: 300px; overflow-y: auto; background: white;">
+                                <div class="border rounded p-2"
+                                    style="max-height: 300px; overflow-y: auto; background: white;">
                                     <div id="listaProductosAgregados">
                                         <p class="text-center text-muted my-3">
                                             <i class="bi bi-inbox"></i><br>
@@ -152,7 +154,8 @@
                         <div class="col-12">
                             <div class="mb-3">
                                 <label for="observaciones" class="form-label fw-bold">Observaciones</label>
-                                <textarea class="form-control" id="observaciones" name="observaciones" rows="3" placeholder="Ej: Cliente solicitó entrega a domicilio, dirección especial, etc."></textarea>
+                                <textarea class="form-control" id="observaciones" name="observaciones" rows="3"
+                                    placeholder="Ej: Cliente solicitó entrega a domicilio, dirección especial, etc."></textarea>
                             </div>
                         </div>
                     </div>
@@ -189,11 +192,13 @@
             <div class="modal-body">
                 <form id="formNuevoCliente">
                     <div class="mb-3">
-                        <label for="nuevo_nombre" class="form-label fw-bold" style="color: #212529 !important;">Nombre Completo *</label>
+                        <label for="nuevo_nombre" class="form-label fw-bold" style="color: #212529 !important;">Nombre
+                            Completo *</label>
                         <input type="text" class="form-control" id="nuevo_nombre" required>
                     </div>
                     <div class="mb-3">
-                        <label for="nuevo_telefono" class="form-label fw-bold" style="color: #212529 !important;">Teléfono *</label>
+                        <label for="nuevo_telefono" class="form-label fw-bold"
+                            style="color: #212529 !important;">Teléfono *</label>
                         <input type="tel" class="form-control" id="nuevo_telefono" required>
                     </div>
                     <div class="mb-3">
@@ -201,11 +206,13 @@
                         <input type="email" class="form-control" id="nuevo_email">
                     </div>
                     <div class="mb-3">
-                        <label for="nuevo_direccion" class="form-label" style="color: #212529 !important;">Dirección</label>
+                        <label for="nuevo_direccion" class="form-label"
+                            style="color: #212529 !important;">Dirección</label>
                         <textarea class="form-control" id="nuevo_direccion" rows="2"></textarea>
                     </div>
                     <div class="mb-3">
-                        <label for="nuevo_ciudad" class="form-label fw-bold" style="color: #212529 !important;">Ciudad</label>
+                        <label for="nuevo_ciudad" class="form-label fw-bold"
+                            style="color: #212529 !important;">Ciudad</label>
                         <select class="form-select" id="nuevo_ciudad">
                             <option value="Medellín" selected>Medellín</option>
                             <option value="Bogotá">Bogotá</option>
@@ -229,51 +236,63 @@
 </div>
 
 <script>
-// Variables globales
-let todosLosClientes = [];
-let todosLosProductos = [];
-let productosAgregados = [];
-let clienteSeleccionado = null;
+    // Variables globales
+    let todosLosClientes = [];
+    let todosLosProductos = [];
+    let productosAgregados = [];
+    let clienteSeleccionado = null;
 
-// Cargar datos al iniciar
-document.addEventListener('DOMContentLoaded', function() {
-    cargarClientes();
-    cargarProductos();
-});
+    // Cargar datos al iniciar
+    document.addEventListener('DOMContentLoaded', function () {
+        cargarClientes();
+        cargarProductos();
 
-//=== CLIENTES ===//
-
-// Cargar todos los clientes
-function cargarClientes() {
-    // Cargar clientes al inicio (sin término de búsqueda)
-    const formData = new FormData();
-    formData.append('termino', '');
-
-    fetch('<?= APP_URL ?>/ventas/buscarCliente', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        mostrarTodosLosClientes(data.clientes || []);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        document.getElementById('listaClientes').innerHTML = '<div class="list-group-item text-danger">Error al cargar clientes</div>';
+        // Mantener la sesión activa para evitar expiración del token CSRF
+        // Refrescar cada 5 minutos (300000 ms)
+        setInterval(function () {
+            // Hacer una petición ligera para mantener la sesión activa
+            fetch('<?= APP_URL ?>/ventas/buscarCliente', {
+                method: 'POST',
+                body: new FormData()
+            }).catch(error => {
+                console.log('Keepalive ping:', error);
+            });
+        }, 300000); // 5 minutos
     });
-}
 
-function mostrarTodosLosClientes(clientes) {
-    const contenedor = document.getElementById('listaClientes');
+    //=== CLIENTES ===//
 
-    if (clientes.length === 0) {
-        contenedor.innerHTML = '<div class="list-group-item text-muted text-center">Escriba para buscar clientes...</div>';
-        return;
+    // Cargar todos los clientes
+    function cargarClientes() {
+        // Cargar clientes al inicio (sin término de búsqueda)
+        const formData = new FormData();
+        formData.append('termino', '');
+
+        fetch('<?= APP_URL ?>/ventas/buscarCliente', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                mostrarTodosLosClientes(data.clientes || []);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('listaClientes').innerHTML = '<div class="list-group-item text-danger">Error al cargar clientes</div>';
+            });
     }
 
-    let html = '';
-    clientes.forEach(cliente => {
-        html += `
+    function mostrarTodosLosClientes(clientes) {
+        const contenedor = document.getElementById('listaClientes');
+
+        if (clientes.length === 0) {
+            contenedor.innerHTML = '<div class="list-group-item text-muted text-center">Escriba para buscar clientes...</div>';
+            return;
+        }
+
+        let html = '';
+        clientes.forEach(cliente => {
+            html += `
             <a href="#" class="list-group-item list-group-item-action" onclick="seleccionarCliente(${cliente.id}, '${escapeHtml(cliente.nombre)}', '${escapeHtml(cliente.telefono)}', '${escapeHtml(cliente.ciudad || 'N/A')}'); return false;">
                 <div class="d-flex justify-content-between">
                     <div>
@@ -284,114 +303,114 @@ function mostrarTodosLosClientes(clientes) {
                 </div>
             </a>
         `;
+        });
+
+        contenedor.innerHTML = html;
+    }
+
+    // Filtrar clientes mientras se escribe
+    document.getElementById('busquedaCliente').addEventListener('input', function () {
+        const termino = this.value.trim().toLowerCase();
+
+        if (termino.length === 0) {
+            mostrarTodosLosClientes([]);
+            return;
+        }
+
+        // Buscar en el servidor
+        const formData = new FormData();
+        formData.append('termino', termino);
+
+        fetch('<?= APP_URL ?>/ventas/buscarCliente', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                mostrarTodosLosClientes(data.clientes || []);
+            })
+            .catch(error => console.error('Error:', error));
     });
 
-    contenedor.innerHTML = html;
-}
+    function seleccionarCliente(id, nombre, telefono, ciudad) {
+        document.getElementById('cliente_id').value = id;
+        document.getElementById('busquedaCliente').value = nombre;
 
-// Filtrar clientes mientras se escribe
-document.getElementById('busquedaCliente').addEventListener('input', function() {
-    const termino = this.value.trim().toLowerCase();
+        document.getElementById('nombreClienteSeleccionado').textContent = nombre;
+        document.getElementById('telefonoClienteSeleccionado').textContent = telefono;
+        document.getElementById('ciudadClienteSeleccionado').textContent = ciudad;
+        document.getElementById('infoClienteSeleccionado').style.display = 'block';
 
-    if (termino.length === 0) {
-        mostrarTodosLosClientes([]);
-        return;
+        clienteSeleccionado = { id, nombre, telefono, ciudad };
     }
 
-    // Buscar en el servidor
-    const formData = new FormData();
-    formData.append('termino', termino);
+    function escapeHtml(text) {
+        const div = document.createElement('div');
+        div.textContent = text;
+        return div.innerHTML;
+    }
 
-    fetch('<?= APP_URL ?>/ventas/buscarCliente', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        mostrarTodosLosClientes(data.clientes || []);
-    })
-    .catch(error => console.error('Error:', error));
-});
+    //=== PRODUCTOS ===//
 
-function seleccionarCliente(id, nombre, telefono, ciudad) {
-    document.getElementById('cliente_id').value = id;
-    document.getElementById('busquedaCliente').value = nombre;
+    // Cargar todos los productos
+    function cargarProductos() {
+        // Cargar productos al inicio (sin término de búsqueda)
+        const formData = new FormData();
+        formData.append('termino', '');
 
-    document.getElementById('nombreClienteSeleccionado').textContent = nombre;
-    document.getElementById('telefonoClienteSeleccionado').textContent = telefono;
-    document.getElementById('ciudadClienteSeleccionado').textContent = ciudad;
-    document.getElementById('infoClienteSeleccionado').style.display = 'block';
+        fetch('<?= APP_URL ?>/ventas/buscarProducto', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                mostrarTodosLosProductos(data.productos || []);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('listaProductos').innerHTML = '<div class="list-group-item text-danger">Error al cargar productos</div>';
+            });
+    }
 
-    clienteSeleccionado = {id, nombre, telefono, ciudad};
-}
+    // Filtrar productos mientras se escribe
+    document.getElementById('busquedaProducto').addEventListener('input', function () {
+        const termino = this.value.trim().toLowerCase();
 
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
+        if (termino.length === 0) {
+            document.getElementById('listaProductos').innerHTML = '<div class="list-group-item text-muted text-center">Escriba para buscar productos...</div>';
+            return;
+        }
 
-//=== PRODUCTOS ===//
+        // Buscar en el servidor
+        const formData = new FormData();
+        formData.append('termino', termino);
 
-// Cargar todos los productos
-function cargarProductos() {
-    // Cargar productos al inicio (sin término de búsqueda)
-    const formData = new FormData();
-    formData.append('termino', '');
-
-    fetch('<?= APP_URL ?>/ventas/buscarProducto', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        mostrarTodosLosProductos(data.productos || []);
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        document.getElementById('listaProductos').innerHTML = '<div class="list-group-item text-danger">Error al cargar productos</div>';
+        fetch('<?= APP_URL ?>/ventas/buscarProducto', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                mostrarTodosLosProductos(data.productos || []);
+            })
+            .catch(error => console.error('Error:', error));
     });
-}
 
-// Filtrar productos mientras se escribe
-document.getElementById('busquedaProducto').addEventListener('input', function() {
-    const termino = this.value.trim().toLowerCase();
+    function mostrarTodosLosProductos(productos) {
+        const contenedor = document.getElementById('listaProductos');
 
-    if (termino.length === 0) {
-        document.getElementById('listaProductos').innerHTML = '<div class="list-group-item text-muted text-center">Escriba para buscar productos...</div>';
-        return;
-    }
+        if (productos.length === 0) {
+            contenedor.innerHTML = '<div class="list-group-item text-muted text-center">No se encontraron productos con stock</div>';
+            return;
+        }
 
-    // Buscar en el servidor
-    const formData = new FormData();
-    formData.append('termino', termino);
+        let html = '';
+        productos.forEach(producto => {
+            const yaAgregado = productosAgregados.find(p => p.id === producto.id);
+            const claseDeshabilitado = yaAgregado ? 'disabled' : '';
+            const textoAgregado = yaAgregado ? ' <span class="badge bg-success">Agregado</span>' : '';
 
-    fetch('<?= APP_URL ?>/ventas/buscarProducto', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        mostrarTodosLosProductos(data.productos || []);
-    })
-    .catch(error => console.error('Error:', error));
-});
-
-function mostrarTodosLosProductos(productos) {
-    const contenedor = document.getElementById('listaProductos');
-
-    if (productos.length === 0) {
-        contenedor.innerHTML = '<div class="list-group-item text-muted text-center">No se encontraron productos con stock</div>';
-        return;
-    }
-
-    let html = '';
-    productos.forEach(producto => {
-        const yaAgregado = productosAgregados.find(p => p.id === producto.id);
-        const claseDeshabilitado = yaAgregado ? 'disabled' : '';
-        const textoAgregado = yaAgregado ? ' <span class="badge bg-success">Agregado</span>' : '';
-
-        html += `
+            html += `
             <a href="#" class="list-group-item list-group-item-action ${claseDeshabilitado}" onclick='agregarProducto(${JSON.stringify(producto)}); return false;'>
                 <div class="d-flex justify-content-between align-items-center">
                     <div>
@@ -407,54 +426,54 @@ function mostrarTodosLosProductos(productos) {
                 </div>
             </a>
         `;
-    });
+        });
 
-    contenedor.innerHTML = html;
-}
-
-function agregarProducto(producto) {
-    // Verificar si ya está agregado
-    const yaAgregado = productosAgregados.find(p => p.id === producto.id);
-    if (yaAgregado) {
-        alert('Este producto ya está agregado.');
-        return;
+        contenedor.innerHTML = html;
     }
 
-    productosAgregados.push({
-        id: producto.id,
-        nombre: producto.nombre,
-        codigo: producto.codigo_producto,
-        precio: parseFloat(producto.precio),
-        cantidad: 1,
-        stock: parseInt(producto.stock)
-    });
+    function agregarProducto(producto) {
+        // Verificar si ya está agregado
+        const yaAgregado = productosAgregados.find(p => p.id === producto.id);
+        if (yaAgregado) {
+            alert('Este producto ya está agregado.');
+            return;
+        }
 
-    actualizarListaProductosAgregados();
+        productosAgregados.push({
+            id: producto.id,
+            nombre: producto.nombre,
+            codigo: producto.codigo_producto,
+            precio: parseFloat(producto.precio),
+            cantidad: 1,
+            stock: parseInt(producto.stock)
+        });
 
-    // Refrescar la lista de productos para mostrar el badge "Agregado"
-    const termino = document.getElementById('busquedaProducto').value.trim();
-    if (termino.length > 0) {
-        document.getElementById('busquedaProducto').dispatchEvent(new Event('input'));
-    }
-}
+        actualizarListaProductosAgregados();
 
-function actualizarListaProductosAgregados() {
-    const contenedor = document.getElementById('listaProductosAgregados');
-    const inputsContainer = document.getElementById('productosInputs');
-
-    if (productosAgregados.length === 0) {
-        contenedor.innerHTML = '<p class="text-center text-muted my-3"><i class="bi bi-inbox"></i><br>No hay productos agregados</p>';
-        inputsContainer.innerHTML = '';
-        calcularTotal();
-        return;
+        // Refrescar la lista de productos para mostrar el badge "Agregado"
+        const termino = document.getElementById('busquedaProducto').value.trim();
+        if (termino.length > 0) {
+            document.getElementById('busquedaProducto').dispatchEvent(new Event('input'));
+        }
     }
 
-    let html = '';
-    let inputs = '';
+    function actualizarListaProductosAgregados() {
+        const contenedor = document.getElementById('listaProductosAgregados');
+        const inputsContainer = document.getElementById('productosInputs');
 
-    productosAgregados.forEach((producto, index) => {
-        const subtotal = producto.precio * producto.cantidad;
-        html += `
+        if (productosAgregados.length === 0) {
+            contenedor.innerHTML = '<p class="text-center text-muted my-3"><i class="bi bi-inbox"></i><br>No hay productos agregados</p>';
+            inputsContainer.innerHTML = '';
+            calcularTotal();
+            return;
+        }
+
+        let html = '';
+        let inputs = '';
+
+        productosAgregados.forEach((producto, index) => {
+            const subtotal = producto.precio * producto.cantidad;
+            html += `
             <div class="card mb-2">
                 <div class="card-body p-2">
                     <div class="d-flex justify-content-between align-items-start">
@@ -492,112 +511,125 @@ function actualizarListaProductosAgregados() {
             </div>
         `;
 
-        // Hidden inputs para enviar al servidor
-        inputs += `
+            // Hidden inputs para enviar al servidor
+            inputs += `
             <input type="hidden" name="items[${index}][producto_id]" value="${producto.id}">
             <input type="hidden" name="items[${index}][cantidad]" value="${producto.cantidad}">
             <input type="hidden" name="items[${index}][precio_unitario]" value="${producto.precio}">
         `;
-    });
+        });
 
-    contenedor.innerHTML = html;
-    inputsContainer.innerHTML = inputs;
-    calcularTotal();
-}
-
-function actualizarCantidad(index, cantidad) {
-    cantidad = parseInt(cantidad);
-
-    if (cantidad < 1) {
-        cantidad = 1;
+        contenedor.innerHTML = html;
+        inputsContainer.innerHTML = inputs;
+        calcularTotal();
     }
 
-    if (cantidad > productosAgregados[index].stock) {
-        alert(`Solo hay ${productosAgregados[index].stock} unidades disponibles`);
-        cantidad = productosAgregados[index].stock;
-    }
+    function actualizarCantidad(index, cantidad) {
+        cantidad = parseInt(cantidad);
 
-    productosAgregados[index].cantidad = cantidad;
-    actualizarListaProductosAgregados();
-}
+        if (cantidad < 1) {
+            cantidad = 1;
+        }
 
-function eliminarProducto(index) {
-    if (confirm('¿Está seguro de eliminar este producto de la venta?')) {
-        productosAgregados.splice(index, 1);
+        if (cantidad > productosAgregados[index].stock) {
+            alert(`Solo hay ${productosAgregados[index].stock} unidades disponibles`);
+            cantidad = productosAgregados[index].stock;
+        }
+
+        productosAgregados[index].cantidad = cantidad;
         actualizarListaProductosAgregados();
+    }
 
-        // Refrescar la lista de productos para quitar el badge "Agregado"
-        const termino = document.getElementById('busquedaProducto').value.trim();
-        if (termino.length > 0) {
-            document.getElementById('busquedaProducto').dispatchEvent(new Event('input'));
+    function eliminarProducto(index) {
+        if (confirm('¿Está seguro de eliminar este producto de la venta?')) {
+            productosAgregados.splice(index, 1);
+            actualizarListaProductosAgregados();
+
+            // Refrescar la lista de productos para quitar el badge "Agregado"
+            const termino = document.getElementById('busquedaProducto').value.trim();
+            if (termino.length > 0) {
+                document.getElementById('busquedaProducto').dispatchEvent(new Event('input'));
+            }
         }
     }
-}
 
-function calcularTotal() {
-    let total = 0;
-    productosAgregados.forEach(producto => {
-        total += producto.precio * producto.cantidad;
-    });
+    function calcularTotal() {
+        let total = 0;
+        productosAgregados.forEach(producto => {
+            total += producto.precio * producto.cantidad;
+        });
 
-    document.getElementById('totalVenta').textContent = '$' + total.toLocaleString('es-CO');
-}
-
-// Crear nuevo cliente
-document.getElementById('btnGuardarCliente').addEventListener('click', function() {
-    const nombre = document.getElementById('nuevo_nombre').value.trim();
-    const telefono = document.getElementById('nuevo_telefono').value.trim();
-    const email = document.getElementById('nuevo_email').value.trim();
-    const direccion = document.getElementById('nuevo_direccion').value.trim();
-    const ciudad = document.getElementById('nuevo_ciudad').value;
-
-    if (!nombre || !telefono) {
-        document.getElementById('erroresCliente').innerHTML = 'Nombre y teléfono son obligatorios';
-        document.getElementById('erroresCliente').style.display = 'block';
-        return;
+        document.getElementById('totalVenta').textContent = '$' + total.toLocaleString('es-CO');
     }
 
-    const formData = new FormData();
-    formData.append('nombre', nombre);
-    formData.append('telefono', telefono);
-    formData.append('email', email);
-    formData.append('direccion', direccion);
-    formData.append('ciudad', ciudad);
+    // Crear nuevo cliente
+    document.getElementById('btnGuardarCliente').addEventListener('click', function () {
+        const nombre = document.getElementById('nuevo_nombre').value.trim();
+        const telefono = document.getElementById('nuevo_telefono').value.trim();
+        const email = document.getElementById('nuevo_email').value.trim();
+        const direccion = document.getElementById('nuevo_direccion').value.trim();
+        const ciudad = document.getElementById('nuevo_ciudad').value;
 
-    fetch('<?= APP_URL ?>/ventas/crearCliente', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            seleccionarCliente(data.cliente.id, data.cliente.nombre, data.cliente.telefono, data.cliente.ciudad);
-            bootstrap.Modal.getInstance(document.getElementById('modalNuevoCliente')).hide();
-            document.getElementById('formNuevoCliente').reset();
-            document.getElementById('erroresCliente').style.display = 'none';
-        } else {
-            document.getElementById('erroresCliente').innerHTML = data.errores.join('<br>');
+        if (!nombre || !telefono) {
+            document.getElementById('erroresCliente').innerHTML = 'Nombre y teléfono son obligatorios';
             document.getElementById('erroresCliente').style.display = 'block';
+            return;
         }
-    })
-    .catch(error => {
-        console.error('Error:', error);
-        alert('Error al crear el cliente');
+
+        const formData = new FormData();
+        formData.append('nombre', nombre);
+        formData.append('telefono', telefono);
+        formData.append('email', email);
+        formData.append('direccion', direccion);
+        formData.append('ciudad', ciudad);
+
+        fetch('<?= APP_URL ?>/ventas/crearCliente', {
+            method: 'POST',
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    seleccionarCliente(data.cliente.id, data.cliente.nombre, data.cliente.telefono, data.cliente.ciudad);
+                    bootstrap.Modal.getInstance(document.getElementById('modalNuevoCliente')).hide();
+                    document.getElementById('formNuevoCliente').reset();
+                    document.getElementById('erroresCliente').style.display = 'none';
+                } else {
+                    document.getElementById('erroresCliente').innerHTML = data.errores.join('<br>');
+                    document.getElementById('erroresCliente').style.display = 'block';
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Error al crear el cliente');
+            });
     });
-});
 
-// Validación del formulario
-document.getElementById('formVenta').addEventListener('submit', function(e) {
-    if (productosAgregados.length === 0) {
-        e.preventDefault();
-        alert('Debe agregar al menos un producto a la venta');
-        return false;
-    }
+    // Validación del formulario
+    document.getElementById('formVenta').addEventListener('submit', function (e) {
+        // Validar que haya productos agregados
+        if (productosAgregados.length === 0) {
+            e.preventDefault();
+            alert('Debe agregar al menos un producto a la venta');
+            return false;
+        }
 
-    if (!document.getElementById('cliente_id').value) {
-        e.preventDefault();
-        alert('Debe seleccionar un cliente');
-        return false;
-    }
-});
+        // Validar que haya cliente seleccionado
+        if (!document.getElementById('cliente_id').value) {
+            e.preventDefault();
+            alert('Debe seleccionar un cliente');
+            return false;
+        }
+
+        // Validar que el token CSRF exista
+        const csrfToken = document.querySelector('input[name="csrf_token"]');
+        if (!csrfToken || !csrfToken.value) {
+            e.preventDefault();
+            alert('Error de seguridad: Token no encontrado. Por favor, recargue la página.');
+            return false;
+        }
+
+        // Todo está bien, permitir el envío
+        return true;
+    });
 </script>
