@@ -21,6 +21,7 @@
                     <option value="">Todos los tipos</option>
                     <option value="entrada" <?= $filtros['tipo_movimiento'] === 'entrada' ? 'selected' : '' ?>>Entrada</option>
                     <option value="salida" <?= $filtros['tipo_movimiento'] === 'salida' ? 'selected' : '' ?>>Salida</option>
+                    <option value="venta" <?= $filtros['tipo_movimiento'] === 'venta' ? 'selected' : '' ?>>Venta</option>
                     <option value="ajuste" <?= $filtros['tipo_movimiento'] === 'ajuste' ? 'selected' : '' ?>>Ajuste</option>
                     <option value="creacion" <?= $filtros['tipo_movimiento'] === 'creacion' ? 'selected' : '' ?>>Creación</option>
                     <option value="eliminacion" <?= $filtros['tipo_movimiento'] === 'eliminacion' ? 'selected' : '' ?>>Eliminación</option>
@@ -144,6 +145,11 @@
                                             $badgeClass = 'bg-secondary';
                                             $icon = 'trash';
                                             $tipoTexto = 'Eliminación';
+                                            break;
+                                        case 'venta':
+                                            $badgeClass = 'bg-primary';
+                                            $icon = 'cart-check';
+                                            $tipoTexto = 'Venta';
                                             break;
                                         case 'cambio_precio':
                                             // Detectar si fue aumento o disminución
