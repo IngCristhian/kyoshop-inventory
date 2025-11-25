@@ -24,6 +24,7 @@
                     <option value="ajuste" <?= $filtros['tipo_movimiento'] === 'ajuste' ? 'selected' : '' ?>>Ajuste</option>
                     <option value="creacion" <?= $filtros['tipo_movimiento'] === 'creacion' ? 'selected' : '' ?>>Creación</option>
                     <option value="eliminacion" <?= $filtros['tipo_movimiento'] === 'eliminacion' ? 'selected' : '' ?>>Eliminación</option>
+                    <option value="cambio_precio" <?= $filtros['tipo_movimiento'] === 'cambio_precio' ? 'selected' : '' ?>>Cambio de precio</option>
                 </select>
             </div>
 
@@ -94,6 +95,8 @@
                             <th>Cantidad</th>
                             <th>Stock Anterior</th>
                             <th>Stock Nuevo</th>
+                            <th>Precio Anterior</th>
+                            <th>Precio Nuevo</th>
                             <th>Usuario</th>
                             <th>Motivo</th>
                         </tr>
@@ -115,31 +118,49 @@
                                     <?php
                                     $badgeClass = '';
                                     $icon = '';
+                                    $tipoTexto = '';
                                     switch($mov['tipo_movimiento']) {
                                         case 'entrada':
                                             $badgeClass = 'bg-success';
                                             $icon = 'arrow-up-circle';
+                                            $tipoTexto = 'Entrada';
                                             break;
                                         case 'salida':
                                             $badgeClass = 'bg-danger';
                                             $icon = 'arrow-down-circle';
+                                            $tipoTexto = 'Salida';
                                             break;
                                         case 'ajuste':
                                             $badgeClass = 'bg-warning';
                                             $icon = 'gear';
+                                            $tipoTexto = 'Ajuste';
                                             break;
                                         case 'creacion':
                                             $badgeClass = 'bg-info';
                                             $icon = 'plus-circle';
+                                            $tipoTexto = 'Creación';
                                             break;
                                         case 'eliminacion':
                                             $badgeClass = 'bg-secondary';
                                             $icon = 'trash';
+                                            $tipoTexto = 'Eliminación';
+                                            break;
+                                        case 'cambio_precio':
+                                            // Detectar si fue aumento o disminución
+                                            if ($mov['precio_nuevo'] > $mov['precio_anterior']) {
+                                                $badgeClass = 'bg-success';
+                                                $icon = 'arrow-up-circle-fill';
+                                                $tipoTexto = 'Aumento precio';
+                                            } else {
+                                                $badgeClass = 'bg-danger';
+                                                $icon = 'arrow-down-circle-fill';
+                                                $tipoTexto = 'Bajó precio';
+                                            }
                                             break;
                                     }
                                     ?>
                                     <span class="badge <?= $badgeClass ?>">
-                                        <i class="bi bi-<?= $icon ?>"></i> <?= ucfirst($mov['tipo_movimiento']) ?>
+                                        <i class="bi bi-<?= $icon ?>"></i> <?= $tipoTexto ?>
                                     </span>
                                 </td>
                                 <td>
@@ -149,6 +170,22 @@
                                 </td>
                                 <td><?= $mov['stock_anterior'] ?></td>
                                 <td><strong><?= $mov['stock_nuevo'] ?></strong></td>
+                                <td>
+                                    <?php if ($mov['precio_anterior']): ?>
+                                        <span class="text-muted">$<?= number_format($mov['precio_anterior'], 0, ',', '.') ?></span>
+                                    <?php else: ?>
+                                        <span class="text-muted">—</span>
+                                    <?php endif; ?>
+                                </td>
+                                <td>
+                                    <?php if ($mov['precio_nuevo']): ?>
+                                        <strong class="<?= $mov['tipo_movimiento'] === 'cambio_precio' && $mov['precio_nuevo'] > $mov['precio_anterior'] ? 'text-success' : ($mov['tipo_movimiento'] === 'cambio_precio' ? 'text-danger' : '') ?>">
+                                            $<?= number_format($mov['precio_nuevo'], 0, ',', '.') ?>
+                                        </strong>
+                                    <?php else: ?>
+                                        <span class="text-muted">—</span>
+                                    <?php endif; ?>
+                                </td>
                                 <td>
                                     <?= htmlspecialchars($mov['usuario_nombre']) ?><br>
                                     <small class="text-muted"><?= ucfirst($mov['usuario_rol']) ?></small>
