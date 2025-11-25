@@ -307,15 +307,20 @@
 
                     <!-- Imagen Principal (Producto Solo) -->
                     <div class="card mb-3">
-                        <div class="card-header bg-light">
+                        <div class="card-header bg-light d-flex justify-content-between align-items-center">
                             <small class="fw-bold text-dark"><i class="bi bi-1-circle"></i> Producto Solo</small>
+                            <?php if ($accion === 'editar' && !empty($producto['imagen'])): ?>
+                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="eliminarImagenExistente('imagen', 'image-preview')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            <?php endif; ?>
                         </div>
                         <div class="card-body text-center">
                             <!-- Preview de imagen principal -->
-                            <div id="image-preview" class="mb-3">
+                            <div id="image-preview" class="mb-3 position-relative">
                                 <?php if (!empty($producto['imagen'])): ?>
                                     <img src="<?= APP_URL ?>/uploads/<?= $producto['imagen'] ?>"
-                                         class="img-fluid rounded" style="max-height: 150px;">
+                                         class="img-fluid rounded" style="max-height: 150px;" id="imagen-actual">
                                 <?php else: ?>
                                     <div class="bg-light rounded d-flex align-items-center justify-content-center"
                                          style="height: 150px;">
@@ -326,21 +331,27 @@
 
                             <input type="file" class="form-control form-control-sm" id="imagen" name="imagen"
                                    accept="image/*" onchange="previewImage(this, 'image-preview')">
+                            <input type="hidden" id="eliminar_imagen" name="eliminar_imagen" value="0">
                             <small class="text-muted d-block mt-1">Foto del producto sin modelo</small>
                         </div>
                     </div>
 
                     <!-- Imagen con Modelo -->
                     <div class="card mb-3">
-                        <div class="card-header bg-light">
+                        <div class="card-header bg-light d-flex justify-content-between align-items-center">
                             <small class="fw-bold text-dark"><i class="bi bi-2-circle"></i> Con Modelo</small>
+                            <?php if ($accion === 'editar' && !empty($producto['imagen_modelo'])): ?>
+                                <button type="button" class="btn btn-sm btn-outline-danger" onclick="eliminarImagenExistente('imagen_modelo', 'image-modelo-preview')">
+                                    <i class="bi bi-trash"></i>
+                                </button>
+                            <?php endif; ?>
                         </div>
                         <div class="card-body text-center">
                             <!-- Preview de imagen con modelo -->
-                            <div id="image-modelo-preview" class="mb-3">
+                            <div id="image-modelo-preview" class="mb-3 position-relative">
                                 <?php if (!empty($producto['imagen_modelo'])): ?>
                                     <img src="<?= APP_URL ?>/uploads/<?= $producto['imagen_modelo'] ?>"
-                                         class="img-fluid rounded" style="max-height: 150px;">
+                                         class="img-fluid rounded" style="max-height: 150px;" id="imagen-modelo-actual">
                                 <?php else: ?>
                                     <div class="bg-light rounded d-flex align-items-center justify-content-center"
                                          style="height: 150px;">
@@ -351,6 +362,7 @@
 
                             <input type="file" class="form-control form-control-sm" id="imagen_modelo" name="imagen_modelo"
                                    accept="image/*" onchange="previewImage(this, 'image-modelo-preview')">
+                            <input type="hidden" id="eliminar_imagen_modelo" name="eliminar_imagen_modelo" value="0">
                             <small class="text-muted d-block mt-1">Foto del producto puesto en modelo</small>
                         </div>
                     </div>
@@ -545,12 +557,21 @@
                         <input type="number" class="form-control" name="variantes[${id}][stock]"
                                value="${stock}" required min="0">
                     </div>
-                    <div class="col-md-4">
-                        <label class="form-label">Imagen</label>
-                        <input type="file" class="form-control imagen-variante" name="variantes[${id}][imagen]"
-                               accept="image/*" onchange="previewVarianteImage(this, ${id})">
-                        <small class="text-muted d-block">Opcional. Si no subes imagen, usará la imagen principal</small>
-                        <div id="preview-variante-${id}" class="mt-2"></div>
+                </div>
+                <div class="row mt-3">
+                    <div class="col-md-6">
+                        <label class="form-label"><i class="bi bi-1-circle"></i> Imagen Producto Solo</label>
+                        <input type="file" class="form-control form-control-sm imagen-variante" name="variantes[${id}][imagen]"
+                               accept="image/*" onchange="previewVarianteImage(this, ${id}, 'solo')">
+                        <small class="text-muted d-block">Opcional. Si no subes, usará la imagen principal</small>
+                        <div id="preview-variante-${id}-solo" class="mt-2"></div>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label"><i class="bi bi-2-circle"></i> Imagen Con Modelo</label>
+                        <input type="file" class="form-control form-control-sm imagen-variante" name="variantes[${id}][imagen_modelo]"
+                               accept="image/*" onchange="previewVarianteImage(this, ${id}, 'modelo')">
+                        <small class="text-muted d-block">Opcional</small>
+                        <div id="preview-variante-${id}-modelo" class="mt-2"></div>
                     </div>
                 </div>
             </div>
@@ -568,8 +589,8 @@
         }
     }
 
-    function previewVarianteImage(input, varianteId) {
-        const preview = document.getElementById(`preview-variante-${varianteId}`);
+    function previewVarianteImage(input, varianteId, tipo = 'solo') {
+        const preview = document.getElementById(`preview-variante-${varianteId}-${tipo}`);
 
         if (input.files && input.files[0]) {
             const reader = new FileReader();
@@ -596,6 +617,29 @@
             };
 
             reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    // Eliminar imagen existente
+    function eliminarImagenExistente(campoNombre, previewId) {
+        if (confirm('¿Estás seguro de que deseas eliminar esta imagen?')) {
+            // Marcar para eliminación
+            document.getElementById('eliminar_' + campoNombre).value = '1';
+
+            // Actualizar preview
+            const preview = document.getElementById(previewId);
+            const icon = campoNombre === 'imagen_modelo' ? 'person' : 'image';
+            preview.innerHTML = `
+                <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 150px;">
+                    <i class="bi bi-${icon} text-muted" style="font-size: 2.5rem;"></i>
+                </div>
+            `;
+
+            // Limpiar el input de archivo
+            document.getElementById(campoNombre).value = '';
+
+            // Ocultar botón de eliminar
+            event.target.closest('.btn').style.display = 'none';
         }
     }
 
