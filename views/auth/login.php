@@ -18,9 +18,11 @@
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             min-height: 100vh;
             display: flex;
+            flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 1rem;
+            padding: 2rem 1rem;
+            gap: 2rem;
         }
         .login-card {
             background: white;
@@ -172,7 +174,7 @@
                     </div>
                 </div>
 
-    <div class="text-center mt-3" style="position: fixed; bottom: 1rem; left: 0; right: 0;">
+    <div class="text-center">
         <small class="text-white">
             <?= APP_NAME ?> v<?= APP_VERSION ?> &copy; <?= date('Y') ?>
         </small>
