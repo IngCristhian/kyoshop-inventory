@@ -18,9 +18,9 @@ class HistorialMovimiento {
      */
     public function registrar($datos) {
         $sql = "INSERT INTO historial_movimientos
-                (producto_id, usuario_id, tipo_movimiento, cantidad, stock_anterior, stock_nuevo, motivo)
+                (producto_id, usuario_id, tipo_movimiento, cantidad, stock_anterior, stock_nuevo, precio_anterior, precio_nuevo, motivo)
                 VALUES
-                (:producto_id, :usuario_id, :tipo_movimiento, :cantidad, :stock_anterior, :stock_nuevo, :motivo)";
+                (:producto_id, :usuario_id, :tipo_movimiento, :cantidad, :stock_anterior, :stock_nuevo, :precio_anterior, :precio_nuevo, :motivo)";
 
         return $this->db->insert($sql, [
             'producto_id' => $datos['producto_id'],
@@ -29,6 +29,8 @@ class HistorialMovimiento {
             'cantidad' => $datos['cantidad'],
             'stock_anterior' => $datos['stock_anterior'],
             'stock_nuevo' => $datos['stock_nuevo'],
+            'precio_anterior' => $datos['precio_anterior'] ?? null,
+            'precio_nuevo' => $datos['precio_nuevo'] ?? null,
             'motivo' => $datos['motivo'] ?? null
         ]);
     }
