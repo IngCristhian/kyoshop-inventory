@@ -299,39 +299,66 @@
                     <?php endif; ?>
                 </div>
                 
-                <!-- Imagen del Producto -->
+                <!-- Imágenes del Producto -->
                 <div class="col-lg-4">
                     <h5 class="text-primary mb-3">
-                        <i class="bi bi-image"></i> Imagen del Producto
+                        <i class="bi bi-images"></i> Imágenes del Producto
                     </h5>
-                    
-                    <div class="card">
+
+                    <!-- Imagen Principal (Producto Solo) -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <small class="fw-bold text-dark"><i class="bi bi-1-circle"></i> Producto Solo</small>
+                        </div>
                         <div class="card-body text-center">
-                            <!-- Preview de imagen actual -->
+                            <!-- Preview de imagen principal -->
                             <div id="image-preview" class="mb-3">
                                 <?php if (!empty($producto['imagen'])): ?>
-                                    <img src="<?= APP_URL ?>/uploads/<?= $producto['imagen'] ?>" 
-                                         class="img-fluid rounded" style="max-height: 200px;">
+                                    <img src="<?= APP_URL ?>/uploads/<?= $producto['imagen'] ?>"
+                                         class="img-fluid rounded" style="max-height: 150px;">
                                 <?php else: ?>
-                                    <div class="bg-light rounded d-flex align-items-center justify-content-center" 
-                                         style="height: 200px;">
-                                        <i class="bi bi-image text-muted" style="font-size: 3rem;"></i>
+                                    <div class="bg-light rounded d-flex align-items-center justify-content-center"
+                                         style="height: 150px;">
+                                        <i class="bi bi-image text-muted" style="font-size: 2.5rem;"></i>
                                     </div>
                                 <?php endif; ?>
                             </div>
-                            
-                            <div class="mb-3">
-                                <input type="file" class="form-control" id="imagen" name="imagen" 
-                                       accept="image/*" onchange="previewImage(this)">
-                            </div>
-                            
-                            <small class="text-muted">
-                                <i class="bi bi-info-circle"></i>
-                                Formatos: JPG, PNG, GIF<br>
-                                Tamaño máximo: 5MB
-                            </small>
+
+                            <input type="file" class="form-control form-control-sm" id="imagen" name="imagen"
+                                   accept="image/*" onchange="previewImage(this, 'image-preview')">
+                            <small class="text-muted d-block mt-1">Foto del producto sin modelo</small>
                         </div>
                     </div>
+
+                    <!-- Imagen con Modelo -->
+                    <div class="card mb-3">
+                        <div class="card-header bg-light">
+                            <small class="fw-bold text-dark"><i class="bi bi-2-circle"></i> Con Modelo</small>
+                        </div>
+                        <div class="card-body text-center">
+                            <!-- Preview de imagen con modelo -->
+                            <div id="image-modelo-preview" class="mb-3">
+                                <?php if (!empty($producto['imagen_modelo'])): ?>
+                                    <img src="<?= APP_URL ?>/uploads/<?= $producto['imagen_modelo'] ?>"
+                                         class="img-fluid rounded" style="max-height: 150px;">
+                                <?php else: ?>
+                                    <div class="bg-light rounded d-flex align-items-center justify-content-center"
+                                         style="height: 150px;">
+                                        <i class="bi bi-person text-muted" style="font-size: 2.5rem;"></i>
+                                    </div>
+                                <?php endif; ?>
+                            </div>
+
+                            <input type="file" class="form-control form-control-sm" id="imagen_modelo" name="imagen_modelo"
+                                   accept="image/*" onchange="previewImage(this, 'image-modelo-preview')">
+                            <small class="text-muted d-block mt-1">Foto del producto puesto en modelo</small>
+                        </div>
+                    </div>
+
+                    <small class="text-muted d-block text-center">
+                        <i class="bi bi-info-circle"></i>
+                        Formatos: JPG, PNG, GIF · Máx: 5MB
+                    </small>
                     
                     <!-- Información adicional -->
                     <?php if ($accion === 'editar' && !empty($producto)): ?>
@@ -557,14 +584,15 @@
     <?php endif; ?>
 
     // Preview de imagen antes de subir
-    function previewImage(input) {
-        const preview = document.getElementById('image-preview');
+    function previewImage(input, previewId = 'image-preview') {
+        const preview = document.getElementById(previewId);
 
         if (input.files && input.files[0]) {
             const reader = new FileReader();
 
             reader.onload = function(e) {
-                preview.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded" style="max-height: 200px;">`;
+                const maxHeight = previewId === 'image-preview' ? '150px' : '150px';
+                preview.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded" style="max-height: ${maxHeight};">`;
             };
 
             reader.readAsDataURL(input.files[0]);

@@ -130,10 +130,10 @@ class Producto {
      */
     public function crear($datos) {
         $sql = "INSERT INTO productos (
-                    nombre, descripcion, precio, stock, imagen,
+                    nombre, descripcion, precio, stock, imagen, imagen_modelo,
                     categoria, tipo, talla, color, ubicacion, codigo_producto
                 ) VALUES (
-                    :nombre, :descripcion, :precio, :stock, :imagen,
+                    :nombre, :descripcion, :precio, :stock, :imagen, :imagen_modelo,
                     :categoria, :tipo, :talla, :color, :ubicacion, :codigo_producto
                 )";
 
@@ -143,6 +143,7 @@ class Producto {
             'precio' => $datos['precio'],
             'stock' => $datos['stock'],
             'imagen' => $datos['imagen'] ?? null,
+            'imagen_modelo' => $datos['imagen_modelo'] ?? null,
             'categoria' => $datos['categoria'],
             'tipo' => $datos['tipo'],
             'talla' => $datos['talla'],
@@ -183,11 +184,17 @@ class Producto {
             'ubicacion' => $datos['ubicacion'],
             'codigo_producto' => $datos['codigo_producto']
         ];
-        
+
         // Solo actualizar imagen si se proporciona una nueva
         if (isset($datos['imagen']) && !empty($datos['imagen'])) {
             $campos[] = 'imagen = :imagen';
             $parametros['imagen'] = $datos['imagen'];
+        }
+
+        // Solo actualizar imagen_modelo si se proporciona una nueva
+        if (isset($datos['imagen_modelo']) && !empty($datos['imagen_modelo'])) {
+            $campos[] = 'imagen_modelo = :imagen_modelo';
+            $parametros['imagen_modelo'] = $datos['imagen_modelo'];
         }
         
         $sql = "UPDATE productos SET " . implode(', ', $campos) . " WHERE id = :id";

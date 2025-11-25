@@ -108,11 +108,31 @@
                 <div class="card h-100">
                     <!-- Imagen del producto -->
                     <div class="position-relative">
-                        <?php if ($producto['imagen']): ?>
-                            <img src="<?= APP_URL ?>/uploads/<?= $producto['imagen'] ?>"
+                        <?php if ($producto['imagen'] || $producto['imagen_modelo']): ?>
+                            <?php
+                            // Usar imagen principal si existe, sino la de modelo
+                            $imagenPrincipalMostrar = $producto['imagen'] ?? $producto['imagen_modelo'];
+                            ?>
+                            <img src="<?= APP_URL ?>/uploads/<?= $imagenPrincipalMostrar ?>"
                                  class="card-img-top"
                                  style="height: 200px; object-fit: cover; cursor: pointer;"
-                                 onclick="abrirVistaPrevia('<?= APP_URL ?>/uploads/<?= $producto['imagen'] ?>', '<?= htmlspecialchars($producto['nombre']) ?>', '<?= htmlspecialchars($producto['codigo_producto']) ?>', '<?= formatPrice($producto['precio']) ?>', '<?= $producto['stock'] ?>', '<?= htmlspecialchars($producto['categoria']) ?>', '<?= htmlspecialchars($producto['talla'] ?? '') ?>', '<?= htmlspecialchars($producto['color'] ?? '') ?>')">
+                                 onclick="abrirVistaPrevia(
+                                     <?= $producto['imagen'] ? '\'' . APP_URL . '/uploads/' . $producto['imagen'] . '\'' : 'null' ?>,
+                                     <?= $producto['imagen_modelo'] ? '\'' . APP_URL . '/uploads/' . $producto['imagen_modelo'] . '\'' : 'null' ?>,
+                                     '<?= htmlspecialchars($producto['nombre']) ?>',
+                                     '<?= htmlspecialchars($producto['codigo_producto']) ?>',
+                                     '<?= formatPrice($producto['precio']) ?>',
+                                     '<?= $producto['stock'] ?>',
+                                     '<?= htmlspecialchars($producto['categoria']) ?>',
+                                     '<?= htmlspecialchars($producto['talla'] ?? '') ?>',
+                                     '<?= htmlspecialchars($producto['color'] ?? '') ?>'
+                                 )">
+                            <!-- Badge si tiene ambas imágenes -->
+                            <?php if ($producto['imagen'] && $producto['imagen_modelo']): ?>
+                                <div class="position-absolute top-0 start-0 m-2">
+                                    <span class="badge bg-info"><i class="bi bi-images"></i> 2 fotos</span>
+                                </div>
+                            <?php endif; ?>
                         <?php else: ?>
                             <div class="card-img-top bg-light d-flex align-items-center justify-content-center"
                                  style="height: 200px;">
@@ -262,8 +282,32 @@
             <div class="modal-body p-4">
                 <div class="row g-4">
                     <div class="col-md-7">
-                        <div class="border rounded p-2 bg-light">
-                            <img id="imagenPreview" src="" class="img-fluid rounded shadow-sm" alt="Imagen del producto">
+                        <div class="position-relative border rounded p-2 bg-light">
+                            <!-- Imagen actual -->
+                            <img id="imagenPreview" src="" class="img-fluid rounded shadow-sm" alt="Imagen del producto" style="max-height: 400px; width: 100%; object-fit: contain;">
+
+                            <!-- Controles de navegación -->
+                            <div id="galeriaControles" style="display: none;">
+                                <!-- Flecha izquierda -->
+                                <button type="button" id="btnPrevImagen" class="btn btn-dark btn-sm position-absolute top-50 start-0 translate-middle-y ms-2" style="opacity: 0.7; z-index: 10;">
+                                    <i class="bi bi-chevron-left"></i>
+                                </button>
+
+                                <!-- Flecha derecha -->
+                                <button type="button" id="btnNextImagen" class="btn btn-dark btn-sm position-absolute top-50 end-0 translate-middle-y me-2" style="opacity: 0.7; z-index: 10;">
+                                    <i class="bi bi-chevron-right"></i>
+                                </button>
+
+                                <!-- Indicador de posición -->
+                                <div class="position-absolute bottom-0 start-50 translate-middle-x mb-2" style="z-index: 10;">
+                                    <span class="badge bg-dark" id="indicadorImagen" style="opacity: 0.8;">1 / 2</span>
+                                </div>
+
+                                <!-- Etiquetas de tipo de imagen -->
+                                <div class="position-absolute top-0 start-0 m-2" style="z-index: 10;">
+                                    <span class="badge bg-primary" id="etiquetaImagen">Producto Solo</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
                     <div class="col-md-5">
@@ -316,9 +360,29 @@
 </div>
 
 <script>
-function abrirVistaPrevia(imagenUrl, nombre, codigo, precio, stock, categoria, talla, color) {
-    // Actualizar imagen
-    document.getElementById('imagenPreview').src = imagenUrl;
+// Variables globales para la galería
+let imagenesGaleria = [];
+let imagenActualIndex = 0;
+
+function abrirVistaPrevia(imagenUrl, imagenModeloUrl, nombre, codigo, precio, stock, categoria, talla, color) {
+    // Resetear galería
+    imagenesGaleria = [];
+    imagenActualIndex = 0;
+
+    // Agregar imágenes disponibles a la galería
+    if (imagenUrl && imagenUrl.trim() !== '') {
+        imagenesGaleria.push({
+            url: imagenUrl,
+            etiqueta: 'Producto Solo'
+        });
+    }
+
+    if (imagenModeloUrl && imagenModeloUrl.trim() !== '') {
+        imagenesGaleria.push({
+            url: imagenModeloUrl,
+            etiqueta: 'Con Modelo'
+        });
+    }
 
     // Actualizar información del producto
     document.getElementById('nombrePreview').textContent = nombre;
@@ -343,10 +407,60 @@ function abrirVistaPrevia(imagenUrl, nombre, codigo, precio, stock, categoria, t
         document.getElementById('colorContainer').style.display = 'none';
     }
 
+    // Mostrar u ocultar controles de galería
+    if (imagenesGaleria.length > 1) {
+        document.getElementById('galeriaControles').style.display = 'block';
+        mostrarImagenGaleria(0);
+    } else if (imagenesGaleria.length === 1) {
+        document.getElementById('galeriaControles').style.display = 'none';
+        document.getElementById('imagenPreview').src = imagenesGaleria[0].url;
+    }
+
     // Abrir modal
     const modal = new bootstrap.Modal(document.getElementById('modalVistaPrevia'));
     modal.show();
 }
+
+function mostrarImagenGaleria(index) {
+    if (imagenesGaleria.length === 0) return;
+
+    // Asegurar que el índice esté en rango
+    imagenActualIndex = (index + imagenesGaleria.length) % imagenesGaleria.length;
+
+    // Actualizar imagen
+    document.getElementById('imagenPreview').src = imagenesGaleria[imagenActualIndex].url;
+
+    // Actualizar indicador
+    document.getElementById('indicadorImagen').textContent = `${imagenActualIndex + 1} / ${imagenesGaleria.length}`;
+
+    // Actualizar etiqueta
+    document.getElementById('etiquetaImagen').textContent = imagenesGaleria[imagenActualIndex].etiqueta;
+}
+
+function siguienteImagen() {
+    mostrarImagenGaleria(imagenActualIndex + 1);
+}
+
+function anteriorImagen() {
+    mostrarImagenGaleria(imagenActualIndex - 1);
+}
+
+// Event listeners para los botones de navegación
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('btnNextImagen')?.addEventListener('click', siguienteImagen);
+    document.getElementById('btnPrevImagen')?.addEventListener('click', anteriorImagen);
+
+    // Soporte para teclas de flecha
+    document.getElementById('modalVistaPrevia')?.addEventListener('keydown', function(e) {
+        if (imagenesGaleria.length > 1) {
+            if (e.key === 'ArrowRight') {
+                siguienteImagen();
+            } else if (e.key === 'ArrowLeft') {
+                anteriorImagen();
+            }
+        }
+    });
+});
 
 // Función ESPECÍFICA para eliminar PRODUCTOS
 function confirmarEliminacionProducto(id, nombre) {

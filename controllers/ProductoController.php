@@ -120,11 +120,23 @@ class ProductoController {
             redirect('productos/crear');
         }
 
-        // Procesar imagen si existe
+        // Procesar imagen principal si existe
         if (isset($files['imagen']) && $files['imagen']['error'] === UPLOAD_ERR_OK) {
             $resultadoImagen = $this->subirImagen($files['imagen']);
             if ($resultadoImagen['success']) {
                 $datos['imagen'] = $resultadoImagen['filename'];
+            } else {
+                $_SESSION['errores'] = $resultadoImagen['errors'];
+                $_SESSION['datos_antiguos'] = $datos;
+                redirect('productos/crear');
+            }
+        }
+
+        // Procesar imagen con modelo si existe
+        if (isset($files['imagen_modelo']) && $files['imagen_modelo']['error'] === UPLOAD_ERR_OK) {
+            $resultadoImagen = $this->subirImagen($files['imagen_modelo']);
+            if ($resultadoImagen['success']) {
+                $datos['imagen_modelo'] = $resultadoImagen['filename'];
             } else {
                 $_SESSION['errores'] = $resultadoImagen['errors'];
                 $_SESSION['datos_antiguos'] = $datos;
@@ -322,7 +334,7 @@ class ProductoController {
             redirect("productos/editar/{$id}");
         }
         
-        // Procesar nueva imagen si se subió
+        // Procesar nueva imagen principal si se subió
         if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
             $resultadoImagen = $this->subirImagen($_FILES['imagen']);
             if ($resultadoImagen['success']) {
@@ -331,6 +343,22 @@ class ProductoController {
                     $this->eliminarImagen($producto['imagen']);
                 }
                 $datos['imagen'] = $resultadoImagen['filename'];
+            } else {
+                $_SESSION['errores'] = $resultadoImagen['errors'];
+                $_SESSION['datos_antiguos'] = $datos;
+                redirect("productos/editar/{$id}");
+            }
+        }
+
+        // Procesar nueva imagen con modelo si se subió
+        if (isset($_FILES['imagen_modelo']) && $_FILES['imagen_modelo']['error'] === UPLOAD_ERR_OK) {
+            $resultadoImagen = $this->subirImagen($_FILES['imagen_modelo']);
+            if ($resultadoImagen['success']) {
+                // Eliminar imagen anterior si existe
+                if (!empty($producto['imagen_modelo'])) {
+                    $this->eliminarImagen($producto['imagen_modelo']);
+                }
+                $datos['imagen_modelo'] = $resultadoImagen['filename'];
             } else {
                 $_SESSION['errores'] = $resultadoImagen['errors'];
                 $_SESSION['datos_antiguos'] = $datos;
