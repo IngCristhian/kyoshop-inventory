@@ -269,19 +269,30 @@ SetEnv APP_URL "https://inventory.kyoshop.co"
 **Development Configuration:**
 - **URL**: https://dev.inventory.kyoshop.co
 - **Database**: kyosankk_inventory_dev
-- **User**: kyosankk_dev
+- **Database User**: kyosankk_dev
+- **Database Password**: mjEZ(oZ2Grn(
 - **Branch**: develop
 - **Directory**: `/home/kyosankk/dev.inventory.kyoshop.co/`
+- **SSH Alias**: `ssh kyoshop` (configurado en ~/.ssh/config)
+- **Auto-deployment**: Pipeline automático al hacer push a develop
 
 ### Development Deployment Commands
 ```bash
-# Upload project files from develop branch
-scp -r * kyosankk@server277.web-hosting.com:/home/kyosankk/dev.inventory.kyoshop.co/
+# Conectar al servidor de desarrollo via SSH
+ssh kyoshop
+# Luego navegar al directorio
+cd dev.inventory.kyoshop.co
 
-# Import database via SSH
-mysql -u kyosankk_dev -p kyosankk_inventory_dev < sql/database.sql
+# IMPORTANTE: NO ejecutar comandos directamente desde local
+# Los archivos se actualizan automáticamente vía pipeline al hacer push a develop
 
-# Set permissions
+# Ejecutar migraciones SQL en desarrollo
+mysql -u kyosankk_dev -p'mjEZ(oZ2Grn(' kyosankk_inventory_dev < sql/nombre_migracion.sql
+
+# Ver logs de errores
+tail -f ~/public_html/error_log
+
+# Set permissions (solo si es necesario)
 chmod 755 uploads/
 chmod 644 config/*.php
 chmod 644 .htaccess
@@ -292,8 +303,8 @@ chmod 644 .htaccess
 # KyoShop Inventory - Development Configuration
 SetEnv DB_HOST "localhost"
 SetEnv DB_NAME "kyosankk_inventory_dev"
-SetEnv DB_USER "kyosankk_dev" 
-SetEnv DB_PASSWORD "your_dev_password"
+SetEnv DB_USER "kyosankk_dev"
+SetEnv DB_PASSWORD "mjEZ(oZ2Grn("
 SetEnv APP_URL "https://dev.inventory.kyoshop.co"
 ```
 

@@ -339,9 +339,11 @@ class ProductoController {
         }
         
         try {
-            // Verificar si cambió el stock para registrar movimiento
+            // Verificar si cambió el stock o el precio para registrar movimientos
             $stockAnterior = $producto['stock'];
             $stockNuevo = $datos['stock'];
+            $precioAnterior = $producto['precio'];
+            $precioNuevo = $datos['precio'];
 
             $this->producto->actualizar($id, $datos);
 
@@ -360,6 +362,27 @@ class ProductoController {
                     'cantidad' => $diferencia,
                     'stock_anterior' => $stockAnterior,
                     'stock_nuevo' => $stockNuevo,
+                    'motivo' => $motivo
+                ]);
+            }
+
+            // Registrar movimiento solo si cambió el precio
+            if ($precioAnterior != $precioNuevo) {
+                $diferenciaPrecio = $precioNuevo - $precioAnterior;
+                $simbolo = $diferenciaPrecio > 0 ? '+' : '';
+                $motivo = "Cambio de precio: $" . number_format($precioAnterior, 0, ',', '.') .
+                         " → $" . number_format($precioNuevo, 0, ',', '.') .
+                         " ({$simbolo}$" . number_format($diferenciaPrecio, 0, ',', '.') . ")";
+
+                $this->historial->registrar([
+                    'producto_id' => $id,
+                    'usuario_id' => $_SESSION['usuario_id'],
+                    'tipo_movimiento' => 'cambio_precio',
+                    'cantidad' => 0, // No afecta el stock
+                    'stock_anterior' => $stockNuevo, // Stock actual
+                    'stock_nuevo' => $stockNuevo, // Stock no cambia
+                    'precio_anterior' => $precioAnterior,
+                    'precio_nuevo' => $precioNuevo,
                     'motivo' => $motivo
                 ]);
             }
