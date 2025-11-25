@@ -151,6 +151,11 @@
                                             $icon = 'cart-check';
                                             $tipoTexto = 'Venta';
                                             break;
+                                        case 'devolucion':
+                                            $badgeClass = 'bg-warning text-dark';
+                                            $icon = 'arrow-return-left';
+                                            $tipoTexto = 'Devolución';
+                                            break;
                                         case 'cambio_precio':
                                             // Detectar si fue aumento o disminución
                                             if ($mov['precio_nuevo'] > $mov['precio_anterior']) {
