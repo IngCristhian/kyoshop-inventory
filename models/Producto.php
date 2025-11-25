@@ -185,14 +185,14 @@ class Producto {
             'codigo_producto' => $datos['codigo_producto']
         ];
 
-        // Solo actualizar imagen si se proporciona una nueva
-        if (isset($datos['imagen']) && !empty($datos['imagen'])) {
+        // Actualizar imagen si está presente en $datos (incluso si es null para eliminar)
+        if (array_key_exists('imagen', $datos)) {
             $campos[] = 'imagen = :imagen';
             $parametros['imagen'] = $datos['imagen'];
         }
 
-        // Solo actualizar imagen_modelo si se proporciona una nueva
-        if (isset($datos['imagen_modelo']) && !empty($datos['imagen_modelo'])) {
+        // Actualizar imagen_modelo si está presente en $datos (incluso si es null para eliminar)
+        if (array_key_exists('imagen_modelo', $datos)) {
             $campos[] = 'imagen_modelo = :imagen_modelo';
             $parametros['imagen_modelo'] = $datos['imagen_modelo'];
         }
