@@ -110,10 +110,17 @@ class ProductoController {
      * Guardar producto simple (sin variantes)
      */
     private function guardarProductoSimple($post, $files) {
+        $tiempoInicio = microtime(true);
+        error_log("=== INICIO CREACIÓN DE PRODUCTO ===");
+
         $datos = $this->procesarDatos($post);
+        error_log("Procesamiento de datos: " . round((microtime(true) - $tiempoInicio) * 1000, 2) . "ms");
 
         // Validar datos
+        $tiempoValidacion = microtime(true);
         $errores = $this->producto->validar($datos);
+        error_log("Validación: " . round((microtime(true) - $tiempoValidacion) * 1000, 2) . "ms");
+
         if (!empty($errores)) {
             $_SESSION['errores'] = $errores;
             $_SESSION['datos_antiguos'] = $datos;
@@ -122,7 +129,10 @@ class ProductoController {
 
         // Procesar imagen principal si existe
         if (isset($files['imagen']) && $files['imagen']['error'] === UPLOAD_ERR_OK) {
+            $tiempoImagen1 = microtime(true);
             $resultadoImagen = $this->subirImagen($files['imagen']);
+            error_log("Subir imagen 1: " . round((microtime(true) - $tiempoImagen1) * 1000, 2) . "ms");
+
             if ($resultadoImagen['success']) {
                 $datos['imagen'] = $resultadoImagen['filename'];
             } else {
@@ -134,7 +144,10 @@ class ProductoController {
 
         // Procesar imagen con modelo si existe
         if (isset($files['imagen_modelo']) && $files['imagen_modelo']['error'] === UPLOAD_ERR_OK) {
+            $tiempoImagen2 = microtime(true);
             $resultadoImagen = $this->subirImagen($files['imagen_modelo']);
+            error_log("Subir imagen 2: " . round((microtime(true) - $tiempoImagen2) * 1000, 2) . "ms");
+
             if ($resultadoImagen['success']) {
                 $datos['imagen_modelo'] = $resultadoImagen['filename'];
             } else {
@@ -150,9 +163,12 @@ class ProductoController {
         }
 
         try {
+            $tiempoInsert = microtime(true);
             $id = $this->producto->crear($datos);
+            error_log("INSERT producto: " . round((microtime(true) - $tiempoInsert) * 1000, 2) . "ms");
 
             // Registrar movimiento de creación en historial
+            $tiempoHistorial = microtime(true);
             $this->historial->registrar([
                 'producto_id' => $id,
                 'usuario_id' => $_SESSION['usuario_id'],
@@ -162,6 +178,10 @@ class ProductoController {
                 'stock_nuevo' => $datos['stock'],
                 'motivo' => 'Producto creado'
             ]);
+            error_log("Registrar historial: " . round((microtime(true) - $tiempoHistorial) * 1000, 2) . "ms");
+
+            $tiempoTotal = round((microtime(true) - $tiempoInicio) * 1000, 2);
+            error_log("=== TIEMPO TOTAL: {$tiempoTotal}ms ===");
 
             redirect('productos', 'Producto creado exitosamente');
         } catch (Exception $e) {
