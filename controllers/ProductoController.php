@@ -87,14 +87,19 @@ class ProductoController {
      * Guardar nuevo producto
      */
     public function guardar() {
+        $tiempoTotal = microtime(true);
+        error_log("⏱️ GUARDAR - Inicio: " . date('H:i:s.u'));
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             redirect('productos');
         }
 
         // Validar token CSRF
+        $t1 = microtime(true);
         if (!validateCSRFToken($_POST['csrf_token'] ?? '')) {
             redirect('productos', 'Token de seguridad inválido', 'error');
         }
+        error_log("⏱️ CSRF validación: " . round((microtime(true) - $t1) * 1000, 2) . "ms");
 
         // Verificar si se están creando variantes
         $crearVariantes = isset($_POST['crear_variantes']) && $_POST['crear_variantes'] == '1';
@@ -104,16 +109,23 @@ class ProductoController {
         } else {
             $this->guardarProductoSimple($_POST, $_FILES);
         }
+
+        error_log("⏱️ GUARDAR - TOTAL: " . round((microtime(true) - $tiempoTotal) * 1000, 2) . "ms");
     }
 
     /**
      * Guardar producto simple (sin variantes)
      */
     private function guardarProductoSimple($post, $files) {
+        $t0 = microtime(true);
         $datos = $this->procesarDatos($post);
+        error_log("   ⏱️ Procesar datos: " . round((microtime(true) - $t0) * 1000, 2) . "ms");
 
         // Validar datos
+        $t1 = microtime(true);
         $errores = $this->producto->validar($datos);
+        error_log("   ⏱️ Validar: " . round((microtime(true) - $t1) * 1000, 2) . "ms");
+
         if (!empty($errores)) {
             $_SESSION['errores'] = $errores;
             $_SESSION['datos_antiguos'] = $datos;
@@ -122,7 +134,10 @@ class ProductoController {
 
         // Procesar imagen principal si existe
         if (isset($files['imagen']) && $files['imagen']['error'] === UPLOAD_ERR_OK) {
+            $t2 = microtime(true);
             $resultadoImagen = $this->subirImagen($files['imagen']);
+            error_log("   ⏱️ Subir imagen 1: " . round((microtime(true) - $t2) * 1000, 2) . "ms");
+
             if ($resultadoImagen['success']) {
                 $datos['imagen'] = $resultadoImagen['filename'];
             } else {
@@ -134,7 +149,10 @@ class ProductoController {
 
         // Procesar imagen con modelo si existe
         if (isset($files['imagen_modelo']) && $files['imagen_modelo']['error'] === UPLOAD_ERR_OK) {
+            $t3 = microtime(true);
             $resultadoImagen = $this->subirImagen($files['imagen_modelo']);
+            error_log("   ⏱️ Subir imagen 2: " . round((microtime(true) - $t3) * 1000, 2) . "ms");
+
             if ($resultadoImagen['success']) {
                 $datos['imagen_modelo'] = $resultadoImagen['filename'];
             } else {
@@ -150,9 +168,12 @@ class ProductoController {
         }
 
         try {
+            $t4 = microtime(true);
             $id = $this->producto->crear($datos);
+            error_log("   ⏱️ INSERT BD: " . round((microtime(true) - $t4) * 1000, 2) . "ms");
 
             // Registrar movimiento de creación en historial
+            $t5 = microtime(true);
             $this->historial->registrar([
                 'producto_id' => $id,
                 'usuario_id' => $_SESSION['usuario_id'],
@@ -162,6 +183,7 @@ class ProductoController {
                 'stock_nuevo' => $datos['stock'],
                 'motivo' => 'Producto creado'
             ]);
+            error_log("   ⏱️ Historial: " . round((microtime(true) - $t5) * 1000, 2) . "ms");
 
             redirect('productos', 'Producto creado exitosamente');
         } catch (Exception $e) {
