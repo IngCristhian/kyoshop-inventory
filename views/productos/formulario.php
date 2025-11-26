@@ -760,10 +760,6 @@
     // Validación del formulario
     document.querySelector('form').addEventListener('submit', function(e) {
         const btnSubmit = document.getElementById('btnSubmit');
-        const tiempoInicio = performance.now();
-
-        console.time('⏱️ Form Submit Validation');
-        console.log('🚀 Iniciando envío del formulario...');
 
         <?php if ($accion === 'crear'): ?>
         const crearVariantes = document.getElementById('crear_variantes').checked;
@@ -773,7 +769,6 @@
             if (variantes.length === 0) {
                 e.preventDefault();
                 alert('Debes agregar al menos una variante');
-                console.timeEnd('⏱️ Form Submit Validation');
                 return;
             }
         } else {
@@ -783,26 +778,19 @@
             if (precio <= 0) {
                 e.preventDefault();
                 alert('El precio debe ser mayor a 0');
-                console.timeEnd('⏱️ Form Submit Validation');
                 return;
             }
 
             if (stock < 0) {
                 e.preventDefault();
                 alert('El stock no puede ser negativo');
-                console.timeEnd('⏱️ Form Submit Validation');
                 return;
             }
         }
-        console.timeEnd('⏱️ Form Submit Validation');
 
         // Deshabilitar botón y mostrar loading
         btnSubmit.disabled = true;
-        const textoOriginal = btnSubmit.innerHTML;
         btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creando...';
-
-        console.log('✅ Validación completada - Enviando al servidor...');
-        console.log('⏰ Tiempo transcurrido desde click:', Math.round(performance.now() - tiempoInicio), 'ms');
         <?php else: ?>
         const precio = parseFloat(document.getElementById('precio').value);
         const stock = parseInt(document.getElementById('stock').value);

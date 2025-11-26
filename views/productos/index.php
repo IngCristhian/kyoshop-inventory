@@ -522,26 +522,11 @@ document.addEventListener('DOMContentLoaded', function() {
         });
 
         lazyImages.forEach(img => imageObserver.observe(img));
-        console.log('🖼️ Lazy loading activado para', lazyImages.length, 'imágenes');
     } else {
         // Fallback para navegadores sin soporte
         lazyImages.forEach(img => {
             img.src = img.getAttribute('data-src');
         });
-    }
-});
-
-// Medir tiempo de carga de la página
-window.addEventListener('load', function() {
-    const perfData = performance.getEntriesByType('navigation')[0];
-    if (perfData) {
-        console.log('📊 PERFORMANCE DE PÁGINA DE PRODUCTOS:');
-        console.log('⏱️ Tiempo total de carga:', Math.round(perfData.loadEventEnd - perfData.fetchStart), 'ms');
-        console.log('   - DNS lookup:', Math.round(perfData.domainLookupEnd - perfData.domainLookupStart), 'ms');
-        console.log('   - Conexión TCP:', Math.round(perfData.connectEnd - perfData.connectStart), 'ms');
-        console.log('   - Request + Response:', Math.round(perfData.responseEnd - perfData.requestStart), 'ms');
-        console.log('   - Procesamiento DOM:', Math.round(perfData.domComplete - perfData.domLoading), 'ms');
-        console.log('   - Carga de recursos:', Math.round(perfData.loadEventEnd - perfData.domContentLoadedEventEnd), 'ms');
     }
 });
 </script>
