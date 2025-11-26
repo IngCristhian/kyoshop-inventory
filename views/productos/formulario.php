@@ -757,7 +757,7 @@
         }
     }
 
-    // Validación del formulario
+    // Validación del formulario con barra de progreso
     document.querySelector('form').addEventListener('submit', function(e) {
         const btnSubmit = document.getElementById('btnSubmit');
 
@@ -788,6 +788,9 @@
             }
         }
 
+        // Mostrar barra de progreso
+        mostrarBarraProgreso('Creando producto...');
+
         // Deshabilitar botón y mostrar loading
         btnSubmit.disabled = true;
         btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creando...';
@@ -811,6 +814,78 @@
             e.preventDefault();
             return;
         }
+
+        // Mostrar barra de progreso
+        mostrarBarraProgreso('Actualizando producto...');
+
+        // Deshabilitar botón
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Actualizando...';
         <?php endif; ?>
     });
+
+    // Función para mostrar barra de progreso
+    function mostrarBarraProgreso(mensaje) {
+        // Crear overlay si no existe
+        let overlay = document.getElementById('upload-overlay');
+        if (!overlay) {
+            overlay = document.createElement('div');
+            overlay.id = 'upload-overlay';
+            overlay.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.7);
+                z-index: 9999;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            `;
+
+            overlay.innerHTML = `
+                <div style="background: white; padding: 30px; border-radius: 10px; max-width: 500px; width: 90%; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                    <div style="text-align: center; margin-bottom: 20px;">
+                        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+                            <span class="visually-hidden">Cargando...</span>
+                        </div>
+                    </div>
+                    <h5 style="text-align: center; margin-bottom: 15px; color: #333;" id="progress-message">${mensaje}</h5>
+                    <div class="progress" style="height: 25px;">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+                             role="progressbar"
+                             id="upload-progress-bar"
+                             style="width: 0%"
+                             aria-valuenow="0"
+                             aria-valuemin="0"
+                             aria-valuemax="100">0%</div>
+                    </div>
+                    <p style="text-align: center; margin-top: 15px; color: #666; font-size: 14px;">
+                        Por favor, no cierres esta ventana...
+                    </p>
+                </div>
+            `;
+
+            document.body.appendChild(overlay);
+        }
+
+        // Animar progreso
+        const progressBar = document.getElementById('upload-progress-bar');
+        let progress = 0;
+
+        const interval = setInterval(() => {
+            if (progress < 90) {
+                progress += Math.random() * 15;
+                if (progress > 90) progress = 90;
+
+                progressBar.style.width = progress + '%';
+                progressBar.textContent = Math.round(progress) + '%';
+                progressBar.setAttribute('aria-valuenow', progress);
+            }
+        }, 500);
+
+        // Guardar intervalo para poder limpiarlo después
+        window.progressInterval = interval;
+    }
 </script>
