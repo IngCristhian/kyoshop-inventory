@@ -605,30 +605,33 @@
     <?php endif; ?>
 
     // Preview de imagen antes de subir
-    function previewImage(input, previewId = 'image-preview') {
+    function previewImage(input, previewId) {
+        console.log('previewImage called with previewId:', previewId);
+
         if (!input.files || !input.files[0]) {
+            console.log('No file selected');
             return;
         }
 
-        const preview = document.getElementById(previewId);
-        if (!preview) {
+        const previewElement = document.getElementById(previewId);
+        console.log('Preview element found:', previewElement);
+
+        if (!previewElement) {
             console.error('Preview element not found:', previewId);
             return;
         }
 
+        const file = input.files[0];
         const reader = new FileReader();
 
-        // Capturar el previewId en el closure para evitar problemas de scope
-        reader.onload = (function(targetPreviewId) {
-            return function(e) {
-                const targetPreview = document.getElementById(targetPreviewId);
-                if (targetPreview) {
-                    targetPreview.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded" style="max-height: 150px;">`;
-                }
-            };
-        })(previewId);
+        reader.onload = function(e) {
+            console.log('Setting innerHTML for:', previewId);
+            const targetElement = document.getElementById(previewId);
+            console.log('Target element at onload:', targetElement);
+            targetElement.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded" style="max-height: 150px;">`;
+        };
 
-        reader.readAsDataURL(input.files[0]);
+        reader.readAsDataURL(file);
     }
 
     // Eliminar imagen existente
