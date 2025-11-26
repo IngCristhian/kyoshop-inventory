@@ -759,6 +759,7 @@
 
     // Validación del formulario
     document.querySelector('form').addEventListener('submit', function(e) {
+        console.time('Form Submit Validation');
         <?php if ($accion === 'crear'): ?>
         const crearVariantes = document.getElementById('crear_variantes').checked;
 
@@ -767,6 +768,7 @@
             if (variantes.length === 0) {
                 e.preventDefault();
                 alert('Debes agregar al menos una variante');
+                console.timeEnd('Form Submit Validation');
                 return;
             }
         } else {
@@ -776,15 +778,19 @@
             if (precio <= 0) {
                 e.preventDefault();
                 alert('El precio debe ser mayor a 0');
+                console.timeEnd('Form Submit Validation');
                 return;
             }
 
             if (stock < 0) {
                 e.preventDefault();
                 alert('El stock no puede ser negativo');
+                console.timeEnd('Form Submit Validation');
                 return;
             }
         }
+        console.timeEnd('Form Submit Validation');
+        console.log('Form submitted - waiting for server response...');
         <?php else: ?>
         const precio = parseFloat(document.getElementById('precio').value);
         const stock = parseInt(document.getElementById('stock').value);
