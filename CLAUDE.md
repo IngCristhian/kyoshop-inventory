@@ -169,6 +169,13 @@ main (producción estable)
 2. **Hotfixes**: `hotfix/nombre` → `main` + `develop`
 3. **Releases**: `develop` → `release/vX.X.X` → `main`
 
+### Reglas Importantes de Git
+- **NUNCA editar la rama `main` directamente**
+- **TODO cambio a `main` DEBE hacerse mediante Pull Request (PR)**
+- Workflow obligatorio: `develop` → crear PR → revisión → merge a `main`
+- Los PRs permiten revisión de código y mantienen historial claro
+- GitHub Actions despliega automáticamente después del merge
+
 ### File Management
 - **Code**: All tracked in Git
 - **Images**: `uploads/` ignored, only `.gitkeep` tracked
