@@ -113,8 +113,9 @@
                             // Usar imagen principal si existe, sino la de modelo
                             $imagenPrincipalMostrar = $producto['imagen'] ?? $producto['imagen_modelo'];
                             ?>
-                            <img src="<?= APP_URL ?>/uploads/<?= $imagenPrincipalMostrar ?>"
-                                 class="card-img-top"
+                            <img src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='200'%3E%3Crect fill='%23f0f0f0' width='400' height='200'/%3E%3C/svg%3E"
+                                 data-src="<?= APP_URL ?>/uploads/<?= $imagenPrincipalMostrar ?>"
+                                 class="card-img-top lazy-load"
                                  style="height: 200px; object-fit: cover; cursor: pointer;"
                                  onclick="abrirVistaPrevia(
                                      <?= $producto['imagen'] ? '\'' . APP_URL . '/uploads/' . $producto['imagen'] . '\'' : 'null' ?>,
@@ -497,4 +498,35 @@ function confirmarEliminacionProducto(id, nombre) {
         console.log('Usuario canceló eliminación de PRODUCTO');
     }
 }
+
+// Lazy Loading de imágenes con Intersection Observer
+document.addEventListener('DOMContentLoaded', function() {
+    const lazyImages = document.querySelectorAll('img.lazy-load');
+
+    if ('IntersectionObserver' in window) {
+        const imageObserver = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    const realSrc = img.getAttribute('data-src');
+
+                    if (realSrc) {
+                        img.src = realSrc;
+                        img.classList.remove('lazy-load');
+                        imageObserver.unobserve(img);
+                    }
+                }
+            });
+        }, {
+            rootMargin: '50px' // Cargar imágenes 50px antes de que sean visibles
+        });
+
+        lazyImages.forEach(img => imageObserver.observe(img));
+    } else {
+        // Fallback para navegadores sin soporte
+        lazyImages.forEach(img => {
+            img.src = img.getAttribute('data-src');
+        });
+    }
+});
 </script>

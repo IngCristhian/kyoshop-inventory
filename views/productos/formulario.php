@@ -405,7 +405,7 @@
                                 </button>
                             <?php endif; ?>
                             
-                            <button type="submit" class="btn btn-primary">
+                            <button type="submit" class="btn btn-primary" id="btnSubmit">
                                 <i class="bi bi-<?= $accion === 'crear' ? 'plus-lg' : 'check-lg' ?>"></i>
                                 <?= $accion === 'crear' ? 'Crear Producto' : 'Actualizar Producto' ?>
                             </button>
@@ -759,6 +759,8 @@
 
     // Validación del formulario
     document.querySelector('form').addEventListener('submit', function(e) {
+        const btnSubmit = document.getElementById('btnSubmit');
+
         <?php if ($accion === 'crear'): ?>
         const crearVariantes = document.getElementById('crear_variantes').checked;
 
@@ -785,6 +787,10 @@
                 return;
             }
         }
+
+        // Deshabilitar botón y mostrar loading
+        btnSubmit.disabled = true;
+        btnSubmit.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Creando...';
         <?php else: ?>
         const precio = parseFloat(document.getElementById('precio').value);
         const stock = parseInt(document.getElementById('stock').value);

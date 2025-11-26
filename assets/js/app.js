@@ -273,21 +273,12 @@ function generarCodigoProducto() {
 }
 
 /**
- * Animaciones de entrada
+ * Animaciones de entrada (deshabilitadas para mejor performance)
  */
 function addEntryAnimations() {
-    const cards = document.querySelectorAll('.card');
-    
-    cards.forEach((card, index) => {
-        card.style.opacity = '0';
-        card.style.transform = 'translateY(20px)';
-        
-        setTimeout(() => {
-            card.style.transition = 'all 0.5s ease-out';
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0)';
-        }, index * 100);
-    });
+    // Animaciones deshabilitadas para carga instantánea
+    // Las cards ahora aparecen inmediatamente
+    return;
 }
 
 /**
