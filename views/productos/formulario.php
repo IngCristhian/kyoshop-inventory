@@ -604,36 +604,6 @@
     }
     <?php endif; ?>
 
-    // Preview de imagen antes de subir
-    function previewImage(input, previewId) {
-        console.log('previewImage called with previewId:', previewId);
-
-        if (!input.files || !input.files[0]) {
-            console.log('No file selected');
-            return;
-        }
-
-        const previewElement = document.getElementById(previewId);
-        console.log('Preview element found:', previewElement);
-
-        if (!previewElement) {
-            console.error('Preview element not found:', previewId);
-            return;
-        }
-
-        const file = input.files[0];
-        const reader = new FileReader();
-
-        reader.onload = function(e) {
-            console.log('Setting innerHTML for:', previewId);
-            const targetElement = document.getElementById(previewId);
-            console.log('Target element at onload:', targetElement);
-            targetElement.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded" style="max-height: 150px;">`;
-        };
-
-        reader.readAsDataURL(file);
-    }
-
     // Eliminar imagen existente
     function eliminarImagenExistente(campoNombre, previewId) {
         if (confirm('¿Estás seguro de que deseas eliminar esta imagen?')) {
