@@ -606,18 +606,29 @@
 
     // Preview de imagen antes de subir
     function previewImage(input, previewId = 'image-preview') {
-        const preview = document.getElementById(previewId);
-
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-
-            reader.onload = function(e) {
-                const maxHeight = previewId === 'image-preview' ? '150px' : '150px';
-                preview.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded" style="max-height: ${maxHeight};">`;
-            };
-
-            reader.readAsDataURL(input.files[0]);
+        if (!input.files || !input.files[0]) {
+            return;
         }
+
+        const preview = document.getElementById(previewId);
+        if (!preview) {
+            console.error('Preview element not found:', previewId);
+            return;
+        }
+
+        const reader = new FileReader();
+
+        // Capturar el previewId en el closure para evitar problemas de scope
+        reader.onload = (function(targetPreviewId) {
+            return function(e) {
+                const targetPreview = document.getElementById(targetPreviewId);
+                if (targetPreview) {
+                    targetPreview.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded" style="max-height: 150px;">`;
+                }
+            };
+        })(previewId);
+
+        reader.readAsDataURL(input.files[0]);
     }
 
     // Eliminar imagen existente
