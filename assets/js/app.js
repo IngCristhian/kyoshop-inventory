@@ -215,10 +215,15 @@ function eliminarProducto(id) {
 /**
  * Preview de imagen antes de subir
  */
-function previewImage(input) {
-    const preview = document.getElementById('image-preview');
+function previewImage(input, previewId = 'image-preview') {
+    const preview = document.getElementById(previewId);
     const file = input.files[0];
-    
+
+    if (!preview) {
+        console.error('Preview element not found:', previewId);
+        return;
+    }
+
     if (file) {
         // Validar tamaño
         if (file.size > 5 * 1024 * 1024) {
@@ -226,7 +231,7 @@ function previewImage(input) {
             input.value = '';
             return;
         }
-        
+
         // Validar tipo
         const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/gif'];
         if (!allowedTypes.includes(file.type)) {
@@ -234,10 +239,13 @@ function previewImage(input) {
             input.value = '';
             return;
         }
-        
+
         const reader = new FileReader();
         reader.onload = function(e) {
-            preview.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded" style="max-height: 200px;">`;
+            const targetPreview = document.getElementById(previewId);
+            if (targetPreview) {
+                targetPreview.innerHTML = `<img src="${e.target.result}" class="img-fluid rounded" style="max-height: 150px;">`;
+            }
         };
         reader.readAsDataURL(file);
     }

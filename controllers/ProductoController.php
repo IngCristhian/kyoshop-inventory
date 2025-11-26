@@ -120,11 +120,23 @@ class ProductoController {
             redirect('productos/crear');
         }
 
-        // Procesar imagen si existe
+        // Procesar imagen principal si existe
         if (isset($files['imagen']) && $files['imagen']['error'] === UPLOAD_ERR_OK) {
             $resultadoImagen = $this->subirImagen($files['imagen']);
             if ($resultadoImagen['success']) {
                 $datos['imagen'] = $resultadoImagen['filename'];
+            } else {
+                $_SESSION['errores'] = $resultadoImagen['errors'];
+                $_SESSION['datos_antiguos'] = $datos;
+                redirect('productos/crear');
+            }
+        }
+
+        // Procesar imagen con modelo si existe
+        if (isset($files['imagen_modelo']) && $files['imagen_modelo']['error'] === UPLOAD_ERR_OK) {
+            $resultadoImagen = $this->subirImagen($files['imagen_modelo']);
+            if ($resultadoImagen['success']) {
+                $datos['imagen_modelo'] = $resultadoImagen['filename'];
             } else {
                 $_SESSION['errores'] = $resultadoImagen['errors'];
                 $_SESSION['datos_antiguos'] = $datos;
@@ -213,7 +225,7 @@ class ProductoController {
                     $timestamp
                 );
 
-                // Procesar imagen de la variante (o usar imagen principal)
+                // Procesar imagen principal de la variante (o usar imagen principal del producto base)
                 if (isset($files['variantes']['name'][$index]['imagen']) &&
                     $files['variantes']['error'][$index]['imagen'] === UPLOAD_ERR_OK) {
 
@@ -229,12 +241,31 @@ class ProductoController {
                     if ($resultadoImagen['success']) {
                         $datosVariante['imagen'] = $resultadoImagen['filename'];
                     } else {
-                        $erroresVariantes[] = "Variante " . ($index + 1) . ": Error al subir imagen";
+                        $erroresVariantes[] = "Variante " . ($index + 1) . ": Error al subir imagen principal";
                         continue;
                     }
                 } else {
-                    // Si no se subió imagen específica, usar la imagen principal
+                    // Si no se subió imagen específica, usar la imagen principal del producto base
                     $datosVariante['imagen'] = $imagenPrincipal;
+                }
+
+                // Procesar imagen con modelo de la variante (opcional)
+                if (isset($files['variantes']['name'][$index]['imagen_modelo']) &&
+                    $files['variantes']['error'][$index]['imagen_modelo'] === UPLOAD_ERR_OK) {
+
+                    $imagenModeloVariante = [
+                        'name' => $files['variantes']['name'][$index]['imagen_modelo'],
+                        'type' => $files['variantes']['type'][$index]['imagen_modelo'],
+                        'tmp_name' => $files['variantes']['tmp_name'][$index]['imagen_modelo'],
+                        'error' => $files['variantes']['error'][$index]['imagen_modelo'],
+                        'size' => $files['variantes']['size'][$index]['imagen_modelo']
+                    ];
+
+                    $resultadoImagenModelo = $this->subirImagen($imagenModeloVariante);
+                    if ($resultadoImagenModelo['success']) {
+                        $datosVariante['imagen_modelo'] = $resultadoImagenModelo['filename'];
+                    }
+                    // No es error crítico si falla la imagen con modelo
                 }
 
                 // Crear el producto variante
@@ -322,7 +353,23 @@ class ProductoController {
             redirect("productos/editar/{$id}");
         }
         
-        // Procesar nueva imagen si se subió
+        // Manejar eliminación de imagen principal
+        if (isset($_POST['eliminar_imagen']) && $_POST['eliminar_imagen'] == '1') {
+            if (!empty($producto['imagen'])) {
+                $this->eliminarImagen($producto['imagen']);
+            }
+            $datos['imagen'] = null;
+        }
+
+        // Manejar eliminación de imagen con modelo
+        if (isset($_POST['eliminar_imagen_modelo']) && $_POST['eliminar_imagen_modelo'] == '1') {
+            if (!empty($producto['imagen_modelo'])) {
+                $this->eliminarImagen($producto['imagen_modelo']);
+            }
+            $datos['imagen_modelo'] = null;
+        }
+
+        // Procesar nueva imagen principal si se subió
         if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
             $resultadoImagen = $this->subirImagen($_FILES['imagen']);
             if ($resultadoImagen['success']) {
@@ -331,6 +378,22 @@ class ProductoController {
                     $this->eliminarImagen($producto['imagen']);
                 }
                 $datos['imagen'] = $resultadoImagen['filename'];
+            } else {
+                $_SESSION['errores'] = $resultadoImagen['errors'];
+                $_SESSION['datos_antiguos'] = $datos;
+                redirect("productos/editar/{$id}");
+            }
+        }
+
+        // Procesar nueva imagen con modelo si se subió
+        if (isset($_FILES['imagen_modelo']) && $_FILES['imagen_modelo']['error'] === UPLOAD_ERR_OK) {
+            $resultadoImagen = $this->subirImagen($_FILES['imagen_modelo']);
+            if ($resultadoImagen['success']) {
+                // Eliminar imagen anterior si existe
+                if (!empty($producto['imagen_modelo'])) {
+                    $this->eliminarImagen($producto['imagen_modelo']);
+                }
+                $datos['imagen_modelo'] = $resultadoImagen['filename'];
             } else {
                 $_SESSION['errores'] = $resultadoImagen['errors'];
                 $_SESSION['datos_antiguos'] = $datos;
