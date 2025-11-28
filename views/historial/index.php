@@ -100,29 +100,22 @@
     <div class="card">
         <div class="card-body">
             <div class="table-responsive">
-                <table class="table table-hover">
+                <table class="table table-hover historial-table">
                     <thead>
                         <tr>
                             <th>Fecha</th>
                             <th>Producto</th>
                             <th>Tipo</th>
-                            <th>Cantidad</th>
-                            <th>Stock Anterior</th>
-                            <th>Stock Nuevo</th>
-                            <th>Precio Anterior</th>
-                            <th>Precio Nuevo</th>
                             <th>Usuario</th>
-                            <th>Motivo</th>
+                            <th style="width: 40%;">Detalle</th>
                         </tr>
                     </thead>
                     <tbody>
                         <?php foreach ($movimientos as $mov): ?>
                             <tr>
-                                <td>
-                                    <small>
-                                        <?= date('d/m/Y', strtotime($mov['fecha_movimiento'])) ?><br>
-                                        <span class="text-muted"><?= date('H:i', strtotime($mov['fecha_movimiento'])) ?></span>
-                                    </small>
+                                <td class="text-nowrap">
+                                    <?= date('d/m/Y', strtotime($mov['fecha_movimiento'])) ?><br>
+                                    <small class="text-muted"><?= date('H:i', strtotime($mov['fecha_movimiento'])) ?></small>
                                 </td>
                                 <td>
                                     <strong><?= htmlspecialchars($mov['producto_nombre']) ?></strong><br>
@@ -134,88 +127,55 @@
                                     $icon = '';
                                     $tipoTexto = '';
                                     switch($mov['tipo_movimiento']) {
-                                        case 'entrada':
-                                            $badgeClass = 'bg-success';
-                                            $icon = 'arrow-up-circle';
-                                            $tipoTexto = 'Entrada';
-                                            break;
-                                        case 'salida':
-                                            $badgeClass = 'bg-danger';
-                                            $icon = 'arrow-down-circle';
-                                            $tipoTexto = 'Salida';
-                                            break;
-                                        case 'ajuste':
-                                            $badgeClass = 'bg-warning';
-                                            $icon = 'gear';
-                                            $tipoTexto = 'Ajuste';
-                                            break;
-                                        case 'creacion':
-                                            $badgeClass = 'bg-info';
-                                            $icon = 'plus-circle';
-                                            $tipoTexto = 'Creación';
-                                            break;
-                                        case 'eliminacion':
-                                            $badgeClass = 'bg-secondary';
-                                            $icon = 'trash';
-                                            $tipoTexto = 'Eliminación';
-                                            break;
-                                        case 'venta':
-                                            $badgeClass = 'bg-primary';
-                                            $icon = 'cart-check';
-                                            $tipoTexto = 'Venta';
-                                            break;
-                                        case 'devolucion':
-                                            $badgeClass = 'bg-warning text-dark';
-                                            $icon = 'arrow-return-left';
-                                            $tipoTexto = 'Devolución';
-                                            break;
+                                        case 'entrada': $badgeClass = 'bg-success-light text-success'; $icon = 'arrow-up-circle'; $tipoTexto = 'Entrada'; break;
+                                        case 'salida': $badgeClass = 'bg-danger-light text-danger'; $icon = 'arrow-down-circle'; $tipoTexto = 'Salida'; break;
+                                        case 'venta': $badgeClass = 'bg-primary-light text-primary'; $icon = 'cart-check'; $tipoTexto = 'Venta'; break;
+                                        case 'ajuste': $badgeClass = 'bg-warning-light text-warning'; $icon = 'gear'; $tipoTexto = 'Ajuste'; break;
+                                        case 'creacion': $badgeClass = 'bg-info-light text-info'; $icon = 'plus-circle'; $tipoTexto = 'Creación'; break;
+                                        case 'eliminacion': $badgeClass = 'bg-secondary-light text-secondary'; $icon = 'trash'; $tipoTexto = 'Eliminación'; break;
+                                        case 'devolucion': $badgeClass = 'bg-warning-light text-warning'; $icon = 'arrow-return-left'; $tipoTexto = 'Devolución'; break;
                                         case 'cambio_precio':
-                                            // Detectar si fue aumento o disminución
                                             if ($mov['precio_nuevo'] > $mov['precio_anterior']) {
-                                                $badgeClass = 'bg-success';
-                                                $icon = 'arrow-up-circle-fill';
-                                                $tipoTexto = 'Aumento precio';
+                                                $badgeClass = 'bg-success-light text-success'; $icon = 'graph-up-arrow'; $tipoTexto = 'Aumento';
                                             } else {
-                                                $badgeClass = 'bg-danger';
-                                                $icon = 'arrow-down-circle-fill';
-                                                $tipoTexto = 'Bajó precio';
+                                                $badgeClass = 'bg-danger-light text-danger'; $icon = 'graph-down-arrow'; $tipoTexto = 'Reducción';
                                             }
                                             break;
                                     }
                                     ?>
-                                    <span class="badge <?= $badgeClass ?>">
-                                        <i class="bi bi-<?= $icon ?>"></i> <?= $tipoTexto ?>
+                                    <span class="badge <?= $badgeClass ?> fs-6">
+                                        <i class="bi bi-<?= $icon ?> me-1"></i> <?= $tipoTexto ?>
                                     </span>
-                                </td>
-                                <td>
-                                    <strong class="<?= $mov['cantidad'] >= 0 ? 'text-success' : 'text-danger' ?>">
-                                        <?= $mov['cantidad'] >= 0 ? '+' : '' ?><?= $mov['cantidad'] ?>
-                                    </strong>
-                                </td>
-                                <td><?= $mov['stock_anterior'] ?></td>
-                                <td><strong><?= $mov['stock_nuevo'] ?></strong></td>
-                                <td>
-                                    <?php if ($mov['precio_anterior']): ?>
-                                        <span class="text-muted">$<?= number_format($mov['precio_anterior'], 0, ',', '.') ?></span>
-                                    <?php else: ?>
-                                        <span class="text-muted">—</span>
-                                    <?php endif; ?>
-                                </td>
-                                <td>
-                                    <?php if ($mov['precio_nuevo']): ?>
-                                        <strong class="<?= $mov['tipo_movimiento'] === 'cambio_precio' && $mov['precio_nuevo'] > $mov['precio_anterior'] ? 'text-success' : ($mov['tipo_movimiento'] === 'cambio_precio' ? 'text-danger' : '') ?>">
-                                            $<?= number_format($mov['precio_nuevo'], 0, ',', '.') ?>
-                                        </strong>
-                                    <?php else: ?>
-                                        <span class="text-muted">—</span>
-                                    <?php endif; ?>
                                 </td>
                                 <td>
                                     <?= htmlspecialchars($mov['usuario_nombre']) ?><br>
                                     <small class="text-muted"><?= ucfirst($mov['usuario_rol']) ?></small>
                                 </td>
                                 <td>
-                                    <small><?= htmlspecialchars($mov['motivo']) ?></small>
+                                    <div class="detalle-movimiento">
+                                        <?php
+                                        // Mostrar cambio de stock
+                                        if ($mov['stock_anterior'] != $mov['stock_nuevo'] && $mov['tipo_movimiento'] !== 'cambio_precio') {
+                                            $diff = $mov['stock_nuevo'] - $mov['stock_anterior'];
+                                            $diffClass = $diff >= 0 ? 'text-success' : 'text-danger';
+                                            echo '<div class="fw-bold">Stock: ' . $mov['stock_anterior'] . ' &rarr; ' . $mov['stock_nuevo'] . 
+                                                 ' <span class="' . $diffClass . '">(' . ($diff >= 0 ? '+' : '') . $diff . ')</span></div>';
+                                        }
+
+                                        // Mostrar cambio de precio
+                                        if ($mov['precio_anterior'] != $mov['precio_nuevo']) {
+                                            $diff_precio = $mov['precio_nuevo'] - $mov['precio_anterior'];
+                                            $diff_precio_class = $diff_precio >= 0 ? 'text-success' : 'text-danger';
+                                            echo '<div class="fw-bold">Precio: ' . formatPrice($mov['precio_anterior']) . ' &rarr; ' . formatPrice($mov['precio_nuevo']) .
+                                                 ' <span class="' . $diff_precio_class . '">(' . ($diff_precio >= 0 ? '+' : '-') . formatPrice(abs($diff_precio)) . ')</span></div>';
+                                        }
+
+                                        // Mostrar motivo si existe
+                                        if (!empty($mov['motivo'])) {
+                                            echo '<small class="text-muted">' . htmlspecialchars($mov['motivo']) . '</small>';
+                                        }
+                                        ?>
+                                    </div>
                                 </td>
                             </tr>
                         <?php endforeach; ?>
