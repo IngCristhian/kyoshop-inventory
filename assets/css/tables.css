@@ -64,3 +64,28 @@
 .card .table tbody tr:hover td .text-muted {
     color: #495057 !important;
 }
+
+/* Estilos para la tabla de historial */
+.historial-table td {
+    vertical-align: middle;
+    padding: 0.8rem 1rem;
+}
+
+.historial-table .badge {
+    padding: 0.4em 0.8em;
+    font-weight: 600;
+}
+
+.detalle-movimiento {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+/* Light Badges */
+.bg-success-light { background-color: rgba(25, 135, 84, 0.1); }
+.bg-danger-light { background-color: rgba(220, 53, 69, 0.1); }
+.bg-warning-light { background-color: rgba(255, 193, 7, 0.1); }
+.bg-info-light { background-color: rgba(13, 202, 240, 0.1); }
+.bg-primary-light { background-color: rgba(13, 110, 253, 0.1); }
+.bg-secondary-light { background-color: rgba(108, 117, 125, 0.1); }
