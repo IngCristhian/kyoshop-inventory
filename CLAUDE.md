@@ -51,11 +51,45 @@ define('APP_URL', 'http://localhost:8000');
 
 ### Production Hosting Details
 - **Hosting Provider**: Namecheap Shared Hosting
-- **Domain**: kyoshop.co
-- **Subdomain**: inventory.kyoshop.co
+- **Domain**: kyoshop.co (Main Domain)
 - **Server**: server277.web-hosting.com
 - **SSH User**: kyosankk
-- **Document Root**: /home/kyosankk/public_html/inventory/
+- **Main Document Root**: /home/kyosankk/public_html/
+
+### Hosting Limits & Capabilities
+- **Subdomains**: 30 available
+- **Databases**: 50 available
+- **Storage**: Shared hosting resources
+- **SSL**: Available (Let's Encrypt)
+
+### Current Domain Structure
+```
+kyoshop.co/                           # Main domain → Future Online Store
+├── public_html/                      # Document root
+│
+inventory.kyoshop.co/                 # Subdomain → Inventory Admin System
+└── public_html/inventory/            # Document root
+
+dev.inventory.kyoshop.co/             # Subdomain → Development Environment
+└── dev.inventory.kyoshop.co/         # Document root
+```
+
+### Planned Architecture
+```
+kyoshop.co                            # Main domain → Online Store (NEW)
+├── Document Root: /public_html/
+├── Repository: kyoshop-store (separate repo)
+└── Database: kyosankk_inventory (shared with admin)
+
+inventory.kyoshop.co                  # Admin System (CURRENT)
+├── Document Root: /public_html/inventory/
+├── Repository: kyoshop-inventory
+└── Database: kyosankk_inventory (full access)
+
+dev.inventory.kyoshop.co              # Development
+├── Document Root: /dev.inventory.kyoshop.co/
+└── Database: kyosankk_inventory_dev
+```
 
 ### Production Database Configuration
 ```php
@@ -168,6 +202,13 @@ main (producción estable)
 1. **Features**: `feature/nombre` → `develop` → `main`
 2. **Hotfixes**: `hotfix/nombre` → `main` + `develop`
 3. **Releases**: `develop` → `release/vX.X.X` → `main`
+
+### Reglas Importantes de Git
+- **NUNCA editar la rama `main` directamente**
+- **TODO cambio a `main` DEBE hacerse mediante Pull Request (PR)**
+- Workflow obligatorio: `develop` → crear PR → revisión → merge a `main`
+- Los PRs permiten revisión de código y mantienen historial claro
+- GitHub Actions despliega automáticamente después del merge
 
 ### File Management
 - **Code**: All tracked in Git
@@ -386,6 +427,78 @@ Simple switch-based routing in `index.php`:
 - Image uploads optimized with file validation
 - CSS/JS minification ready for production
 - Database connection reuses single PDO instance
+
+## KyoShop Online Store (Separate Project)
+
+### Overview
+Tienda online pública que se desplegará en el dominio principal `kyoshop.co`, funcionará como un ecommerce completo separado del sistema administrativo.
+
+### Architecture Decision
+- **Repository**: Nuevo repositorio separado `kyoshop-store`
+- **Domain**: kyoshop.co (dominio principal)
+- **Database**: kyosankk_inventory (COMPARTIDA con el admin)
+- **Technology Stack**: PHP + JavaScript (sin frameworks pesados)
+- **Deployment**: /home/kyosankk/public_html/
+
+### Database Sharing Strategy
+```
+Base de Datos: kyosankk_inventory
+├── Admin System (inventory.kyoshop.co)
+│   └── Permisos: FULL (SELECT, INSERT, UPDATE, DELETE)
+│
+└── Online Store (kyoshop.co)
+    └── Permisos: READ ONLY (SELECT)
+    └── Lectura de: productos, categorias, stock, precios
+```
+
+### Benefits of Separate Repository
+1. **Desarrollo independiente**: Equipo puede trabajar sin afectar admin
+2. **Deploy independiente**: Actualizaciones sin tocar sistema admin
+3. **Tecnología flexible**: Libertad de elegir stack diferente si es necesario
+4. **Seguridad**: Store solo lee, no puede modificar inventario
+5. **Escalabilidad**: Fácil agregar funcionalidades (carrito, pagos, etc.)
+
+### Shared Resources
+- ✅ **Database**: Misma BD para datos en tiempo real
+- ✅ **Uploads**: Carpeta de imágenes compartida o sincronizada
+- ✅ **Server**: Mismo hosting, diferente directory
+- ✅ **SSL**: Certificado del dominio principal
+
+### Planned Features (Online Store)
+- [ ] Catálogo público de productos
+- [ ] Filtros y búsqueda avanzada
+- [ ] Carrito de compras
+- [ ] Integración con WhatsApp
+- [ ] Integración con ePayco (pasarela de pagos)
+- [ ] Checkout process
+- [ ] Seguimiento de pedidos
+- [ ] Sistema de usuarios/clientes
+- [ ] Wishlist
+- [ ] Reseñas de productos
+
+### Integration Points
+- **Stock sync**: Store lee stock en tiempo real del admin
+- **Product updates**: Cambios en admin se reflejan inmediatamente
+- **Orders**: Pedidos de store pueden verse en admin (futuro)
+- **Analytics**: Reportes unificados (futuro)
+
+### Technical Considerations
+- Store usa **SELECT queries** solamente
+- Store tiene su propio sistema de sesiones/auth
+- Store maneja su propia tabla de pedidos/carritos
+- Comparte tabla de productos (read-only)
+- Puede tener su propio cache/optimization
+
+### Development Workflow
+```
+kyoshop-store (nuevo repo)
+├── develop → dev.kyoshop.co (crear subdomain)
+└── main → kyoshop.co (production)
+
+kyoshop-inventory (repo actual)
+├── develop → dev.inventory.kyoshop.co
+└── main → inventory.kyoshop.co
+```
 
 ## Future Roadmap & Improvement Plan
 
