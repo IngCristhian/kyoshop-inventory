@@ -11,10 +11,12 @@ require_once 'models/User.php';
 class HistorialController {
     private $historial;
     private $producto;
+    private $user;
 
     public function __construct() {
         $this->historial = new HistorialMovimiento();
         $this->producto = new Producto();
+        $this->user = new User();
     }
 
     /**
@@ -25,6 +27,7 @@ class HistorialController {
         $filtros = [
             'producto_id' => $_GET['producto_id'] ?? '',
             'tipo_movimiento' => $_GET['tipo_movimiento'] ?? '',
+            'usuario_id' => $_GET['usuario_id'] ?? '',
             'fecha_desde' => $_GET['fecha_desde'] ?? '',
             'fecha_hasta' => $_GET['fecha_hasta'] ?? ''
         ];
@@ -42,10 +45,14 @@ class HistorialController {
         // Obtener productos para el filtro
         $productos = $this->producto->obtenerTodos();
 
+        // Obtener usuarios para el filtro
+        $usuarios = $this->user->obtenerTodos();
+
         $data = [
             'titulo' => 'Historial de Movimientos - ' . APP_NAME,
             'movimientos' => $movimientos,
             'productos' => $productos,
+            'usuarios' => $usuarios,
             'filtros' => $filtros,
             'paginacion' => [
                 'pagina_actual' => $pagina,

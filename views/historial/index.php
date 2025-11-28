@@ -30,6 +30,19 @@
             </div>
 
             <div class="col-md-2">
+                <label for="usuario_id" class="form-label">Usuario</label>
+                <select class="form-select" id="usuario_id" name="usuario_id">
+                    <option value="">Todos los usuarios</option>
+                    <?php foreach ($usuarios as $usuario): ?>
+                        <option value="<?= $usuario['id'] ?>"
+                                <?= $filtros['usuario_id'] == $usuario['id'] ? 'selected' : '' ?>>
+                            <?= htmlspecialchars($usuario['nombre']) ?> (<?= ucfirst($usuario['rol']) ?>)
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+
+            <div class="col-md-2">
                 <label for="fecha_desde" class="form-label">Desde</label>
                 <input type="date" class="form-control" id="fecha_desde" name="fecha_desde"
                        value="<?= htmlspecialchars($filtros['fecha_desde']) ?>">
@@ -41,7 +54,7 @@
                        value="<?= htmlspecialchars($filtros['fecha_hasta']) ?>">
             </div>
 
-            <div class="col-md-3">
+            <div class="col-md-1">
                 <label class="form-label">&nbsp;</label>
                 <div class="d-grid gap-2 d-md-flex">
                     <button type="submit" class="btn btn-primary">
@@ -218,7 +231,7 @@
             <ul class="pagination justify-content-center">
                 <?php if ($paginacion['pagina_actual'] > 1): ?>
                     <li class="page-item">
-                        <a class="page-link" href="<?= APP_URL ?>/historial?pagina=<?= $paginacion['pagina_actual'] - 1 ?><?= !empty($filtros['producto_id']) ? '&producto_id=' . urlencode($filtros['producto_id']) : '' ?><?= !empty($filtros['tipo_movimiento']) ? '&tipo_movimiento=' . urlencode($filtros['tipo_movimiento']) : '' ?><?= !empty($filtros['fecha_desde']) ? '&fecha_desde=' . urlencode($filtros['fecha_desde']) : '' ?><?= !empty($filtros['fecha_hasta']) ? '&fecha_hasta=' . urlencode($filtros['fecha_hasta']) : '' ?>">
+                        <a class="page-link" href="<?= APP_URL ?>/historial?pagina=<?= $paginacion['pagina_actual'] - 1 ?><?= !empty($filtros['producto_id']) ? '&producto_id=' . urlencode($filtros['producto_id']) : '' ?><?= !empty($filtros['tipo_movimiento']) ? '&tipo_movimiento=' . urlencode($filtros['tipo_movimiento']) : '' ?><?= !empty($filtros['usuario_id']) ? '&usuario_id=' . urlencode($filtros['usuario_id']) : '' ?><?= !empty($filtros['fecha_desde']) ? '&fecha_desde=' . urlencode($filtros['fecha_desde']) : '' ?><?= !empty($filtros['fecha_hasta']) ? '&fecha_hasta=' . urlencode($filtros['fecha_hasta']) : '' ?>">
                             <i class="bi bi-chevron-left"></i> Anterior
                         </a>
                     </li>
@@ -231,7 +244,7 @@
 
                 <?php for ($i = $inicio; $i <= $fin; $i++): ?>
                     <li class="page-item <?= $i == $paginacion['pagina_actual'] ? 'active' : '' ?>">
-                        <a class="page-link" href="<?= APP_URL ?>/historial?pagina=<?= $i ?><?= !empty($filtros['producto_id']) ? '&producto_id=' . urlencode($filtros['producto_id']) : '' ?><?= !empty($filtros['tipo_movimiento']) ? '&tipo_movimiento=' . urlencode($filtros['tipo_movimiento']) : '' ?><?= !empty($filtros['fecha_desde']) ? '&fecha_desde=' . urlencode($filtros['fecha_desde']) : '' ?><?= !empty($filtros['fecha_hasta']) ? '&fecha_hasta=' . urlencode($filtros['fecha_hasta']) : '' ?>">
+                        <a class="page-link" href="<?= APP_URL ?>/historial?pagina=<?= $i ?><?= !empty($filtros['producto_id']) ? '&producto_id=' . urlencode($filtros['producto_id']) : '' ?><?= !empty($filtros['tipo_movimiento']) ? '&tipo_movimiento=' . urlencode($filtros['tipo_movimiento']) : '' ?><?= !empty($filtros['usuario_id']) ? '&usuario_id=' . urlencode($filtros['usuario_id']) : '' ?><?= !empty($filtros['fecha_desde']) ? '&fecha_desde=' . urlencode($filtros['fecha_desde']) : '' ?><?= !empty($filtros['fecha_hasta']) ? '&fecha_hasta=' . urlencode($filtros['fecha_hasta']) : '' ?>">
                             <?= $i ?>
                         </a>
                     </li>
@@ -239,7 +252,7 @@
 
                 <?php if ($paginacion['pagina_actual'] < $paginacion['total_paginas']): ?>
                     <li class="page-item">
-                        <a class="page-link" href="<?= APP_URL ?>/historial?pagina=<?= $paginacion['pagina_actual'] + 1 ?><?= !empty($filtros['producto_id']) ? '&producto_id=' . urlencode($filtros['producto_id']) : '' ?><?= !empty($filtros['tipo_movimiento']) ? '&tipo_movimiento=' . urlencode($filtros['tipo_movimiento']) : '' ?><?= !empty($filtros['fecha_desde']) ? '&fecha_desde=' . urlencode($filtros['fecha_desde']) : '' ?><?= !empty($filtros['fecha_hasta']) ? '&fecha_hasta=' . urlencode($filtros['fecha_hasta']) : '' ?>">
+                        <a class="page-link" href="<?= APP_URL ?>/historial?pagina=<?= $paginacion['pagina_actual'] + 1 ?><?= !empty($filtros['producto_id']) ? '&producto_id=' . urlencode($filtros['producto_id']) : '' ?><?= !empty($filtros['tipo_movimiento']) ? '&tipo_movimiento=' . urlencode($filtros['tipo_movimiento']) : '' ?><?= !empty($filtros['usuario_id']) ? '&usuario_id=' . urlencode($filtros['usuario_id']) : '' ?><?= !empty($filtros['fecha_desde']) ? '&fecha_desde=' . urlencode($filtros['fecha_desde']) : '' ?><?= !empty($filtros['fecha_hasta']) ? '&fecha_hasta=' . urlencode($filtros['fecha_hasta']) : '' ?>">
                             Siguiente <i class="bi bi-chevron-right"></i>
                         </a>
                     </li>
