@@ -170,11 +170,14 @@ class ProductoVariante {
 
         // Obtener todas las variantes (incluyendo el padre como variante)
         $sqlVariantes = "SELECT * FROM productos
-                        WHERE (id = :id OR producto_padre_id = :id)
+                        WHERE (id = :id1 OR producto_padre_id = :id2)
                         AND activo = 1
                         ORDER BY talla, color";
 
-        $producto['variantes'] = $this->db->fetchAll($sqlVariantes, ['id' => $productoId]);
+        $producto['variantes'] = $this->db->fetchAll($sqlVariantes, [
+            'id1' => $productoId,
+            'id2' => $productoId
+        ]);
 
         return $producto;
     }

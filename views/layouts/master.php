@@ -456,9 +456,9 @@
             }
         }
 
-        // Auto-hide alerts after 5 seconds
+        // Auto-hide only dismissible alerts (flash messages) after 5 seconds
         setTimeout(function() {
-            const alerts = document.querySelectorAll('.alert');
+            const alerts = document.querySelectorAll('.alert-dismissible');
             alerts.forEach(function(alert) {
                 const bsAlert = new bootstrap.Alert(alert);
                 bsAlert.close();
