@@ -2,11 +2,11 @@
     <!-- Header -->
     <div class="row mb-4">
         <div class="col-md-8">
-            <h1 class="h3">
+            <h1 class="h3 text-dark">
                 <i class="bi bi-eye"></i>
                 Detalles del Producto Agrupado
             </h1>
-            <p class="text-muted"><?= htmlspecialchars($producto['nombre']) ?></p>
+            <p class="text-secondary"><?= htmlspecialchars($producto['nombre']) ?></p>
         </div>
         <div class="col-md-4 text-end">
             <a href="<?= APP_URL ?>/variantes" class="btn btn-secondary">

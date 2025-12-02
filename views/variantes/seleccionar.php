@@ -2,11 +2,11 @@
     <!-- Header -->
     <div class="row mb-4">
         <div class="col-md-8">
-            <h1 class="h3">
+            <h1 class="h3 text-dark">
                 <i class="bi bi-check2-square"></i>
                 Seleccionar Productos para Agrupar
             </h1>
-            <p class="text-muted">Paso 1: Selecciona los productos que deseas agrupar como variantes</p>
+            <p class="text-secondary">Paso 1: Selecciona los productos que deseas agrupar como variantes</p>
         </div>
         <div class="col-md-4 text-end">
             <a href="<?= APP_URL ?>/variantes" class="btn btn-secondary">

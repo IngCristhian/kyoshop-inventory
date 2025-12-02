@@ -2,11 +2,11 @@
     <!-- Header -->
     <div class="row mb-4">
         <div class="col-md-8">
-            <h1 class="h3">
+            <h1 class="h3 text-dark">
                 <i class="bi bi-gear"></i>
                 Configurar Producto Principal
             </h1>
-            <p class="text-muted">Paso 2: Elige el producto principal y configura la agrupación</p>
+            <p class="text-secondary">Paso 2: Elige el producto principal y configura la agrupación</p>
         </div>
         <div class="col-md-4 text-end">
             <a href="<?= APP_URL ?>/variantes/seleccionar" class="btn btn-secondary">

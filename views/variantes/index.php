@@ -2,11 +2,11 @@
     <!-- Header -->
     <div class="row mb-4">
         <div class="col-md-8">
-            <h1 class="h3">
+            <h1 class="h3 text-dark">
                 <i class="bi bi-collection"></i>
                 Gestión de Variantes de Productos
             </h1>
-            <p class="text-muted">Agrupa productos por tallas y colores para optimizar tu catálogo</p>
+            <p class="text-secondary">Agrupa productos por tallas y colores para optimizar tu catálogo</p>
         </div>
         <div class="col-md-4 text-end">
             <a href="<?= APP_URL ?>/variantes/seleccionar" class="btn btn-primary">
