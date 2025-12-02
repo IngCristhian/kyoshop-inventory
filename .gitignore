@@ -34,3 +34,9 @@ config/database_local.php
 # Ignorar dependencias (si usas Composer en el futuro)
 vendor/
 composer.lock
+
+# Ignorar documentación con información sensible
+CLAUDE.md
+GEMINI.md
+DEPLOY.md
+PLAN_*.md
