@@ -210,6 +210,14 @@ class ProductoVariante {
             return false;
         }
 
+        // Asegurar que sea un array indexado consecutivo
+        $variantesIds = array_values($variantesIds);
+
+        // Verificar que haya variantes para validar
+        if (empty($variantesIds)) {
+            return true;
+        }
+
         // Verificar que ninguna variante ya sea padre de otros productos
         $sql = "SELECT COUNT(*) as total
                 FROM productos
