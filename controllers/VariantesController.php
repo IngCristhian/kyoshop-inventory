@@ -277,6 +277,17 @@ class VariantesController {
      * Cargar vista con layout
      */
     private function cargarVista($vista, $data = []) {
+        $flashMessage = getFlashMessage();
+        if ($flashMessage) {
+            $data['flash'] = $flashMessage;
+        }
+
+        // Obtener errores de sesión si existen
+        if (isset($_SESSION['errores'])) {
+            $data['errores'] = $_SESSION['errores'];
+            unset($_SESSION['errores']);
+        }
+
         extract($data);
         $contenido = 'views/' . $vista . '.php';
 
