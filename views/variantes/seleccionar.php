@@ -50,7 +50,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-light d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0">
+                        <h5 class="mb-0 text-dark">
                             <i class="bi bi-list-check"></i>
                             Productos Disponibles (<?= count($productos) ?>)
                         </h5>

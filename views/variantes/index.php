@@ -58,7 +58,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header bg-light">
-                    <h5 class="mb-0">
+                    <h5 class="mb-0 text-dark">
                         <i class="bi bi-collection-fill"></i>
                         Productos Agrupados (<?= count($productos_agrupados) ?>)
                     </h5>
@@ -155,7 +155,7 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-header bg-light">
-                    <h5 class="mb-0">
+                    <h5 class="mb-0 text-dark">
                         <i class="bi bi-box"></i>
                         Productos Sin Agrupar (<?= count($productos_sin_agrupar) ?>)
                     </h5>

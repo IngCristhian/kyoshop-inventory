@@ -90,7 +90,7 @@
         <div class="col-md-8 mb-4">
             <div class="card">
                 <div class="card-header bg-light">
-                    <h5 class="mb-0">
+                    <h5 class="mb-0 text-dark">
                         <i class="bi bi-collection"></i>
                         Variantes Disponibles (<?= count($producto['variantes'] ?? []) ?>)
                     </h5>
@@ -216,7 +216,7 @@
             <!-- Historial / Información Adicional -->
             <div class="card mt-4">
                 <div class="card-header bg-light">
-                    <h5 class="mb-0">
+                    <h5 class="mb-0 text-dark">
                         <i class="bi bi-clock-history"></i>
                         Información Adicional
                     </h5>

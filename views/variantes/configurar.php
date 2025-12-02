@@ -24,7 +24,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-light">
-                        <h5 class="mb-0">
+                        <h5 class="mb-0 text-dark">
                             <i class="bi bi-list-check"></i>
                             Productos Seleccionados (<?= count($productos) ?>)
                         </h5>
@@ -135,7 +135,7 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-light">
-                        <h5 class="mb-0">
+                        <h5 class="mb-0 text-dark">
                             <i class="bi bi-pencil"></i>
                             Editar Información del Producto Principal (Opcional)
                         </h5>
