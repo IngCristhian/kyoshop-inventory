@@ -250,6 +250,56 @@ class VariantesController {
     }
 
     /**
+     * Actualizar stock de una variante consolidada
+     */
+    public function actualizarStockVariante($id) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            redirect('variantes');
+        }
+
+        // Validar token CSRF
+        if (!validateCSRFToken($_POST['csrf_token'] ?? '')) {
+            redirect($_SERVER['HTTP_REFERER'] ?? 'variantes', 'Token de seguridad inválido', 'error');
+        }
+
+        $nuevoStock = (int)($_POST['stock'] ?? 0);
+
+        if ($nuevoStock < 0) {
+            redirect($_SERVER['HTTP_REFERER'] ?? 'variantes', 'El stock no puede ser negativo', 'error');
+        }
+
+        $resultado = $this->variante->actualizarStockVariante($id, $nuevoStock);
+
+        if ($resultado) {
+            redirect($_SERVER['HTTP_REFERER'] ?? 'variantes', 'Stock actualizado exitosamente', 'success');
+        } else {
+            redirect($_SERVER['HTTP_REFERER'] ?? 'variantes', 'Error al actualizar stock', 'error');
+        }
+    }
+
+    /**
+     * Eliminar variante consolidada
+     */
+    public function eliminarVarianteConsolidada($id) {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            redirect('variantes');
+        }
+
+        // Validar token CSRF
+        if (!validateCSRFToken($_POST['csrf_token'] ?? '')) {
+            redirect('variantes', 'Token de seguridad inválido', 'error');
+        }
+
+        $resultado = $this->variante->eliminarVarianteConsolidada($id);
+
+        if ($resultado) {
+            redirect($_SERVER['HTTP_REFERER'] ?? 'variantes', 'Variante eliminada exitosamente. Stock total recalculado.', 'success');
+        } else {
+            redirect($_SERVER['HTTP_REFERER'] ?? 'variantes', 'Error al eliminar variante', 'error');
+        }
+    }
+
+    /**
      * Vista previa de agrupación (AJAX)
      */
     public function preview() {

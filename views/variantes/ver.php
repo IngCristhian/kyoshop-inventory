@@ -92,47 +92,41 @@
                 <div class="card-header bg-light">
                     <h5 class="mb-0 text-dark">
                         <i class="bi bi-collection"></i>
-                        Variantes Disponibles (<?= count($producto['variantes'] ?? []) ?>)
+                        Variantes Consolidadas (<?= count($variantes ?? []) ?>)
                     </h5>
                 </div>
                 <div class="card-body">
-                    <?php if (empty($producto['variantes'])): ?>
+                    <?php if (empty($variantes)): ?>
                         <div class="alert alert-warning">
                             <i class="bi bi-exclamation-triangle"></i>
-                            Este producto no tiene variantes asociadas.
+                            Este producto no tiene variantes consolidadas.
                         </div>
                     <?php else: ?>
                         <!-- Resumen de Stock Total -->
                         <div class="alert alert-info mb-4">
                             <div class="row text-center">
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <h6 class="text-muted">Total Variantes</h6>
-                                    <h3><?= count($producto['variantes']) ?></h3>
+                                    <h3><?= count($variantes) ?></h3>
                                 </div>
-                                <div class="col-md-4">
+                                <div class="col-md-6">
                                     <h6 class="text-muted">Stock Total</h6>
                                     <h3>
                                         <?php
                                         $stockTotal = 0;
-                                        foreach ($producto['variantes'] as $variante) {
+                                        foreach ($variantes as $variante) {
                                             $stockTotal += $variante['stock'];
                                         }
-                                        echo $stockTotal;
+                                        echo $stockTotal . ' unidades';
                                         ?>
                                     </h3>
                                 </div>
-                                <div class="col-md-4">
-                                    <h6 class="text-muted">Valor Total</h6>
-                                    <h3>
-                                        <?php
-                                        $valorTotal = 0;
-                                        foreach ($producto['variantes'] as $variante) {
-                                            $valorTotal += $variante['precio'] * $variante['stock'];
-                                        }
-                                        echo formatPrice($valorTotal);
-                                        ?>
-                                    </h3>
-                                </div>
+                            </div>
+                            <div class="text-center mt-2">
+                                <small class="text-muted">
+                                    <i class="bi bi-info-circle"></i>
+                                    Stock del producto principal: <?= $producto['stock'] ?> unidades
+                                </small>
                             </div>
                         </div>
 
@@ -141,67 +135,73 @@
                             <table class="table table-hover">
                                 <thead>
                                     <tr>
-                                        <th>Imagen</th>
+                                        <th>ID</th>
                                         <th>Talla</th>
                                         <th>Color</th>
                                         <th>Stock</th>
-                                        <th>Precio</th>
-                                        <th>Ubicación</th>
+                                        <th>Código Único</th>
+                                        <th>Fecha Creación</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <?php foreach ($producto['variantes'] as $variante): ?>
+                                    <?php foreach ($variantes as $variante): ?>
                                         <tr>
                                             <td>
-                                                <?php if (!empty($variante['imagen'])): ?>
-                                                    <img src="<?= APP_URL ?>/uploads/<?= $variante['imagen'] ?>"
-                                                         alt="Variante"
-                                                         class="img-thumbnail"
-                                                         style="max-width: 50px; max-height: 50px;">
+                                                <code>#<?= $variante['id'] ?></code>
+                                            </td>
+                                            <td>
+                                                <?php if (!empty($variante['talla'])): ?>
+                                                    <span class="badge bg-secondary fs-6">
+                                                        <?= htmlspecialchars($variante['talla']) ?>
+                                                    </span>
                                                 <?php else: ?>
-                                                    <div class="bg-light text-center p-2" style="width: 50px; height: 50px;">
-                                                        <i class="bi bi-image text-muted"></i>
-                                                    </div>
+                                                    <span class="text-muted">-</span>
                                                 <?php endif; ?>
                                             </td>
                                             <td>
-                                                <span class="badge bg-secondary fs-6">
-                                                    <?= htmlspecialchars($variante['talla'] ?? '-') ?>
-                                                </span>
+                                                <?php if (!empty($variante['color'])): ?>
+                                                    <?= htmlspecialchars($variante['color']) ?>
+                                                <?php else: ?>
+                                                    <span class="text-muted">-</span>
+                                                <?php endif; ?>
                                             </td>
-                                            <td><?= htmlspecialchars($variante['color'] ?? '-') ?></td>
                                             <td>
                                                 <span class="badge bg-<?= $variante['stock'] > 10 ? 'success' : ($variante['stock'] > 5 ? 'warning' : 'danger') ?>">
                                                     <?= $variante['stock'] ?> unidades
                                                 </span>
                                             </td>
-                                            <td><?= formatPrice($variante['precio']) ?></td>
                                             <td>
-                                                <span class="badge bg-info">
-                                                    <?= htmlspecialchars($variante['ubicacion']) ?>
-                                                </span>
+                                                <?php if (!empty($variante['codigo_unico'])): ?>
+                                                    <small><code><?= htmlspecialchars($variante['codigo_unico']) ?></code></small>
+                                                <?php else: ?>
+                                                    <span class="text-muted">-</span>
+                                                <?php endif; ?>
+                                            </td>
+                                            <td>
+                                                <small class="text-muted">
+                                                    <?= date('d/m/Y', strtotime($variante['created_at'])) ?>
+                                                </small>
                                             </td>
                                             <td>
                                                 <div class="btn-group" role="group">
-                                                    <a href="<?= APP_URL ?>/productos/editar/<?= $variante['id'] ?>"
-                                                       class="btn btn-sm btn-outline-primary"
-                                                       title="Editar">
+                                                    <button type="button"
+                                                            class="btn btn-sm btn-outline-primary"
+                                                            onclick="editarStockVariante(<?= $variante['id'] ?>, <?= $variante['stock'] ?>)"
+                                                            title="Editar stock">
                                                         <i class="bi bi-pencil"></i>
-                                                    </a>
-                                                    <?php if ($variante['producto_padre_id']): ?>
-                                                        <form method="POST"
-                                                              action="<?= APP_URL ?>/variantes/eliminarVariante/<?= $variante['id'] ?>"
-                                                              onsubmit="return confirm('¿Convertir esta variante en producto independiente?');"
-                                                              class="d-inline">
-                                                            <input type="hidden" name="csrf_token" value="<?= generateCSRFToken() ?>">
-                                                            <button type="submit"
-                                                                    class="btn btn-sm btn-outline-warning"
-                                                                    title="Separar variante">
-                                                                <i class="bi bi-box-arrow-right"></i>
-                                                            </button>
-                                                        </form>
-                                                    <?php endif; ?>
+                                                    </button>
+                                                    <form method="POST"
+                                                          action="<?= APP_URL ?>/variantes/eliminarVarianteConsolidada/<?= $variante['id'] ?>"
+                                                          onsubmit="return confirm('¿Eliminar esta variante? El stock total se recalculará automáticamente.');"
+                                                          class="d-inline">
+                                                        <input type="hidden" name="csrf_token" value="<?= generateCSRFToken() ?>">
+                                                        <button type="submit"
+                                                                class="btn btn-sm btn-outline-danger"
+                                                                title="Eliminar variante">
+                                                            <i class="bi bi-trash"></i>
+                                                        </button>
+                                                    </form>
                                                 </div>
                                             </td>
                                         </tr>
@@ -237,3 +237,39 @@
         </div>
     </div>
 </div>
+
+<script>
+// Función para editar stock de una variante
+function editarStockVariante(varianteId, stockActual) {
+    const nuevoStock = prompt(`Editar stock de variante #${varianteId}\nStock actual: ${stockActual} unidades\n\nIngrese el nuevo stock:`, stockActual);
+
+    if (nuevoStock !== null && nuevoStock !== '') {
+        const stock = parseInt(nuevoStock);
+
+        if (isNaN(stock) || stock < 0) {
+            alert('Por favor ingrese un número válido mayor o igual a 0');
+            return;
+        }
+
+        // Crear formulario y enviarlo
+        const form = document.createElement('form');
+        form.method = 'POST';
+        form.action = '<?= APP_URL ?>/variantes/actualizarStockVariante/' + varianteId;
+
+        const csrfToken = document.createElement('input');
+        csrfToken.type = 'hidden';
+        csrfToken.name = 'csrf_token';
+        csrfToken.value = '<?= generateCSRFToken() ?>';
+        form.appendChild(csrfToken);
+
+        const stockInput = document.createElement('input');
+        stockInput.type = 'hidden';
+        stockInput.name = 'stock';
+        stockInput.value = stock;
+        form.appendChild(stockInput);
+
+        document.body.appendChild(form);
+        form.submit();
+    }
+}
+</script>
