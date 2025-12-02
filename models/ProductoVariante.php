@@ -195,7 +195,7 @@ class ProductoVariante {
                 FROM productos
                 WHERE activo = 1";
 
-        return $this->db->fetch($sql);
+        return $this->db->fetch($sql, []);
     }
 
     /**
