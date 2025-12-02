@@ -309,12 +309,11 @@ class VariantesController {
         }
 
         extract($data);
-        $contenido = 'views/' . $vista . '.php';
-
-        if (!file_exists($contenido)) {
-            die('Vista no encontrada: ' . $vista);
-        }
-
-        require_once 'views/layouts/master.php';
+        
+        ob_start();
+        include "views/{$vista}.php";
+        $contenido = ob_get_clean();
+        
+        include 'views/layouts/master.php';
     }
 }
