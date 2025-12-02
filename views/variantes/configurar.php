@@ -197,10 +197,10 @@
                                 </ul>
                             </div>
                             <div class="col-md-6">
-                                <h6>Resultado esperado:</h6>
-                                <div class="alert alert-info">
-                                    <p><strong>Total de variantes:</strong> <?= count($productos) ?></p>
-                                    <p><strong>Stock total combinado:</strong>
+                                <h6 class="text-dark">Resultado esperado:</h6>
+                                <div class="alert alert-info mb-0">
+                                    <p class="mb-2"><strong>Total de variantes:</strong> <?= count($productos) ?></p>
+                                    <p class="mb-2"><strong>Stock total combinado:</strong>
                                         <?php
                                         $stockTotal = 0;
                                         foreach ($productos as $p) {
@@ -209,9 +209,20 @@
                                         echo $stockTotal . ' unidades';
                                         ?>
                                     </p>
+                                    <p class="mb-2">
+                                        <strong>Tallas disponibles:</strong>
+                                        <?php
+                                        $tallas = array_map(function($p) {
+                                            return $p['talla'] ?? '-';
+                                        }, $productos);
+                                        echo implode(', ', array_unique($tallas));
+                                        ?>
+                                    </p>
+                                    <hr>
                                     <p class="mb-0">
                                         <i class="bi bi-info-circle"></i>
-                                        Las variantes se mostrarán agrupadas en el catálogo con un selector de tallas.
+                                        <strong>Se consolidará en 1 solo producto</strong> con <?= count($productos) ?> variantes de talla/color.
+                                        Los productos originales se marcarán como inactivos y sus stocks se transferirán a la tabla de variantes.
                                     </p>
                                 </div>
                             </div>
