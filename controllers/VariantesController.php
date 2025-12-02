@@ -21,18 +21,38 @@ class VariantesController {
      * Muestra productos agrupados y productos sin agrupar
      */
     public function index() {
-        $productosAgrupados = $this->variante->obtenerProductosAgrupados();
-        $productosSinAgrupar = $this->variante->obtenerProductosSinAgrupar();
-        $estadisticas = $this->variante->obtenerEstadisticas();
+        try {
+            $productosAgrupados = $this->variante->obtenerProductosAgrupados();
+            $productosSinAgrupar = $this->variante->obtenerProductosSinAgrupar();
+            $estadisticas = $this->variante->obtenerEstadisticas();
 
-        $data = [
-            'titulo' => 'Gestión de Variantes - ' . APP_NAME,
-            'productos_agrupados' => $productosAgrupados,
-            'productos_sin_agrupar' => $productosSinAgrupar,
-            'estadisticas' => $estadisticas
-        ];
+            $data = [
+                'titulo' => 'Gestión de Variantes - ' . APP_NAME,
+                'productos_agrupados' => $productosAgrupados,
+                'productos_sin_agrupar' => $productosSinAgrupar,
+                'estadisticas' => $estadisticas
+            ];
 
-        $this->cargarVista('variantes/index', $data);
+            $this->cargarVista('variantes/index', $data);
+        } catch (Exception $e) {
+            error_log("Error en VariantesController::index - " . $e->getMessage());
+            error_log($e->getTraceAsString());
+
+            // Mostrar error al usuario
+            $data = [
+                'titulo' => 'Error - ' . APP_NAME,
+                'productos_agrupados' => [],
+                'productos_sin_agrupar' => [],
+                'estadisticas' => [
+                    'total_productos' => 0,
+                    'productos_con_variantes' => 0,
+                    'total_variantes' => 0
+                ],
+                'error' => 'Error al cargar datos: ' . $e->getMessage()
+            ];
+
+            $this->cargarVista('variantes/index', $data);
+        }
     }
 
     /**

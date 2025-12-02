@@ -16,6 +16,15 @@
         </div>
     </div>
 
+    <!-- Mostrar error si existe -->
+    <?php if (isset($error)): ?>
+        <div class="alert alert-danger alert-dismissible fade show" role="alert">
+            <i class="bi bi-exclamation-triangle"></i>
+            <strong>Error:</strong> <?= htmlspecialchars($error) ?>
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    <?php endif; ?>
+
     <!-- Estadísticas -->
     <div class="row mb-4">
         <div class="col-md-4">
