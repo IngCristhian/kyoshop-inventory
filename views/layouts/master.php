@@ -227,6 +227,11 @@
                         </a>
                     </li>
                     <li class="nav-item">
+                        <a class="nav-link <?= (strpos($_SERVER['REQUEST_URI'], 'variantes') !== false) ? 'active' : '' ?>" href="<?= APP_URL ?>/variantes">
+                            <i class="bi bi-collection"></i> Variantes
+                        </a>
+                    </li>
+                    <li class="nav-item">
                         <a class="nav-link <?= (strpos($_SERVER['REQUEST_URI'], 'combos') !== false) ? 'active' : '' ?>" href="<?= APP_URL ?>/combos">
                             <i class="bi bi-box-seam"></i> Combos
                         </a>
@@ -319,6 +324,14 @@
                             echo '<i class="bi bi-pencil-square"></i> Editar Producto';
                         } elseif (strpos($rutaActual, 'productos') !== false) {
                             echo '<i class="bi bi-box-seam"></i> Productos';
+                        } elseif (strpos($rutaActual, 'variantes/seleccionar') !== false) {
+                            echo '<i class="bi bi-check2-square"></i> Seleccionar Productos';
+                        } elseif (strpos($rutaActual, 'variantes/configurar') !== false) {
+                            echo '<i class="bi bi-gear"></i> Configurar Agrupación';
+                        } elseif (strpos($rutaActual, 'variantes/ver') !== false) {
+                            echo '<i class="bi bi-eye"></i> Detalles de Variante';
+                        } elseif (strpos($rutaActual, 'variantes') !== false) {
+                            echo '<i class="bi bi-collection"></i> Variantes';
                         } elseif (strpos($rutaActual, 'combos/crear') !== false) {
                             echo '<i class="bi bi-plus-circle"></i> Crear Combo';
                         } elseif (strpos($rutaActual, 'combos/editar') !== false) {

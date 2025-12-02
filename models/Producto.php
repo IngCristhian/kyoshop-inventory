@@ -304,5 +304,116 @@ class Producto {
         
         return $errores;
     }
+
+    /**
+     * MÉTODOS DE SOPORTE PARA VARIANTES
+     */
+
+    /**
+     * Verificar si este producto tiene variantes
+     * @param int $id ID del producto
+     * @return bool True si tiene variantes
+     */
+    public function tieneVariantes($id) {
+        $sql = "SELECT COUNT(*) as total
+                FROM productos
+                WHERE producto_padre_id = :id AND activo = 1";
+        $result = $this->db->fetch($sql, ['id' => $id]);
+        return $result['total'] > 0;
+    }
+
+    /**
+     * Obtener todas las variantes de un producto
+     * @param int $id ID del producto padre
+     * @return array Lista de variantes
+     */
+    public function obtenerVariantes($id) {
+        $sql = "SELECT * FROM productos
+                WHERE producto_padre_id = :id AND activo = 1
+                ORDER BY talla, color";
+        return $this->db->fetchAll($sql, ['id' => $id]);
+    }
+
+    /**
+     * Obtener producto padre (si es variante)
+     * @param int $id ID del producto variante
+     * @return array|null Producto padre o null
+     */
+    public function obtenerProductoPadre($id) {
+        $sql = "SELECT p2.*
+                FROM productos p1
+                INNER JOIN productos p2 ON p1.producto_padre_id = p2.id
+                WHERE p1.id = :id";
+        return $this->db->fetch($sql, ['id' => $id]);
+    }
+
+    /**
+     * Obtener productos principales (sin padre) para el selector de agrupación
+     * @return array Lista de productos principales
+     */
+    public function obtenerProductosPrincipales() {
+        $sql = "SELECT * FROM productos
+                WHERE producto_padre_id IS NULL
+                AND activo = 1
+                ORDER BY nombre";
+        return $this->db->fetchAll($sql);
+    }
+
+    /**
+     * Modificar obtenerTodos para excluir variantes opcionalmente
+     * @param int $pagina Página actual
+     * @param int $limite Productos por página
+     * @param array $filtros Filtros de búsqueda
+     * @param bool $incluirVariantes Si se incluyen variantes o solo productos principales
+     * @return array Lista de productos
+     */
+    public function obtenerTodosSinVariantes($pagina = 1, $limite = ITEMS_PER_PAGE, $filtros = []) {
+        $offset = ($pagina - 1) * $limite;
+        $condiciones = ['activo = 1', 'producto_padre_id IS NULL'];
+        $parametros = [];
+
+        // Aplicar filtros (mismo código que obtenerTodos)
+        if (!empty($filtros['categoria'])) {
+            $condiciones[] = 'categoria = :categoria';
+            $parametros['categoria'] = $filtros['categoria'];
+        }
+
+        if (!empty($filtros['tipo'])) {
+            $condiciones[] = 'tipo = :tipo';
+            $parametros['tipo'] = $filtros['tipo'];
+        }
+
+        if (!empty($filtros['ubicacion'])) {
+            $condiciones[] = 'ubicacion = :ubicacion';
+            $parametros['ubicacion'] = $filtros['ubicacion'];
+        }
+
+        if (!empty($filtros['busqueda'])) {
+            $condiciones[] = '(nombre LIKE :busqueda1 OR descripcion LIKE :busqueda2 OR codigo_producto LIKE :busqueda3)';
+            $parametros['busqueda1'] = '%' . $filtros['busqueda'] . '%';
+            $parametros['busqueda2'] = '%' . $filtros['busqueda'] . '%';
+            $parametros['busqueda3'] = '%' . $filtros['busqueda'] . '%';
+        }
+
+        if (isset($filtros['stock_bajo']) && $filtros['stock_bajo']) {
+            $condiciones[] = 'stock <= 5';
+        }
+
+        if (isset($filtros['stock_minimo'])) {
+            $condiciones[] = 'stock >= :stock_minimo';
+            $parametros['stock_minimo'] = (int)$filtros['stock_minimo'];
+        }
+
+        $where = implode(' AND ', $condiciones);
+        $limite = (int)$limite;
+        $offset = (int)$offset;
+
+        $sql = "SELECT * FROM productos
+                WHERE {$where}
+                ORDER BY fecha_actualizacion DESC
+                LIMIT {$limite} OFFSET {$offset}";
+
+        return $this->db->fetchAll($sql, $parametros);
+    }
 }
 ?>
