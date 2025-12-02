@@ -171,13 +171,14 @@ class VariantesController {
             $this->producto->actualizar($productoPadreId, $datosActualizar);
         }
 
-        // Ejecutar agrupación
-        $resultado = $this->variante->agruparProductos($productoPadreId, $variantesIds);
+        // Ejecutar CONSOLIDACIÓN (nuevo sistema)
+        // Los productos se consolidan en uno solo con variantes en tabla separada
+        $resultado = $this->variante->consolidarProductos($productoPadreId, $variantesIds);
 
         if ($resultado) {
-            redirect('variantes', 'Productos agrupados exitosamente', 'success');
+            redirect('variantes', 'Productos consolidados exitosamente. Ahora son un solo producto con variantes.', 'success');
         } else {
-            redirect('variantes', 'Error al agrupar productos. Verifica que no existan referencias circulares.', 'error');
+            redirect('variantes', 'Error al consolidar productos. Verifica que no existan referencias circulares.', 'error');
         }
     }
 
@@ -207,15 +208,20 @@ class VariantesController {
      * Ver detalles de un producto con sus variantes
      */
     public function ver($id) {
-        $producto = $this->variante->obtenerProductoConVariantes($id);
+        // Obtener producto principal
+        $producto = $this->producto->obtenerPorId($id);
 
         if (!$producto) {
             redirect('variantes', 'Producto no encontrado', 'error');
         }
 
+        // Obtener variantes consolidadas (nuevo sistema)
+        $variantes = $this->variante->obtenerVariantesConsolidadas($id);
+
         $data = [
             'titulo' => 'Detalles del Producto - ' . APP_NAME,
-            'producto' => $producto
+            'producto' => $producto,
+            'variantes' => $variantes
         ];
 
         $this->cargarVista('variantes/ver', $data);

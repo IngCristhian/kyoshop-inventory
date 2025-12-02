@@ -300,4 +300,217 @@ class ProductoVariante {
         $parametro = '%' . $termino . '%';
         return $this->db->fetchAll($sql, ['termino' => $parametro]);
     }
+
+    /**
+     * ================================================================
+     * SISTEMA DE CONSOLIDACIÓN DE PRODUCTOS
+     * Métodos para el nuevo sistema que convierte múltiples productos
+     * en uno solo con variantes en tabla separada
+     * ================================================================
+     */
+
+    /**
+     * Consolidar productos agrupados en un solo producto con variantes
+     * @param int $productoPadreId ID del producto que será el principal
+     * @param array $variantesIds IDs de productos a consolidar como variantes
+     * @return bool True si se consolidó correctamente
+     */
+    public function consolidarProductos($productoPadreId, $variantesIds) {
+        // Validar que no haya referencias circulares
+        if (!$this->validarReferencias($productoPadreId, $variantesIds)) {
+            return false;
+        }
+
+        try {
+            $this->db->beginTransaction();
+
+            // 1. Obtener datos del producto padre
+            require_once 'models/Producto.php';
+            $productoModel = new Producto();
+            $productoPadre = $productoModel->obtenerPorId($productoPadreId);
+
+            if (!$productoPadre) {
+                throw new Exception("Producto padre no encontrado");
+            }
+
+            // 2. Crear variante para el producto padre (si tiene talla/color)
+            if (!empty($productoPadre['talla']) || !empty($productoPadre['color'])) {
+                $this->crearVariante([
+                    'producto_id' => $productoPadreId,
+                    'talla' => $productoPadre['talla'],
+                    'color' => $productoPadre['color'],
+                    'stock' => $productoPadre['stock'],
+                    'codigo_unico' => $productoPadre['codigo_producto']
+                ]);
+            }
+
+            // 3. Consolidar cada variante
+            $stockTotal = $productoPadre['stock'];
+            foreach ($variantesIds as $varianteId) {
+                $variante = $productoModel->obtenerPorId($varianteId);
+
+                if (!$variante) {
+                    continue;
+                }
+
+                // Crear variante en nueva tabla
+                $this->crearVariante([
+                    'producto_id' => $productoPadreId,
+                    'talla' => $variante['talla'],
+                    'color' => $variante['color'],
+                    'stock' => $variante['stock'],
+                    'codigo_unico' => $variante['codigo_producto']
+                ]);
+
+                // Acumular stock total
+                $stockTotal += $variante['stock'];
+
+                // Marcar producto como inactivo (soft delete)
+                $sqlInactivar = "UPDATE productos SET activo = 0 WHERE id = :id";
+                $this->db->execute($sqlInactivar, ['id' => $varianteId]);
+            }
+
+            // 4. Actualizar stock total del producto padre
+            $sqlUpdateStock = "UPDATE productos SET stock = :stock WHERE id = :id";
+            $this->db->execute($sqlUpdateStock, [
+                'stock' => $stockTotal,
+                'id' => $productoPadreId
+            ]);
+
+            $this->db->commit();
+            return true;
+
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            error_log("Error consolidando productos: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Crear una variante en la tabla producto_variantes
+     * @param array $datos Datos de la variante
+     * @return bool True si se creó correctamente
+     */
+    private function crearVariante($datos) {
+        $sql = "INSERT INTO producto_variantes
+                (producto_id, talla, color, stock, codigo_unico, activo)
+                VALUES (:producto_id, :talla, :color, :stock, :codigo_unico, 1)";
+
+        return $this->db->execute($sql, [
+            'producto_id' => $datos['producto_id'],
+            'talla' => $datos['talla'] ?? null,
+            'color' => $datos['color'] ?? null,
+            'stock' => $datos['stock'] ?? 0,
+            'codigo_unico' => $datos['codigo_unico'] ?? null
+        ]);
+    }
+
+    /**
+     * Obtener variantes desde la nueva tabla producto_variantes
+     * @param int $productoId ID del producto
+     * @return array Lista de variantes
+     */
+    public function obtenerVariantesConsolidadas($productoId) {
+        $sql = "SELECT * FROM producto_variantes
+                WHERE producto_id = :id AND activo = 1
+                ORDER BY talla, color";
+
+        return $this->db->fetchAll($sql, ['id' => $productoId]);
+    }
+
+    /**
+     * Actualizar stock de una variante específica
+     * @param int $varianteId ID de la variante
+     * @param int $nuevoStock Nuevo valor de stock
+     * @return bool True si se actualizó correctamente
+     */
+    public function actualizarStockVariante($varianteId, $nuevoStock) {
+        try {
+            $this->db->beginTransaction();
+
+            // Actualizar stock de la variante
+            $sql = "UPDATE producto_variantes SET stock = :stock WHERE id = :id";
+            $this->db->execute($sql, ['stock' => $nuevoStock, 'id' => $varianteId]);
+
+            // Recalcular stock total del producto padre
+            $sqlVariante = "SELECT producto_id FROM producto_variantes WHERE id = :id";
+            $variante = $this->db->fetch($sqlVariante, ['id' => $varianteId]);
+
+            if ($variante) {
+                $this->recalcularStockTotal($variante['producto_id']);
+            }
+
+            $this->db->commit();
+            return true;
+
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            error_log("Error actualizando stock de variante: " . $e->getMessage());
+            return false;
+        }
+    }
+
+    /**
+     * Recalcular stock total del producto padre sumando variantes
+     * @param int $productoId ID del producto
+     * @return bool True si se recalculó correctamente
+     */
+    private function recalcularStockTotal($productoId) {
+        $sql = "UPDATE productos p
+                SET p.stock = (
+                    SELECT COALESCE(SUM(pv.stock), 0)
+                    FROM producto_variantes pv
+                    WHERE pv.producto_id = p.id AND pv.activo = 1
+                )
+                WHERE p.id = :id";
+
+        return $this->db->execute($sql, ['id' => $productoId]);
+    }
+
+    /**
+     * Verificar si un producto tiene variantes consolidadas
+     * @param int $productoId ID del producto
+     * @return bool True si tiene variantes
+     */
+    public function tieneVariantesConsolidadas($productoId) {
+        $sql = "SELECT COUNT(*) as total
+                FROM producto_variantes
+                WHERE producto_id = :id AND activo = 1";
+
+        $result = $this->db->fetch($sql, ['id' => $productoId]);
+        return $result['total'] > 0;
+    }
+
+    /**
+     * Eliminar una variante consolidada
+     * @param int $varianteId ID de la variante
+     * @return bool True si se eliminó correctamente
+     */
+    public function eliminarVarianteConsolidada($varianteId) {
+        try {
+            $this->db->beginTransaction();
+
+            // Obtener producto_id antes de eliminar
+            $sql = "SELECT producto_id FROM producto_variantes WHERE id = :id";
+            $variante = $this->db->fetch($sql, ['id' => $varianteId]);
+
+            // Soft delete de la variante
+            $sqlDelete = "UPDATE producto_variantes SET activo = 0 WHERE id = :id";
+            $this->db->execute($sqlDelete, ['id' => $varianteId]);
+
+            // Recalcular stock total
+            if ($variante) {
+                $this->recalcularStockTotal($variante['producto_id']);
+            }
+
+            $this->db->commit();
+            return true;
+
+        } catch (Exception $e) {
+            $this->db->rollBack();
+            error_log("Error eliminando variante consolidada: " . $e->getMessage());
+            return false;
+        }
+    }
 }
