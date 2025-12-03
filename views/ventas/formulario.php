@@ -49,14 +49,14 @@
                             </button>
 
                             <!-- Info del cliente seleccionado -->
-                            <div id="infoClienteSeleccionado" class="card" style="display: none;">
-                                <div class="card-body p-3" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);">
-                                    <h6 class="card-title text-dark mb-2">
-                                        <i class="bi bi-person-check-fill text-success"></i> Cliente Seleccionado
+                            <div id="infoClienteSeleccionado" class="card border-success" style="display: none;">
+                                <div class="card-body p-3" style="background: #ffffff;">
+                                    <h6 class="card-title mb-2" style="color: #198754;">
+                                        <i class="bi bi-person-check-fill"></i> Cliente Seleccionado
                                     </h6>
-                                    <p class="mb-1"><strong>Nombre:</strong> <span id="nombreClienteSeleccionado"></span></p>
-                                    <p class="mb-1"><strong>Teléfono:</strong> <span id="telefonoClienteSeleccionado"></span></p>
-                                    <p class="mb-0"><strong>Ciudad:</strong> <span id="ciudadClienteSeleccionado"></span></p>
+                                    <p class="mb-1 text-dark"><strong>Nombre:</strong> <span id="nombreClienteSeleccionado"></span></p>
+                                    <p class="mb-1 text-dark"><strong>Teléfono:</strong> <span id="telefonoClienteSeleccionado"></span></p>
+                                    <p class="mb-0 text-dark"><strong>Ciudad:</strong> <span id="ciudadClienteSeleccionado"></span></p>
                                 </div>
                             </div>
                         </div>
@@ -204,8 +204,8 @@
                     <div class="row">
                         <div class="col-12">
                             <div class="d-flex justify-content-between">
-                                <a href="<?= APP_URL ?>/ventas" class="btn btn-outline-secondary">
-                                    <i class="bi bi-arrow-left"></i> Cancelar
+                                <a href="<?= APP_URL ?>/ventas" class="btn btn-outline-danger">
+                                    <i class="bi bi-x-circle"></i> Cancelar
                                 </a>
                                 <button type="submit" class="btn btn-primary" id="btnGuardar">
                                     <i class="bi bi-save"></i> Registrar Venta
