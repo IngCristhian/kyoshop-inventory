@@ -197,33 +197,35 @@
                                 </ul>
                             </div>
                             <div class="col-md-6">
-                                <h6 class="text-dark">Resultado esperado:</h6>
-                                <div class="alert alert-info mb-0">
-                                    <p class="mb-2"><strong>Total de variantes:</strong> <?= count($productos) ?></p>
-                                    <p class="mb-2"><strong>Stock total combinado:</strong>
-                                        <?php
-                                        $stockTotal = 0;
-                                        foreach ($productos as $p) {
-                                            $stockTotal += $p['stock'];
-                                        }
-                                        echo $stockTotal . ' unidades';
-                                        ?>
-                                    </p>
-                                    <p class="mb-2">
-                                        <strong>Tallas disponibles:</strong>
-                                        <?php
-                                        $tallas = array_map(function($p) {
-                                            return $p['talla'] ?? '-';
-                                        }, $productos);
-                                        echo implode(', ', array_unique($tallas));
-                                        ?>
-                                    </p>
-                                    <hr>
-                                    <p class="mb-0">
-                                        <i class="bi bi-info-circle"></i>
-                                        <strong>Se consolidará en 1 solo producto</strong> con <?= count($productos) ?> variantes de talla/color.
-                                        Los productos originales se marcarán como inactivos y sus stocks se transferirán a la tabla de variantes.
-                                    </p>
+                                <div class="resultado-esperado-sticky">
+                                    <h6 class="text-dark">Resultado esperado:</h6>
+                                    <div class="alert alert-info mb-0">
+                                        <p class="mb-2"><strong>Total de variantes:</strong> <?= count($productos) ?></p>
+                                        <p class="mb-2"><strong>Stock total combinado:</strong>
+                                            <?php
+                                            $stockTotal = 0;
+                                            foreach ($productos as $p) {
+                                                $stockTotal += $p['stock'];
+                                            }
+                                            echo $stockTotal . ' unidades';
+                                            ?>
+                                        </p>
+                                        <p class="mb-2">
+                                            <strong>Tallas disponibles:</strong>
+                                            <?php
+                                            $tallas = array_map(function($p) {
+                                                return $p['talla'] ?? '-';
+                                            }, $productos);
+                                            echo implode(', ', array_unique($tallas));
+                                            ?>
+                                        </p>
+                                        <hr>
+                                        <p class="mb-0">
+                                            <i class="bi bi-info-circle"></i>
+                                            <strong>Se consolidará en 1 solo producto</strong> con <?= count($productos) ?> variantes de talla/color.
+                                            Los productos originales se marcarán como inactivos y sus stocks se transferirán a la tabla de variantes.
+                                        </p>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -263,6 +265,26 @@
 
 .producto-padre-radio:checked ~ * {
     border-color: var(--bs-primary);
+}
+
+/* Resultado esperado siempre visible (sticky) */
+.resultado-esperado-sticky {
+    position: sticky;
+    top: 20px;
+    z-index: 100;
+    background: white;
+    border-radius: 8px;
+    padding: 10px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.resultado-esperado-sticky h6 {
+    margin-bottom: 10px;
+}
+
+.resultado-esperado-sticky .alert {
+    box-shadow: none;
+    border-width: 2px;
 }
 </style>
 
