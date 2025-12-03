@@ -118,6 +118,7 @@
                                  class="card-img-top lazy-load"
                                  style="height: 200px; object-fit: cover; cursor: pointer;"
                                  onclick="abrirVistaPrevia(
+                                     <?= $producto['id'] ?>,
                                      <?= $producto['imagen'] ? '\'' . APP_URL . '/uploads/' . $producto['imagen'] . '\'' : 'null' ?>,
                                      <?= $producto['imagen_modelo'] ? '\'' . APP_URL . '/uploads/' . $producto['imagen_modelo'] . '\'' : 'null' ?>,
                                      '<?= htmlspecialchars($producto['nombre']) ?>',
@@ -334,6 +335,22 @@
                             <p id="categoriaPreview" class="mb-0 text-dark fw-semibold"></p>
                         </div>
 
+                        <!-- Selector de Variantes (cuando tiene variantes consolidadas) -->
+                        <div id="variantesContainer" style="display: none;">
+                            <div class="mb-3 p-3 border rounded bg-light">
+                                <label class="form-label fw-bold text-dark">
+                                    <i class="bi bi-collection"></i> Selecciona una variante:
+                                </label>
+                                <div id="variantesSelector" class="d-flex flex-wrap gap-2">
+                                    <!-- Las variantes se cargarán dinámicamente aquí -->
+                                </div>
+                                <small class="text-muted d-block mt-2">
+                                    <i class="bi bi-info-circle"></i> El stock se actualiza según la variante seleccionada
+                                </small>
+                            </div>
+                        </div>
+
+                        <!-- Detalles originales (cuando NO tiene variantes) -->
                         <div class="row g-2" id="detallesExtras">
                             <div class="col-6" id="tallaContainer" style="display: none;">
                                 <div class="p-2 bg-light rounded h-100">
@@ -365,7 +382,7 @@
 let imagenesGaleria = [];
 let imagenActualIndex = 0;
 
-function abrirVistaPrevia(imagenUrl, imagenModeloUrl, nombre, codigo, precio, stock, categoria, talla, color) {
+function abrirVistaPrevia(productoId, imagenUrl, imagenModeloUrl, nombre, codigo, precio, stock, categoria, talla, color) {
     // Resetear galería
     imagenesGaleria = [];
     imagenActualIndex = 0;
@@ -392,6 +409,10 @@ function abrirVistaPrevia(imagenUrl, imagenModeloUrl, nombre, codigo, precio, st
     document.getElementById('stockPreview').textContent = stock + ' unidades';
     document.getElementById('categoriaPreview').textContent = categoria;
 
+    // Ocultar variantes por defecto
+    document.getElementById('variantesContainer').style.display = 'none';
+    document.getElementById('detallesExtras').style.display = 'flex';
+
     // Mostrar talla si existe
     if (talla && talla.trim() !== '') {
         document.getElementById('tallaPreview').textContent = talla;
@@ -417,9 +438,69 @@ function abrirVistaPrevia(imagenUrl, imagenModeloUrl, nombre, codigo, precio, st
         document.getElementById('imagenPreview').src = imagenesGaleria[0].url;
     }
 
+    // Cargar variantes si existen
+    cargarVariantes(productoId, stock);
+
     // Abrir modal
     const modal = new bootstrap.Modal(document.getElementById('modalVistaPrevia'));
     modal.show();
+}
+
+// Función para cargar variantes del producto
+function cargarVariantes(productoId, stockOriginal) {
+    fetch('<?= APP_URL ?>/productos/variantes/' + productoId)
+        .then(response => response.json())
+        .then(data => {
+            if (data.success && data.tieneVariantes && data.variantes.length > 0) {
+                // Mostrar selector de variantes
+                document.getElementById('variantesContainer').style.display = 'block';
+                document.getElementById('detallesExtras').style.display = 'none';
+
+                // Limpiar selector
+                const selector = document.getElementById('variantesSelector');
+                selector.innerHTML = '';
+
+                // Crear botones para cada variante
+                data.variantes.forEach((variante, index) => {
+                    const btn = document.createElement('button');
+                    btn.type = 'button';
+                    btn.className = 'btn btn-outline-primary variante-btn';
+                    if (index === 0) btn.classList.add('active');
+
+                    const tallaText = variante.talla || 'S/T';
+                    const colorText = variante.color ? ` - ${variante.color}` : '';
+
+                    btn.innerHTML = `
+                        <strong>${tallaText}</strong>${colorText}<br>
+                        <small>${variante.stock} unidades</small>
+                    `;
+
+                    btn.onclick = () => seleccionarVariante(variante, data.variantes);
+
+                    selector.appendChild(btn);
+                });
+
+                // Seleccionar primera variante por defecto
+                if (data.variantes.length > 0) {
+                    seleccionarVariante(data.variantes[0], data.variantes);
+                }
+            }
+        })
+        .catch(error => {
+            console.error('Error cargando variantes:', error);
+        });
+}
+
+// Función para seleccionar una variante
+function seleccionarVariante(variante, todasVariantes) {
+    // Actualizar stock
+    document.getElementById('stockPreview').textContent = variante.stock + ' unidades';
+
+    // Resaltar botón seleccionado
+    document.querySelectorAll('.variante-btn').forEach(btn => {
+        btn.classList.remove('active');
+    });
+    event.target.closest('.variante-btn').classList.add('active');
 }
 
 function mostrarImagenGaleria(index) {
@@ -530,3 +611,36 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 });
 </script>
+
+<style>
+/* Estilos para selector de variantes */
+.variante-btn {
+    min-width: 80px;
+    font-size: 0.9rem;
+    padding: 10px 15px;
+    border-width: 2px;
+    transition: all 0.2s ease;
+}
+
+.variante-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.variante-btn.active {
+    background-color: #667eea;
+    border-color: #667eea;
+    color: white;
+    font-weight: bold;
+}
+
+.variante-btn small {
+    display: block;
+    font-size: 0.75rem;
+    margin-top: 2px;
+}
+
+#variantesContainer .border {
+    border-color: #667eea !important;
+}
+</style>

@@ -49,12 +49,24 @@
                         
                         <div class="col-md-6 mb-3">
                             <label for="stock" class="form-label">Stock *</label>
-                            <input type="number" class="form-control" id="stock" name="stock" 
-                                   value="<?= $datos_antiguos['stock'] ?? $producto['stock'] ?? '' ?>" 
+                            <input type="number" class="form-control" id="stock" name="stock"
+                                   value="<?= $datos_antiguos['stock'] ?? $producto['stock'] ?? '' ?>"
                                    min="0" required>
+                            <small class="text-muted">Stock total del producto</small>
                         </div>
                     </div>
-                    
+
+                    <?php if ($accion === 'editar' && isset($producto['id'])): ?>
+                        <!-- Sección de Variantes (solo en edición) -->
+                        <div id="seccionVariantes" class="mb-4"></div>
+                        <script>
+                            // Cargar variantes del producto al cargar la página
+                            document.addEventListener('DOMContentLoaded', function() {
+                                cargarVariantesEdicion(<?= $producto['id'] ?>);
+                            });
+                        </script>
+                    <?php endif; ?>
+
                     <h5 class="text-primary mb-3 mt-4">
                         <i class="bi bi-tags"></i> Características
                     </h5>
@@ -887,5 +899,123 @@
 
         // Guardar intervalo para poder limpiarlo después
         window.progressInterval = interval;
+    }
+
+    // ========================================
+    // FUNCIONES PARA GESTIÓN DE VARIANTES
+    // ========================================
+
+    function cargarVariantesEdicion(productoId) {
+        fetch('<?= APP_URL ?>/productos/variantes/' + productoId)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.tieneVariantes && data.variantes.length > 0) {
+                    mostrarSeccionVariantes(data.variantes, productoId);
+                }
+            })
+            .catch(error => {
+                console.error('Error cargando variantes:', error);
+            });
+    }
+
+    function mostrarSeccionVariantes(variantes, productoId) {
+        const seccion = document.getElementById('seccionVariantes');
+
+        let html = `
+            <div class="card border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">
+                        <i class="bi bi-collection"></i> Variantes del Producto (${variantes.length})
+                    </h5>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i>
+                        <strong>Este producto tiene variantes consolidadas.</strong>
+                        Puedes editar el stock de cada variante individualmente.
+                        El stock total del producto se calculará automáticamente sumando todas las variantes.
+                    </div>
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Talla</th>
+                                    <th>Color</th>
+                                    <th>Stock</th>
+                                    <th>Código</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>`;
+
+        variantes.forEach(variante => {
+            html += `
+                <tr id="variante-row-${variante.id}">
+                    <td><code>#${variante.id}</code></td>
+                    <td>
+                        <span class="badge bg-secondary fs-6">${variante.talla || '-'}</span>
+                    </td>
+                    <td>${variante.color || '-'}</td>
+                    <td>
+                        <span class="badge bg-${variante.stock > 10 ? 'success' : (variante.stock > 5 ? 'warning' : 'danger')}" id="stock-badge-${variante.id}">
+                            ${variante.stock} unidades
+                        </span>
+                    </td>
+                    <td><small><code>${variante.codigo_unico || '-'}</code></small></td>
+                    <td>
+                        <button type="button" class="btn btn-sm btn-primary" onclick="editarStockVariante(${variante.id}, ${variante.stock})">
+                            <i class="bi bi-pencil"></i> Editar Stock
+                        </button>
+                    </td>
+                </tr>`;
+        });
+
+        html += `
+                            </tbody>
+                        </table>
+                    </div>
+                    <div class="alert alert-warning mt-3">
+                        <i class="bi bi-exclamation-triangle"></i>
+                        <strong>Nota:</strong> Para gestionar las variantes de forma avanzada (agregar, eliminar, etc.),
+                        ve a la sección <a href="<?= APP_URL ?>/variantes/ver/${productoId}" class="alert-link">Gestión de Variantes</a>.
+                    </div>
+                </div>
+            </div>`;
+
+        seccion.innerHTML = html;
+    }
+
+    function editarStockVariante(varianteId, stockActual) {
+        const nuevoStock = prompt(`Editar stock de variante #${varianteId}\nStock actual: ${stockActual} unidades\n\nIngrese el nuevo stock:`, stockActual);
+
+        if (nuevoStock !== null && nuevoStock !== '') {
+            const stock = parseInt(nuevoStock);
+
+            if (isNaN(stock) || stock < 0) {
+                alert('Por favor ingrese un número válido mayor o igual a 0');
+                return;
+            }
+
+            // Crear formulario y enviarlo
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '<?= APP_URL ?>/variantes/actualizarStockVariante/' + varianteId;
+
+            const csrfToken = document.createElement('input');
+            csrfToken.type = 'hidden';
+            csrfToken.name = 'csrf_token';
+            csrfToken.value = '<?= generateCSRFToken() ?>';
+            form.appendChild(csrfToken);
+
+            const stockInput = document.createElement('input');
+            stockInput.type = 'hidden';
+            stockInput.name = 'stock';
+            stockInput.value = stock;
+            form.appendChild(stockInput);
+
+            document.body.appendChild(form);
+            form.submit();
+        }
     }
 </script>

@@ -103,6 +103,70 @@ switch ($path) {
         $controller->buscar();
         break;
 
+    case (preg_match('/productos\/variantes\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/ProductoController.php';
+        $controller = new ProductoController();
+        $controller->obtenerVariantes($matches[1]);
+        break;
+
+    // Rutas de variantes de productos
+    case 'variantes':
+        requiereAuth();
+        require_once 'controllers/VariantesController.php';
+        $controller = new VariantesController();
+        $controller->index();
+        break;
+
+    case 'variantes/seleccionar':
+        requiereAuth();
+        require_once 'controllers/VariantesController.php';
+        $controller = new VariantesController();
+        $controller->seleccionar();
+        break;
+
+    case 'variantes/configurar':
+        requiereAuth();
+        require_once 'controllers/VariantesController.php';
+        $controller = new VariantesController();
+        $controller->configurar();
+        break;
+
+    case 'variantes/agrupar':
+        requiereAuth();
+        require_once 'controllers/VariantesController.php';
+        $controller = new VariantesController();
+        $controller->agrupar();
+        break;
+
+    case (preg_match('/variantes\/desagrupar\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/VariantesController.php';
+        $controller = new VariantesController();
+        $controller->desagrupar($matches[1]);
+        break;
+
+    case (preg_match('/variantes\/ver\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/VariantesController.php';
+        $controller = new VariantesController();
+        $controller->ver($matches[1]);
+        break;
+
+    case (preg_match('/variantes\/eliminarVariante\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/VariantesController.php';
+        $controller = new VariantesController();
+        $controller->eliminarVariante($matches[1]);
+        break;
+
+    case 'variantes/preview':
+        requiereAuth();
+        require_once 'controllers/VariantesController.php';
+        $controller = new VariantesController();
+        $controller->preview();
+        break;
+
     // Rutas de gestión de usuarios (solo admin)
     case 'usuarios':
         requiereAdmin();
