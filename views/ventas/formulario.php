@@ -107,15 +107,15 @@
                                 <div class="d-flex justify-content-between mb-2">
                                     <div class="btn-group btn-group-sm" role="group">
                                         <input type="radio" class="btn-check" name="vistaProductos" id="vistaLista" value="lista" checked>
-                                        <label class="btn btn-outline-secondary" for="vistaLista" title="Vista lista">
+                                        <label class="btn btn-outline-primary" for="vistaLista" title="Vista lista">
                                             <i class="bi bi-list-ul"></i>
                                         </label>
                                         <input type="radio" class="btn-check" name="vistaProductos" id="vistaTarjetas" value="tarjetas">
-                                        <label class="btn btn-outline-secondary" for="vistaTarjetas" title="Vista tarjetas">
+                                        <label class="btn btn-outline-primary" for="vistaTarjetas" title="Vista tarjetas">
                                             <i class="bi bi-grid-3x2"></i>
                                         </label>
                                     </div>
-                                    <select class="form-select form-select-sm" id="ordenarProductos" style="width: auto;">
+                                    <select class="form-select form-select-sm fw-bold" id="ordenarProductos" style="width: auto; color: #212529;">
                                         <option value="nombre_asc">A-Z</option>
                                         <option value="nombre_desc">Z-A</option>
                                         <option value="precio_asc">Precio menor</option>
