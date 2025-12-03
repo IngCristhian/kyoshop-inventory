@@ -248,6 +248,15 @@ class ProductoVariante {
             return false;
         }
 
+        // Verificar que el producto padre NO tenga variantes ya consolidadas
+        $sqlVariantesExistentes = "SELECT COUNT(*) as total FROM producto_variantes WHERE producto_id = :producto_id";
+        $variantesExistentes = $this->db->fetch($sqlVariantesExistentes, ['producto_id' => $padreId]);
+
+        if ($variantesExistentes['total'] > 0) {
+            error_log("ERROR: El producto padre ($padreId) ya tiene variantes consolidadas (total: {$variantesExistentes['total']}). No se pueden agregar más variantes.");
+            return false;
+        }
+
         error_log("✓ Validación exitosa - Producto padre ($padreId) con variantes: " . implode(', ', $variantesIds));
         return true;
     }
