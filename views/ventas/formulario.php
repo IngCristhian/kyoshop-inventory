@@ -499,6 +499,18 @@ function buscarProductos() {
 function aplicarFiltrosYOrden() {
     let productosFiltrados = [...todosLosProductos];
 
+    // Filtrar por término de búsqueda
+    const terminoBusqueda = document.getElementById('busquedaProducto').value.trim().toLowerCase();
+    if (terminoBusqueda) {
+        productosFiltrados = productosFiltrados.filter(p => {
+            return p.nombre.toLowerCase().includes(terminoBusqueda) ||
+                   p.codigo_producto.toLowerCase().includes(terminoBusqueda) ||
+                   (p.descripcion && p.descripcion.toLowerCase().includes(terminoBusqueda)) ||
+                   (p.categoria && p.categoria.toLowerCase().includes(terminoBusqueda)) ||
+                   (p.color && p.color.toLowerCase().includes(terminoBusqueda));
+        });
+    }
+
     // Filtrar por categoría
     const categoria = document.getElementById('filtroCategoria').value;
     if (categoria) {
