@@ -16,6 +16,46 @@
         </div>
     </div>
 
+    <!-- Resultado Esperado - SIEMPRE VISIBLE -->
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert alert-info mb-0 resultado-fijo">
+                <div class="row align-items-center">
+                    <div class="col-md-3">
+                        <p class="mb-0"><strong><i class="bi bi-collection"></i> Total de variantes:</strong> <?= count($productos) ?></p>
+                    </div>
+                    <div class="col-md-3">
+                        <p class="mb-0"><strong><i class="bi bi-box-seam"></i> Stock total:</strong>
+                            <?php
+                            $stockTotal = 0;
+                            foreach ($productos as $p) {
+                                $stockTotal += $p['stock'];
+                            }
+                            echo $stockTotal . ' unidades';
+                            ?>
+                        </p>
+                    </div>
+                    <div class="col-md-3">
+                        <p class="mb-0"><strong><i class="bi bi-tags"></i> Tallas:</strong>
+                            <?php
+                            $tallas = array_map(function($p) {
+                                return $p['talla'] ?? '-';
+                            }, $productos);
+                            echo implode(', ', array_unique($tallas));
+                            ?>
+                        </p>
+                    </div>
+                    <div class="col-md-3">
+                        <p class="mb-0">
+                            <i class="bi bi-info-circle-fill"></i>
+                            <strong>Se consolidará en 1 producto</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <form method="POST" action="<?= APP_URL ?>/variantes/agrupar" id="formConfiguracion">
         <input type="hidden" name="csrf_token" value="<?= generateCSRFToken() ?>">
 
@@ -172,63 +212,37 @@
             </div>
         </div>
 
-        <!-- Resumen y Confirmación -->
+        <!-- Productos Seleccionados y Confirmación -->
         <div class="row mb-4">
             <div class="col-12">
                 <div class="card border-success">
                     <div class="card-header bg-success text-white">
                         <h5 class="mb-0">
-                            <i class="bi bi-check-circle"></i>
-                            Resumen de Agrupación
+                            <i class="bi bi-list-check"></i>
+                            Productos que se consolidarán
                         </h5>
                     </div>
                     <div class="card-body">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <h6>Productos que se agruparán:</h6>
-                                <ul class="list-group">
-                                    <?php foreach ($productos as $producto): ?>
-                                        <li class="list-group-item d-flex justify-content-between align-items-center">
-                                            <?= htmlspecialchars($producto['nombre']) ?>
-                                            <span class="badge bg-secondary"><?= htmlspecialchars($producto['talla'] ?? '-') ?></span>
-                                            <input type="hidden" name="variantes_ids[]" value="<?= $producto['id'] ?>">
-                                        </li>
-                                    <?php endforeach; ?>
-                                </ul>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="resultado-esperado-sticky">
-                                    <h6 class="text-dark">Resultado esperado:</h6>
-                                    <div class="alert alert-info mb-0">
-                                        <p class="mb-2"><strong>Total de variantes:</strong> <?= count($productos) ?></p>
-                                        <p class="mb-2"><strong>Stock total combinado:</strong>
-                                            <?php
-                                            $stockTotal = 0;
-                                            foreach ($productos as $p) {
-                                                $stockTotal += $p['stock'];
-                                            }
-                                            echo $stockTotal . ' unidades';
-                                            ?>
-                                        </p>
-                                        <p class="mb-2">
-                                            <strong>Tallas disponibles:</strong>
-                                            <?php
-                                            $tallas = array_map(function($p) {
-                                                return $p['talla'] ?? '-';
-                                            }, $productos);
-                                            echo implode(', ', array_unique($tallas));
-                                            ?>
-                                        </p>
-                                        <hr>
-                                        <p class="mb-0">
-                                            <i class="bi bi-info-circle"></i>
-                                            <strong>Se consolidará en 1 solo producto</strong> con <?= count($productos) ?> variantes de talla/color.
-                                            Los productos originales se marcarán como inactivos y sus stocks se transferirán a la tabla de variantes.
-                                        </p>
+                        <ul class="list-group">
+                            <?php foreach ($productos as $producto): ?>
+                                <li class="list-group-item d-flex justify-content-between align-items-center">
+                                    <div class="d-flex align-items-center">
+                                        <?php if (!empty($producto['imagen'])): ?>
+                                            <img src="<?= APP_URL ?>/uploads/<?= $producto['imagen'] ?>"
+                                                 alt="<?= htmlspecialchars($producto['nombre']) ?>"
+                                                 class="img-thumbnail me-2"
+                                                 style="max-width: 50px; max-height: 50px;">
+                                        <?php endif; ?>
+                                        <span><?= htmlspecialchars($producto['nombre']) ?></span>
                                     </div>
-                                </div>
-                            </div>
-                        </div>
+                                    <div>
+                                        <span class="badge bg-secondary me-2"><?= htmlspecialchars($producto['talla'] ?? '-') ?></span>
+                                        <span class="badge bg-info"><?= $producto['stock'] ?> unidades</span>
+                                    </div>
+                                    <input type="hidden" name="variantes_ids[]" value="<?= $producto['id'] ?>">
+                                </li>
+                            <?php endforeach; ?>
+                        </ul>
                     </div>
                     <div class="card-footer bg-light">
                         <div class="d-flex justify-content-between">
@@ -267,24 +281,21 @@
     border-color: var(--bs-primary);
 }
 
-/* Resultado esperado siempre visible (sticky) */
-.resultado-esperado-sticky {
-    position: sticky;
-    top: 20px;
-    z-index: 100;
-    background: white;
-    border-radius: 8px;
-    padding: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+/* Resultado esperado siempre visible en la parte superior */
+.resultado-fijo {
+    border-left: 5px solid #0dcaf0;
+    background-color: #d1ecf1;
+    border-color: #0dcaf0;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
-.resultado-esperado-sticky h6 {
-    margin-bottom: 10px;
+.resultado-fijo p {
+    font-size: 0.9rem;
 }
 
-.resultado-esperado-sticky .alert {
-    box-shadow: none;
-    border-width: 2px;
+.resultado-fijo strong {
+    color: #055160;
 }
 </style>
 
