@@ -72,7 +72,9 @@
 
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label class="form-label fw-bold">Buscar Producto</label>
+                                <label class="form-label fw-bold">Buscar y Filtrar Productos</label>
+
+                                <!-- Barra de búsqueda -->
                                 <div class="input-group mb-2">
                                     <span class="input-group-text"><i class="bi bi-search"></i></span>
                                     <input type="text"
@@ -82,8 +84,49 @@
                                            autocomplete="off">
                                 </div>
 
+                                <!-- Filtros adicionales -->
+                                <div class="row g-2 mb-2">
+                                    <div class="col-4">
+                                        <select class="form-select form-select-sm" id="filtroCategoria">
+                                            <option value="">Categoría</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-4">
+                                        <select class="form-select form-select-sm" id="filtroTalla">
+                                            <option value="">Talla</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-4">
+                                        <select class="form-select form-select-sm" id="filtroColor">
+                                            <option value="">Color</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <!-- Controles de vista y ordenamiento -->
+                                <div class="d-flex justify-content-between mb-2">
+                                    <div class="btn-group btn-group-sm" role="group">
+                                        <input type="radio" class="btn-check" name="vistaProductos" id="vistaLista" value="lista" checked>
+                                        <label class="btn btn-outline-secondary" for="vistaLista" title="Vista lista">
+                                            <i class="bi bi-list-ul"></i>
+                                        </label>
+                                        <input type="radio" class="btn-check" name="vistaProductos" id="vistaTarjetas" value="tarjetas">
+                                        <label class="btn btn-outline-secondary" for="vistaTarjetas" title="Vista tarjetas">
+                                            <i class="bi bi-grid-3x2"></i>
+                                        </label>
+                                    </div>
+                                    <select class="form-select form-select-sm" id="ordenarProductos" style="width: auto;">
+                                        <option value="nombre_asc">A-Z</option>
+                                        <option value="nombre_desc">Z-A</option>
+                                        <option value="precio_asc">Precio menor</option>
+                                        <option value="precio_desc">Precio mayor</option>
+                                        <option value="stock_asc">Stock menor</option>
+                                        <option value="stock_desc">Stock mayor</option>
+                                    </select>
+                                </div>
+
                                 <!-- Lista de productos filtrable -->
-                                <div class="border rounded" style="max-height: 300px; overflow-y: auto; background: white;">
+                                <div class="border rounded" style="max-height: 400px; overflow-y: auto; background: white;" id="contenedorProductos">
                                     <div id="listaProductos" class="list-group list-group-flush">
                                         <div class="list-group-item text-center text-muted">
                                             <i class="bi bi-hourglass-split"></i> Cargando productos...
@@ -234,11 +277,15 @@ let todosLosClientes = [];
 let todosLosProductos = [];
 let productosAgregados = [];
 let clienteSeleccionado = null;
+let vistaActual = 'lista';
+let ordenActual = 'nombre_asc';
 
 // Cargar datos al iniciar
 document.addEventListener('DOMContentLoaded', function() {
     cargarClientes();
     cargarProductos();
+    cargarFiltros();
+    configurarEventos();
 });
 
 //=== CLIENTES ===//
@@ -335,7 +382,6 @@ function escapeHtml(text) {
 
 // Cargar todos los productos
 function cargarProductos() {
-    // Cargar productos al inicio (sin término de búsqueda)
     const formData = new FormData();
     formData.append('termino', '');
 
@@ -345,7 +391,8 @@ function cargarProductos() {
     })
     .then(response => response.json())
     .then(data => {
-        mostrarTodosLosProductos(data.productos || []);
+        todosLosProductos = data.productos || [];
+        aplicarFiltrosYOrden();
     })
     .catch(error => {
         console.error('Error:', error);
@@ -353,16 +400,86 @@ function cargarProductos() {
     });
 }
 
-// Filtrar productos mientras se escribe
-document.getElementById('busquedaProducto').addEventListener('input', function() {
+// Cargar filtros dinámicamente
+function cargarFiltros() {
+    const categorias = new Set();
+    const tallas = new Set();
+    const colores = new Set();
+
+    // Obtener valores únicos del servidor
+    fetch('<?= APP_URL ?>/ventas/obtenerFiltrosProductos', {
+        method: 'POST'
+    })
+    .then(response => response.json())
+    .then(data => {
+        // Llenar select de categorías
+        const selectCategoria = document.getElementById('filtroCategoria');
+        (data.categorias || []).forEach(cat => {
+            const option = document.createElement('option');
+            option.value = cat;
+            option.textContent = cat;
+            selectCategoria.appendChild(option);
+        });
+
+        // Llenar select de tallas
+        const selectTalla = document.getElementById('filtroTalla');
+        (data.tallas || []).forEach(talla => {
+            if (talla) {
+                const option = document.createElement('option');
+                option.value = talla;
+                option.textContent = talla;
+                selectTalla.appendChild(option);
+            }
+        });
+
+        // Llenar select de colores
+        const selectColor = document.getElementById('filtroColor');
+        (data.colores || []).forEach(color => {
+            if (color) {
+                const option = document.createElement('option');
+                option.value = color;
+                option.textContent = color;
+                selectColor.appendChild(option);
+            }
+        });
+    })
+    .catch(error => console.error('Error cargando filtros:', error));
+}
+
+// Configurar eventos de filtrado y ordenamiento
+function configurarEventos() {
+    // Búsqueda por texto
+    document.getElementById('busquedaProducto').addEventListener('input', buscarProductos);
+
+    // Filtros
+    document.getElementById('filtroCategoria').addEventListener('change', aplicarFiltrosYOrden);
+    document.getElementById('filtroTalla').addEventListener('change', aplicarFiltrosYOrden);
+    document.getElementById('filtroColor').addEventListener('change', aplicarFiltrosYOrden);
+
+    // Ordenamiento
+    document.getElementById('ordenarProductos').addEventListener('change', function() {
+        ordenActual = this.value;
+        aplicarFiltrosYOrden();
+    });
+
+    // Vista
+    document.querySelectorAll('input[name="vistaProductos"]').forEach(radio => {
+        radio.addEventListener('change', function() {
+            vistaActual = this.value;
+            aplicarFiltrosYOrden();
+        });
+    });
+}
+
+// Buscar productos mientras se escribe
+function buscarProductos() {
     const termino = this.value.trim().toLowerCase();
 
     if (termino.length === 0) {
-        document.getElementById('listaProductos').innerHTML = '<div class="list-group-item text-muted text-center">Escriba para buscar productos...</div>';
+        cargarProductos();
         return;
     }
 
-    // Buscar en el servidor
     const formData = new FormData();
     formData.append('termino', termino);
 
@@ -372,31 +489,95 @@ document.getElementById('busquedaProducto').addEventListener('input', function()
     })
     .then(response => response.json())
     .then(data => {
-        mostrarTodosLosProductos(data.productos || []);
+        todosLosProductos = data.productos || [];
+        aplicarFiltrosYOrden();
     })
     .catch(error => console.error('Error:', error));
-});
+}
 
-function mostrarTodosLosProductos(productos) {
+// Aplicar filtros y ordenamiento
+function aplicarFiltrosYOrden() {
+    let productosFiltrados = [...todosLosProductos];
+
+    // Filtrar por categoría
+    const categoria = document.getElementById('filtroCategoria').value;
+    if (categoria) {
+        productosFiltrados = productosFiltrados.filter(p => p.categoria === categoria);
+    }
+
+    // Filtrar por talla
+    const talla = document.getElementById('filtroTalla').value;
+    if (talla) {
+        productosFiltrados = productosFiltrados.filter(p => p.talla === talla);
+    }
+
+    // Filtrar por color
+    const color = document.getElementById('filtroColor').value;
+    if (color) {
+        productosFiltrados = productosFiltrados.filter(p => p.color === color);
+    }
+
+    // Ordenar
+    productosFiltrados.sort((a, b) => {
+        switch(ordenActual) {
+            case 'nombre_asc':
+                return a.nombre.localeCompare(b.nombre);
+            case 'nombre_desc':
+                return b.nombre.localeCompare(a.nombre);
+            case 'precio_asc':
+                return parseFloat(a.precio) - parseFloat(b.precio);
+            case 'precio_desc':
+                return parseFloat(b.precio) - parseFloat(a.precio);
+            case 'stock_asc':
+                return parseInt(a.stock) - parseInt(b.stock);
+            case 'stock_desc':
+                return parseInt(b.stock) - parseInt(a.stock);
+            default:
+                return 0;
+        }
+    });
+
+    mostrarProductos(productosFiltrados);
+}
+
+// Mostrar productos según vista seleccionada
+function mostrarProductos(productos) {
     const contenedor = document.getElementById('listaProductos');
 
     if (productos.length === 0) {
-        contenedor.innerHTML = '<div class="list-group-item text-muted text-center">No se encontraron productos con stock</div>';
+        contenedor.innerHTML = '<div class="list-group-item text-muted text-center">No se encontraron productos</div>';
         return;
     }
 
+    if (vistaActual === 'lista') {
+        mostrarProductosLista(productos, contenedor);
+    } else {
+        mostrarProductosTarjetas(productos, contenedor);
+    }
+}
+
+// Vista de lista
+function mostrarProductosLista(productos, contenedor) {
     let html = '';
     productos.forEach(producto => {
         const yaAgregado = productosAgregados.find(p => p.id === producto.id);
         const claseDeshabilitado = yaAgregado ? 'disabled' : '';
         const textoAgregado = yaAgregado ? ' <span class="badge bg-success">Agregado</span>' : '';
 
+        const talla = producto.talla ? ` - ${escapeHtml(producto.talla)}` : '';
+        const color = producto.color ? ` - ${escapeHtml(producto.color)}` : '';
+
         html += `
             <a href="#" class="list-group-item list-group-item-action ${claseDeshabilitado}" onclick='agregarProducto(${JSON.stringify(producto)}); return false;'>
                 <div class="d-flex justify-content-between align-items-center">
-                    <div>
-                        <strong>${escapeHtml(producto.nombre)}</strong>${textoAgregado}<br>
-                        <small class="text-muted">${escapeHtml(producto.codigo_producto)} - ${escapeHtml(producto.categoria)}</small>
+                    <div class="d-flex align-items-center flex-grow-1">
+                        ${producto.imagen ? `<img src="<?= APP_URL ?>/uploads/${escapeHtml(producto.imagen)}" class="rounded me-2" style="width: 40px; height: 40px; object-fit: cover;" alt="Producto">` : '<div class="bg-secondary rounded me-2" style="width: 40px; height: 40px;"></div>'}
+                        <div>
+                            <strong>${escapeHtml(producto.nombre)}</strong>${textoAgregado}<br>
+                            <small class="text-muted">
+                                ${escapeHtml(producto.codigo_producto)} - ${escapeHtml(producto.categoria)}${talla}${color}
+                            </small>
+                        </div>
                     </div>
                     <div class="text-end">
                         <strong class="text-primary">$${parseFloat(producto.precio).toLocaleString('es-CO')}</strong><br>
@@ -406,6 +587,50 @@ function mostrarTodosLosProductos(productos) {
                     </div>
                 </div>
             </a>
+        `;
+    });
+
+    contenedor.innerHTML = html;
+}
+
+// Vista de tarjetas
+function mostrarProductosTarjetas(productos, contenedor) {
+    contenedor.className = 'row g-2 p-2';
+
+    let html = '';
+    productos.forEach(producto => {
+        const yaAgregado = productosAgregados.find(p => p.id === producto.id);
+        const claseDeshabilitado = yaAgregado ? 'opacity-50 pe-none' : '';
+        const textoAgregado = yaAgregado ? '<span class="badge bg-success position-absolute top-0 end-0 m-1">Agregado</span>' : '';
+
+        const talla = producto.talla ? `<span class="badge bg-secondary me-1">${escapeHtml(producto.talla)}</span>` : '';
+        const color = producto.color ? `<span class="badge bg-secondary">${escapeHtml(producto.color)}</span>` : '';
+
+        html += `
+            <div class="col-6">
+                <div class="card h-100 ${claseDeshabilitado}" style="cursor: pointer;" onclick='agregarProducto(${JSON.stringify(producto)}); return false;'>
+                    <div class="position-relative">
+                        ${producto.imagen ?
+                            `<img src="<?= APP_URL ?>/uploads/${escapeHtml(producto.imagen)}" class="card-img-top" style="height: 120px; object-fit: cover;" alt="Producto">` :
+                            '<div class="bg-secondary" style="height: 120px;"></div>'}
+                        ${textoAgregado}
+                    </div>
+                    <div class="card-body p-2">
+                        <h6 class="card-title mb-1 small">${escapeHtml(producto.nombre)}</h6>
+                        <p class="card-text mb-1">
+                            <small class="text-muted">${escapeHtml(producto.codigo_producto)}</small><br>
+                            <small class="text-muted">${escapeHtml(producto.categoria)}</small><br>
+                            ${talla}${color}
+                        </p>
+                        <div class="d-flex justify-content-between align-items-center">
+                            <strong class="text-primary">$${parseFloat(producto.precio).toLocaleString('es-CO')}</strong>
+                            <small class="${producto.stock > 5 ? 'text-success' : 'text-warning'}">
+                                <i class="bi bi-box"></i> ${producto.stock}
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
         `;
     });
 

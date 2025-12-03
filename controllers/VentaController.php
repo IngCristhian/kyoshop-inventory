@@ -238,13 +238,13 @@ class VentaController {
 
         // Si no hay término de búsqueda, devolver todos los productos con stock
         if (empty($termino)) {
-            $productos = $this->producto->obtenerTodos(1, 50, ['stock_minimo' => 1]);
+            $productos = $this->producto->obtenerTodos(1, 100, ['stock_minimo' => 1]);
             $this->enviarJSON(['productos' => $productos]);
             return;
         }
 
         // Buscar productos que tengan stock disponible
-        $productos = $this->producto->buscar($termino, 20);
+        $productos = $this->producto->buscar($termino, 50);
 
         // Filtrar solo productos con stock > 0
         $productosConStock = array_filter($productos, function($producto) {
@@ -252,6 +252,54 @@ class VentaController {
         });
 
         $this->enviarJSON(['productos' => array_values($productosConStock)]);
+    }
+
+    /**
+     * Obtener filtros disponibles para productos (categorías, tallas, colores)
+     */
+    public function obtenerFiltrosProductos() {
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            http_response_code(405);
+            exit;
+        }
+
+        try {
+            $db = getDB();
+
+            // Obtener categorías únicas
+            $categorias = $db->fetchAll(
+                "SELECT DISTINCT categoria FROM productos
+                 WHERE activo = 1 AND stock > 0 AND categoria IS NOT NULL
+                 ORDER BY categoria"
+            );
+
+            // Obtener tallas únicas
+            $tallas = $db->fetchAll(
+                "SELECT DISTINCT talla FROM productos
+                 WHERE activo = 1 AND stock > 0 AND talla IS NOT NULL AND talla != ''
+                 ORDER BY talla"
+            );
+
+            // Obtener colores únicos
+            $colores = $db->fetchAll(
+                "SELECT DISTINCT color FROM productos
+                 WHERE activo = 1 AND stock > 0 AND color IS NOT NULL AND color != ''
+                 ORDER BY color"
+            );
+
+            $this->enviarJSON([
+                'categorias' => array_column($categorias, 'categoria'),
+                'tallas' => array_column($tallas, 'talla'),
+                'colores' => array_column($colores, 'color')
+            ]);
+        } catch (Exception $e) {
+            error_log("Error al obtener filtros: " . $e->getMessage());
+            $this->enviarJSON([
+                'categorias' => [],
+                'tallas' => [],
+                'colores' => []
+            ]);
+        }
     }
 
     /**

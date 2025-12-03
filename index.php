@@ -324,6 +324,13 @@ switch ($path) {
         $controller->buscarProducto();
         break;
 
+    case 'ventas/obtenerFiltrosProductos':
+        requiereAuth();
+        require_once 'controllers/VentaController.php';
+        $controller = new VentaController();
+        $controller->obtenerFiltrosProductos();
+        break;
+
     case 'ventas/crearCliente':
         requiereAuth();
         require_once 'controllers/VentaController.php';
