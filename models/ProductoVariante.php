@@ -208,8 +208,13 @@ class ProductoVariante {
      * @return bool True si las referencias son válidas
      */
     private function validarReferencias($padreId, $variantesIds) {
+        error_log("=== VALIDANDO REFERENCIAS ===");
+        error_log("Producto Padre ID: " . $padreId);
+        error_log("Variantes IDs: " . print_r($variantesIds, true));
+
         // El padre no puede estar en la lista de variantes
         if (in_array($padreId, $variantesIds)) {
+            error_log("ERROR: El producto padre ($padreId) está en la lista de variantes");
             return false;
         }
 
@@ -218,7 +223,8 @@ class ProductoVariante {
 
         // Verificar que haya variantes para validar
         if (empty($variantesIds)) {
-            return true;
+            error_log("ERROR: No hay variantes para validar (array vacío)");
+            return false;
         }
 
         // Verificar que ninguna variante ya sea padre de otros productos
@@ -229,7 +235,7 @@ class ProductoVariante {
         $result = $this->db->fetch($sql, $variantesIds);
 
         if ($result['total'] > 0) {
-            // Alguna variante ya es padre de otros productos
+            error_log("ERROR: Alguna variante ya es padre de otros productos (total: {$result['total']})");
             return false;
         }
 
@@ -238,10 +244,11 @@ class ProductoVariante {
         $padre = $this->db->fetch($sqlPadre, ['id' => $padreId]);
 
         if ($padre && $padre['producto_padre_id'] !== null) {
-            // El padre seleccionado es variante de otro producto
+            error_log("ERROR: El producto padre ($padreId) ya es variante de otro producto (padre: {$padre['producto_padre_id']})");
             return false;
         }
 
+        error_log("✓ Validación exitosa - Producto padre ($padreId) con variantes: " . implode(', ', $variantesIds));
         return true;
     }
 
