@@ -448,8 +448,8 @@ function cargarFiltros() {
 
 // Configurar eventos de filtrado y ordenamiento
 function configurarEventos() {
-    // Búsqueda por texto
-    document.getElementById('busquedaProducto').addEventListener('input', buscarProductos);
+    // Búsqueda por texto - filtrado en tiempo real
+    document.getElementById('busquedaProducto').addEventListener('input', aplicarFiltrosYOrden);
 
     // Filtros
     document.getElementById('filtroCategoria').addEventListener('change', aplicarFiltrosYOrden);
@@ -469,30 +469,6 @@ function configurarEventos() {
             aplicarFiltrosYOrden();
         });
     });
-}
-
-// Buscar productos mientras se escribe
-function buscarProductos() {
-    const termino = this.value.trim().toLowerCase();
-
-    if (termino.length === 0) {
-        cargarProductos();
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append('termino', termino);
-
-    fetch('<?= APP_URL ?>/ventas/buscarProducto', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        todosLosProductos = data.productos || [];
-        aplicarFiltrosYOrden();
-    })
-    .catch(error => console.error('Error:', error));
 }
 
 // Aplicar filtros y ordenamiento
