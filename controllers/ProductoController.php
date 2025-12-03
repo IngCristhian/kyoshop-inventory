@@ -504,15 +504,38 @@ class ProductoController {
             http_response_code(405);
             exit;
         }
-        
+
         $termino = $_POST['termino'] ?? '';
-        
+
         if (empty($termino)) {
             $this->enviarJSON(['productos' => []]);
         }
-        
+
         $productos = $this->producto->buscar($termino);
         $this->enviarJSON(['productos' => $productos]);
+    }
+
+    /**
+     * Obtener variantes de un producto (AJAX)
+     */
+    public function obtenerVariantes($id) {
+        header('Content-Type: application/json');
+
+        require_once 'models/ProductoVariante.php';
+        $varianteModel = new ProductoVariante();
+
+        // Obtener variantes consolidadas
+        $variantes = $varianteModel->obtenerVariantesConsolidadas($id);
+
+        // Verificar si tiene variantes
+        $tieneVariantes = !empty($variantes);
+
+        echo json_encode([
+            'success' => true,
+            'tieneVariantes' => $tieneVariantes,
+            'variantes' => $variantes
+        ]);
+        exit;
     }
     
     /**

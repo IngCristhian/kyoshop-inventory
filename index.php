@@ -103,6 +103,13 @@ switch ($path) {
         $controller->buscar();
         break;
 
+    case (preg_match('/productos\/variantes\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/ProductoController.php';
+        $controller = new ProductoController();
+        $controller->obtenerVariantes($matches[1]);
+        break;
+
     // Rutas de variantes de productos
     case 'variantes':
         requiereAuth();
