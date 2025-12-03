@@ -178,7 +178,7 @@ class VariantesController {
         if ($resultado) {
             redirect('variantes', 'Productos consolidados exitosamente. Ahora son un solo producto con variantes.', 'success');
         } else {
-            redirect('variantes', 'Error al consolidar productos. Verifica que no existan referencias circulares.', 'error');
+            redirect('variantes', 'Error al consolidar productos. Posibles causas: (1) El producto padre ya tiene variantes consolidadas, (2) Alguna variante ya es padre de otros productos, (3) El producto padre es variante de otro producto. Revisa los productos seleccionados.', 'error');
         }
     }
 

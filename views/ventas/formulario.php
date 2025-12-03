@@ -448,8 +448,8 @@ function cargarFiltros() {
 
 // Configurar eventos de filtrado y ordenamiento
 function configurarEventos() {
-    // Búsqueda por texto
-    document.getElementById('busquedaProducto').addEventListener('input', buscarProductos);
+    // Búsqueda por texto - filtrado en tiempo real
+    document.getElementById('busquedaProducto').addEventListener('input', aplicarFiltrosYOrden);
 
     // Filtros
     document.getElementById('filtroCategoria').addEventListener('change', aplicarFiltrosYOrden);
@@ -471,33 +471,21 @@ function configurarEventos() {
     });
 }
 
-// Buscar productos mientras se escribe
-function buscarProductos() {
-    const termino = this.value.trim().toLowerCase();
-
-    if (termino.length === 0) {
-        cargarProductos();
-        return;
-    }
-
-    const formData = new FormData();
-    formData.append('termino', termino);
-
-    fetch('<?= APP_URL ?>/ventas/buscarProducto', {
-        method: 'POST',
-        body: formData
-    })
-    .then(response => response.json())
-    .then(data => {
-        todosLosProductos = data.productos || [];
-        aplicarFiltrosYOrden();
-    })
-    .catch(error => console.error('Error:', error));
-}
-
 // Aplicar filtros y ordenamiento
 function aplicarFiltrosYOrden() {
     let productosFiltrados = [...todosLosProductos];
+
+    // Filtrar por término de búsqueda
+    const terminoBusqueda = document.getElementById('busquedaProducto').value.trim().toLowerCase();
+    if (terminoBusqueda) {
+        productosFiltrados = productosFiltrados.filter(p => {
+            return p.nombre.toLowerCase().includes(terminoBusqueda) ||
+                   p.codigo_producto.toLowerCase().includes(terminoBusqueda) ||
+                   (p.descripcion && p.descripcion.toLowerCase().includes(terminoBusqueda)) ||
+                   (p.categoria && p.categoria.toLowerCase().includes(terminoBusqueda)) ||
+                   (p.color && p.color.toLowerCase().includes(terminoBusqueda));
+        });
+    }
 
     // Filtrar por categoría
     const categoria = document.getElementById('filtroCategoria').value;
