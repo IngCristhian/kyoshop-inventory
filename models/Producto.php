@@ -164,8 +164,6 @@ class Producto {
             'stock = :stock',
             'categoria = :categoria',
             'tipo = :tipo',
-            'talla = :talla',
-            'color = :color',
             'ubicacion = :ubicacion',
             'codigo_producto = :codigo_producto',
             'fecha_actualizacion = CURRENT_TIMESTAMP'
@@ -179,11 +177,21 @@ class Producto {
             'stock' => $datos['stock'],
             'categoria' => $datos['categoria'],
             'tipo' => $datos['tipo'],
-            'talla' => $datos['talla'],
-            'color' => $datos['color'],
             'ubicacion' => $datos['ubicacion'],
             'codigo_producto' => $datos['codigo_producto']
         ];
+
+        // Actualizar talla solo si está presente en $datos
+        if (array_key_exists('talla', $datos)) {
+            $campos[] = 'talla = :talla';
+            $parametros['talla'] = $datos['talla'];
+        }
+
+        // Actualizar color solo si está presente en $datos
+        if (array_key_exists('color', $datos)) {
+            $campos[] = 'color = :color';
+            $parametros['color'] = $datos['color'];
+        }
 
         // Actualizar imagen si está presente en $datos (incluso si es null para eliminar)
         if (array_key_exists('imagen', $datos)) {
