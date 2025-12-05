@@ -321,7 +321,7 @@ class Compra {
                 WHERE DATE(c.fecha_compra) = CURDATE()
                 ORDER BY c.fecha_compra DESC";
 
-        return $this->db->fetchAll($sql);
+        return $this->db->fetchAll($sql, []);
     }
 
     /**
