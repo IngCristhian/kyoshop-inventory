@@ -342,9 +342,27 @@ class ProductoController {
         if (!$producto) {
             redirect('productos', 'Producto no encontrado', 'error');
         }
-        
+
         $datos = $this->procesarDatos($_POST);
-        
+
+        // Preservar talla y color originales SOLO si vienen en el POST y tienen valor
+        // Si no vienen en $datos, NO los agregamos para que el modelo no los actualice
+        if (isset($datos['talla']) && !empty($datos['talla'])) {
+            // Mantener el valor nuevo de talla
+        } elseif (isset($_POST['talla']) && empty($_POST['talla'])) {
+            // Si viene vacío en el POST, preservar el valor original
+            $datos['talla'] = $producto['talla'];
+        }
+        // Si no viene en el POST, no agregamos la clave para que no se actualice
+
+        if (isset($datos['color']) && !empty($datos['color'])) {
+            // Mantener el valor nuevo de color
+        } elseif (isset($_POST['color']) && empty($_POST['color'])) {
+            // Si viene vacío en el POST, preservar el valor original
+            $datos['color'] = $producto['color'];
+        }
+        // Si no viene en el POST, no agregamos la clave para que no se actualice
+
         // Validar datos
         $errores = $this->producto->validar($datos, $id);
         if (!empty($errores)) {
@@ -542,18 +560,27 @@ class ProductoController {
      * Procesar y sanitizar datos del formulario
      */
     private function procesarDatos($datos) {
-        return [
+        $procesados = [
             'nombre' => sanitize($datos['nombre'] ?? ''),
             'descripcion' => sanitize($datos['descripcion'] ?? ''),
             'precio' => floatval($datos['precio'] ?? 0),
             'stock' => intval($datos['stock'] ?? 0),
             'categoria' => sanitize($datos['categoria'] ?? ''),
             'tipo' => sanitize($datos['tipo'] ?? 'Niño'),
-            'talla' => sanitize($datos['talla'] ?? ''),
-            'color' => sanitize($datos['color'] ?? ''),
             'ubicacion' => sanitize($datos['ubicacion'] ?? 'Medellín'),
             'codigo_producto' => sanitize($datos['codigo_producto'] ?? '')
         ];
+
+        // Solo incluir talla y color si tienen valor (para no sobrescribir en edición)
+        if (!empty($datos['talla'])) {
+            $procesados['talla'] = sanitize($datos['talla']);
+        }
+
+        if (!empty($datos['color'])) {
+            $procesados['color'] = sanitize($datos['color']);
+        }
+
+        return $procesados;
     }
     
     /**
