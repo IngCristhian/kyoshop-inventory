@@ -26,6 +26,8 @@
                     <option value="creacion" <?= $filtros['tipo_movimiento'] === 'creacion' ? 'selected' : '' ?>>Creación</option>
                     <option value="eliminacion" <?= $filtros['tipo_movimiento'] === 'eliminacion' ? 'selected' : '' ?>>Eliminación</option>
                     <option value="cambio_precio" <?= $filtros['tipo_movimiento'] === 'cambio_precio' ? 'selected' : '' ?>>Cambio de precio</option>
+                    <option value="eliminacion_compra" <?= $filtros['tipo_movimiento'] === 'eliminacion_compra' ? 'selected' : '' ?>>Eliminación de Compra</option>
+                    <option value="creacion_compra" <?= $filtros['tipo_movimiento'] === 'creacion_compra' ? 'selected' : '' ?>>Creación de Compra</option>
                 </select>
             </div>
 
@@ -104,7 +106,7 @@
                     <thead>
                         <tr>
                             <th>Fecha</th>
-                            <th>Producto</th>
+                            <th>Entidad</th>
                             <th>Tipo</th>
                             <th>Usuario</th>
                             <th style="width: 40%;">Detalle</th>
@@ -118,8 +120,17 @@
                                     <small class="text-muted"><?= date('H:i', strtotime($mov['fecha_movimiento'])) ?></small>
                                 </td>
                                 <td>
-                                    <strong><?= htmlspecialchars($mov['producto_nombre']) ?></strong><br>
-                                    <small class="text-muted"><?= htmlspecialchars($mov['codigo_producto']) ?></small>
+                                    <?php if (!empty($mov['producto_id']) && !empty($mov['producto_nombre'])): ?>
+                                        <a href="<?= APP_URL . '/productos/editar/' . $mov['producto_id'] ?>">
+                                            <strong><?= htmlspecialchars($mov['producto_nombre']) ?></strong>
+                                        </a><br>
+                                        <small class="text-muted"><?= htmlspecialchars($mov['codigo_producto']) ?></small>
+                                    <?php elseif ($mov['entidad'] === 'Compra'): ?>
+                                        <strong>Compra de Insumo</strong><br>
+                                        <small class="text-muted">ID: <?= htmlspecialchars($mov['entidad_id']) ?></small>
+                                    <?php else: ?>
+                                        <strong>N/A</strong>
+                                    <?php endif; ?>
                                 </td>
                                 <td>
                                     <?php
@@ -133,6 +144,8 @@
                                         case 'ajuste': $badgeClass = 'bg-warning-light text-warning'; $icon = 'gear'; $tipoTexto = 'Ajuste'; break;
                                         case 'creacion': $badgeClass = 'bg-info-light text-info'; $icon = 'plus-circle'; $tipoTexto = 'Creación'; break;
                                         case 'eliminacion': $badgeClass = 'bg-secondary-light text-secondary'; $icon = 'trash'; $tipoTexto = 'Eliminación'; break;
+                                        case 'eliminacion_compra': $badgeClass = 'bg-dark-light text-dark'; $icon = 'receipt'; $tipoTexto = 'Eliminación Compra'; break;
+                                        case 'creacion_compra': $badgeClass = 'bg-info-light text-info'; $icon = 'bag-plus'; $tipoTexto = 'Creación Compra'; break;
                                         case 'devolucion': $badgeClass = 'bg-warning-light text-warning'; $icon = 'arrow-return-left'; $tipoTexto = 'Devolución'; break;
                                         case 'cambio_precio':
                                             if ($mov['precio_nuevo'] > $mov['precio_anterior']) {
@@ -154,25 +167,30 @@
                                 <td>
                                     <div class="detalle-movimiento">
                                         <?php
-                                        // Mostrar cambio de stock
-                                        if ($mov['stock_anterior'] != $mov['stock_nuevo'] && $mov['tipo_movimiento'] !== 'cambio_precio') {
-                                            $diff = $mov['stock_nuevo'] - $mov['stock_anterior'];
-                                            $diffClass = $diff >= 0 ? 'text-success' : 'text-danger';
-                                            echo '<div class="fw-bold">Stock: ' . $mov['stock_anterior'] . ' &rarr; ' . $mov['stock_nuevo'] . 
-                                                 ' <span class="' . $diffClass . '">(' . ($diff >= 0 ? '+' : '') . $diff . ')</span></div>';
-                                        }
+                                        if ($mov['tipo_movimiento'] === 'eliminacion_compra' || $mov['tipo_movimiento'] === 'creacion_compra') {
+                                            // Para eliminación o creación de compra, solo mostrar el motivo.
+                                            if (!empty($mov['motivo'])) {
+                                                echo '<small class="text-muted">' . htmlspecialchars($mov['motivo']) . '</small>';
+                                            }
+                                        } else {
+                                            // Lógica existente para productos
+                                            if ($mov['stock_anterior'] != $mov['stock_nuevo'] && $mov['tipo_movimiento'] !== 'cambio_precio') {
+                                                $diff = $mov['stock_nuevo'] - $mov['stock_anterior'];
+                                                $diffClass = $diff >= 0 ? 'text-success' : 'text-danger';
+                                                echo '<div class="fw-bold">Stock: ' . $mov['stock_anterior'] . ' &rarr; ' . $mov['stock_nuevo'] . 
+                                                     ' <span class="' . $diffClass . '">(' . ($diff >= 0 ? '+' : '') . $diff . ')</span></div>';
+                                            }
 
-                                        // Mostrar cambio de precio
-                                        if ($mov['precio_anterior'] != $mov['precio_nuevo']) {
-                                            $diff_precio = $mov['precio_nuevo'] - $mov['precio_anterior'];
-                                            $diff_precio_class = $diff_precio >= 0 ? 'text-success' : 'text-danger';
-                                            echo '<div class="fw-bold">Precio: ' . formatPrice($mov['precio_anterior']) . ' &rarr; ' . formatPrice($mov['precio_nuevo']) .
-                                                 ' <span class="' . $diff_precio_class . '">(' . ($diff_precio >= 0 ? '+' : '-') . formatPrice(abs($diff_precio)) . ')</span></div>';
-                                        }
+                                            if (isset($mov['precio_anterior']) && isset($mov['precio_nuevo']) && $mov['precio_anterior'] != $mov['precio_nuevo']) {
+                                                $diff_precio = $mov['precio_nuevo'] - $mov['precio_anterior'];
+                                                $diff_precio_class = $diff_precio >= 0 ? 'text-success' : 'text-danger';
+                                                echo '<div class="fw-bold">Precio: ' . formatPrice($mov['precio_anterior']) . ' &rarr; ' . formatPrice($mov['precio_nuevo']) .
+                                                     ' <span class="' . $diff_precio_class . '">(' . ($diff_precio >= 0 ? '+' : '-') . formatPrice(abs($diff_precio)) . ')</span></div>';
+                                            }
 
-                                        // Mostrar motivo si existe
-                                        if (!empty($mov['motivo'])) {
-                                            echo '<small class="text-muted">' . htmlspecialchars($mov['motivo']) . '</small>';
+                                            if (!empty($mov['motivo'])) {
+                                                echo '<small class="text-muted">' . htmlspecialchars($mov['motivo']) . '</small>';
+                                            }
                                         }
                                         ?>
                                     </div>
@@ -184,7 +202,6 @@
             </div>
         </div>
     </div>
-
     <!-- Paginación -->
     <?php if ($paginacion['total_paginas'] > 1): ?>
         <nav aria-label="Paginación de historial" class="mt-4">

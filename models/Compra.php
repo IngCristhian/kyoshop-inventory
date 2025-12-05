@@ -5,12 +5,15 @@
  */
 
 require_once 'config/database.php';
+require_once 'models/HistorialMovimiento.php';
 
 class Compra {
     private $db;
+    private $historial;
 
     public function __construct() {
         $this->db = getDB();
+        $this->historial = new HistorialMovimiento();
     }
 
     /**
@@ -180,6 +183,24 @@ class Compra {
                 throw new Exception('Error al crear la compra');
             }
 
+            // Registrar en historial
+            $motivo = sprintf(
+                "Compra #%s registrada. Total: %s",
+                $numeroCompra,
+                formatPrice($datos['total'])
+            );
+            $this->historial->registrar([
+                'producto_id' => null,
+                'usuario_id' => $datos['usuario_id'],
+                'entidad' => 'Compra',
+                'entidad_id' => $compraId,
+                'tipo_movimiento' => 'creacion_compra',
+                'cantidad' => 0,
+                'stock_anterior' => 0,
+                'stock_nuevo' => 0,
+                'motivo' => $motivo
+            ]);
+
             return [
                 'success' => true,
                 'compra_id' => $compraId,
@@ -240,24 +261,52 @@ class Compra {
     }
 
     /**
-     * Eliminar compra (soft delete cambiando observaciones)
+     * Eliminar compra (hard delete) y registrar en historial de movimientos.
      */
     public function eliminar($id, $usuarioId) {
         try {
-            $sql = "UPDATE compras
-                    SET observaciones = CONCAT(COALESCE(observaciones, ''), '\nELIMINADA por usuario ID: {$usuarioId} en " . date('Y-m-d H:i:s') . "'),
-                        fecha_actualizacion = CURRENT_TIMESTAMP
-                    WHERE id = :id";
+            $this->db->beginTransaction();
 
-            $resultado = $this->db->execute($sql, ['id' => $id]);
-
-            if (!$resultado) {
-                throw new Exception('Error al eliminar la compra');
+            // 1. Obtener los datos de la compra antes de eliminarla
+            $compraAnterior = $this->obtenerPorId($id);
+            if (!$compraAnterior) {
+                throw new Exception("La compra con ID {$id} no existe.");
             }
 
+            // 2. Registrar la acción en la tabla de historial
+            $motivo = sprintf(
+                "Compra #%s eliminada. Proveedor: %s, Total: %s",
+                $compraAnterior['numero_compra'],
+                $compraAnterior['proveedor'] ?? 'N/A',
+                formatPrice($compraAnterior['total'])
+            );
+
+            $this->historial->registrar([
+                'producto_id' => null,
+                'usuario_id' => $usuarioId,
+                'entidad' => 'Compra',
+                'entidad_id' => $id,
+                'tipo_movimiento' => 'eliminacion_compra',
+                'cantidad' => 0,
+                'stock_anterior' => 0,
+                'stock_nuevo' => 0,
+                'motivo' => $motivo
+            ]);
+
+            // 3. Eliminar permanentemente la compra
+            $sql = "DELETE FROM compras WHERE id = :id";
+            $resultado = $this->db->execute($sql, ['id' => $id]);
+
+            if ($resultado === 0) {
+                throw new Exception("No se pudo eliminar la compra con ID {$id}.");
+            }
+            
+            $this->db->commit();
             return ['success' => true];
 
         } catch (Exception $e) {
+            $this->db->rollBack();
+            error_log("Error en Compra::eliminar: " . $e->getMessage());
             return [
                 'success' => false,
                 'error' => $e->getMessage()
