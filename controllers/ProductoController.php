@@ -6,16 +6,22 @@
 
 require_once 'models/Producto.php';
 require_once 'models/HistorialMovimiento.php';
+require_once 'models/Compra.php';
+require_once 'models/Venta.php';
 
 class ProductoController {
     private $producto;
     private $historial;
+    private $compra;
+    private $venta;
 
     public function __construct() {
         $this->producto = new Producto();
         $this->historial = new HistorialMovimiento();
+        $this->compra = new Compra();
+        $this->venta = new Venta();
     }
-    
+
     /**
      * Dashboard principal con estadísticas
      */
@@ -23,14 +29,23 @@ class ProductoController {
         $estadisticas = $this->producto->obtenerEstadisticas();
         $productosStockBajo = $this->producto->obtenerStockBajo();
         $productosRecientes = $this->producto->obtenerTodos(1, 5);
-        
+
+        // Obtener datos de compras y ventas para ganancias
+        $totalCompras30d = $this->compra->obtenerTotalComprasPeriodo(30);
+        $estadisticasVentas = $this->venta->obtenerEstadisticas(30);
+        $totalVentas30d = $estadisticasVentas['monto_total'] ?? 0;
+        $gananciaNeta30d = $totalVentas30d - $totalCompras30d;
+
         $data = [
             'titulo' => 'Dashboard - ' . APP_NAME,
             'estadisticas' => $estadisticas,
             'productos_stock_bajo' => $productosStockBajo,
-            'productos_recientes' => $productosRecientes
+            'productos_recientes' => $productosRecientes,
+            'total_compras_30d' => $totalCompras30d,
+            'total_ventas_30d' => $totalVentas30d,
+            'ganancia_neta_30d' => $gananciaNeta30d
         ];
-        
+
         $this->cargarVista('dashboard', $data);
     }
     

@@ -82,6 +82,70 @@
     </div>
 </div>
 
+<!-- Estadísticas Financieras (30 días) -->
+<div class="row mb-4">
+    <div class="col-md-4 mb-4">
+        <div class="card text-white shadow h-100 py-2" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">
+                            Ventas (30d)
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold">
+                            <?= formatPrice($total_ventas_30d ?? 0) ?>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-graph-up-arrow fa-2x" style="opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card text-white bg-danger shadow h-100 py-2">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">
+                            Compras Insumos (30d)
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold">
+                            <?= formatPrice($total_compras_30d ?? 0) ?>
+                        </div>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-bag-check fa-2x" style="opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card text-white shadow h-100 py-2" style="background: linear-gradient(135deg, <?= ($ganancia_neta_30d ?? 0) >= 0 ? '#56ab2f 0%, #a8e063 100%' : '#eb3349 0%, #f45c43 100%' ?>);">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">
+                            Ganancia Neta (30d)
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold">
+                            <?= formatPrice($ganancia_neta_30d ?? 0) ?>
+                        </div>
+                        <small style="opacity: 0.8;">Ventas - Compras Insumos</small>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-<?= ($ganancia_neta_30d ?? 0) >= 0 ? 'cash-stack' : 'exclamation-triangle' ?> fa-2x" style="opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row">
     <!-- Productos con Stock Bajo -->
     <div class="col-lg-6 mb-4">

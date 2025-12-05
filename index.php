@@ -338,6 +338,56 @@ switch ($path) {
         $controller->crearCliente();
         break;
 
+    // Rutas de compras (insumos)
+    case 'compras':
+        requiereAuth();
+        require_once 'controllers/CompraController.php';
+        $controller = new CompraController();
+        $controller->index();
+        break;
+
+    case 'compras/crear':
+        requiereAuth();
+        require_once 'controllers/CompraController.php';
+        $controller = new CompraController();
+        $controller->crear();
+        break;
+
+    case 'compras/guardar':
+        requiereAuth();
+        require_once 'controllers/CompraController.php';
+        $controller = new CompraController();
+        $controller->guardar();
+        break;
+
+    case (preg_match('/compras\/ver\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/CompraController.php';
+        $controller = new CompraController();
+        $controller->ver($matches[1]);
+        break;
+
+    case (preg_match('/compras\/editar\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/CompraController.php';
+        $controller = new CompraController();
+        $controller->editar($matches[1]);
+        break;
+
+    case (preg_match('/compras\/actualizar\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/CompraController.php';
+        $controller = new CompraController();
+        $controller->actualizar($matches[1]);
+        break;
+
+    case (preg_match('/compras\/eliminar\/(\d+)/', $path, $matches) ? true : false):
+        requiereAuth();
+        require_once 'controllers/CompraController.php';
+        $controller = new CompraController();
+        $controller->eliminar($matches[1]);
+        break;
+
     // Rutas de historial
     case 'historial':
         requiereAuth();

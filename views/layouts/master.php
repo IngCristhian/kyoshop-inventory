@@ -250,6 +250,12 @@
                     </li>
 
                     <li class="nav-item">
+                        <a class="nav-link <?= (strpos($_SERVER['REQUEST_URI'], 'compras') !== false) ? 'active' : '' ?>" href="<?= APP_URL ?>/compras">
+                            <i class="bi bi-bag-check"></i> Compras Insumos
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
                         <a class="nav-link <?= (strpos($_SERVER['REQUEST_URI'], 'historial') !== false) ? 'active' : '' ?>" href="<?= APP_URL ?>/historial">
                             <i class="bi bi-clock-history"></i> Historial
                         </a>
