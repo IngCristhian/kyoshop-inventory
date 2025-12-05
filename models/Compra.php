@@ -5,15 +5,12 @@
  */
 
 require_once 'config/database.php';
-require_once 'models/Auditoria.php';
 
 class Compra {
     private $db;
-    private $auditoria;
 
     public function __construct() {
         $this->db = getDB();
-        $this->auditoria = new Auditoria();
     }
 
     /**
@@ -243,43 +240,24 @@ class Compra {
     }
 
     /**
-     * Eliminar compra (hard delete) y registrar en auditoría.
+     * Eliminar compra (soft delete cambiando observaciones)
      */
     public function eliminar($id, $usuarioId) {
         try {
-            $this->db->beginTransaction();
+            $sql = "UPDATE compras
+                    SET observaciones = CONCAT(COALESCE(observaciones, ''), '\nELIMINADA por usuario ID: {$usuarioId} en " . date('Y-m-d H:i:s') . "'),
+                        fecha_actualizacion = CURRENT_TIMESTAMP
+                    WHERE id = :id";
 
-            // 1. Obtener los datos de la compra antes de eliminarla
-            $compraAnterior = $this->obtenerPorId($id);
-
-            if (!$compraAnterior) {
-                throw new Exception("La compra con ID {$id} no existe.");
-            }
-
-            // 2. Registrar la acción en la tabla de auditoría
-            $this->auditoria->registrar([
-                'usuario_id' => $usuarioId,
-                'accion' => 'eliminacion',
-                'tipo_entidad' => 'Compra',
-                'entidad_id' => $id,
-                'detalles' => $compraAnterior // Guardar el estado anterior
-            ]);
-
-            // 3. Eliminar permanentemente la compra
-            $sql = "DELETE FROM compras WHERE id = :id";
             $resultado = $this->db->execute($sql, ['id' => $id]);
 
-            if ($resultado === 0) {
-                // No se afectaron filas, puede que el ID no exista
-                throw new Exception("No se pudo eliminar la compra con ID {$id}. Puede que ya haya sido eliminada.");
+            if (!$resultado) {
+                throw new Exception('Error al eliminar la compra');
             }
-            
-            $this->db->commit();
+
             return ['success' => true];
 
         } catch (Exception $e) {
-            $this->db->rollBack();
-            error_log("Error en Compra::eliminar: " . $e->getMessage());
             return [
                 'success' => false,
                 'error' => $e->getMessage()
