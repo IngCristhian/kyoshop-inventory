@@ -66,24 +66,24 @@
                     </div>
                 </div>
 
-                <div class="card bg-light mb-4">
+                <div class="card mb-4" style="background-color: #f8f9fa;">
                     <div class="card-body">
                         <h6 class="fw-bold text-muted mb-2">Descripción</h6>
-                        <p class="mb-0"><?= nl2br(htmlspecialchars($compra['descripcion'])) ?></p>
+                        <p class="mb-0 text-dark"><?= nl2br(htmlspecialchars($compra['descripcion'])) ?></p>
                     </div>
                 </div>
 
                 <?php if (!empty($compra['observaciones'])): ?>
-                    <div class="card bg-light mb-4">
+                    <div class="card mb-4" style="background-color: #f8f9fa;">
                         <div class="card-body">
                             <h6 class="fw-bold text-muted mb-2">Observaciones</h6>
-                            <p class="mb-0"><?= nl2br(htmlspecialchars($compra['observaciones'])) ?></p>
+                            <p class="mb-0 text-dark"><?= nl2br(htmlspecialchars($compra['observaciones'])) ?></p>
                         </div>
                     </div>
                 <?php endif; ?>
 
                 <?php if (!empty($compra['comprobante'])): ?>
-                    <div class="card bg-light mb-4">
+                    <div class="card mb-4" style="background-color: #f8f9fa;">
                         <div class="card-body">
                             <h6 class="fw-bold text-muted mb-2">Comprobante</h6>
                             <a href="<?= APP_URL ?>/uploads/comprobantes/<?= htmlspecialchars($compra['comprobante']) ?>"
