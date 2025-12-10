@@ -40,3 +40,6 @@ CLAUDE.md
 GEMINI.md
 DEPLOY.md
 PLAN_*.md
+
+# Ignorar archivos de Gemini (IA)
+.gemini-clipboard/
