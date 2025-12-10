@@ -654,4 +654,12 @@ document.addEventListener('DOMContentLoaded', function() {
 #variantesContainer .border {
     border-color: #667eea !important;
 }
+
+#variantesContainer label {
+    color: #212529 !important;
+}
+
+#variantesContainer small {
+    color: #6c757d !important;
+}
 </style>
