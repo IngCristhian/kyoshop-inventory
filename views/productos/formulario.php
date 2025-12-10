@@ -106,22 +106,26 @@
                         </div>
                     </div>
 
-                    <?php if ($accion === 'crear'): ?>
-                        <!-- Opción de crear variantes (solo en creación) -->
-                        <div class="card border-info mb-3">
-                            <div class="card-body bg-info bg-opacity-10">
-                                <div class="form-check">
-                                    <input class="form-check-input" type="checkbox" id="crear_variantes" name="crear_variantes" value="1">
-                                    <label class="form-check-label fw-bold text-dark" for="crear_variantes">
+                    <!-- Opción de crear variantes (disponible en creación y edición) -->
+                    <div class="card border-info mb-3">
+                        <div class="card-body bg-info bg-opacity-10">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="crear_variantes" name="crear_variantes" value="1">
+                                <label class="form-check-label fw-bold text-dark" for="crear_variantes">
+                                    <?php if ($accion === 'crear'): ?>
                                         ¿Crear múltiples variantes?
                                         <small class="d-block fw-normal text-dark">Activa esta opción si tienes el mismo producto en diferentes colores y/o tallas</small>
-                                    </label>
-                                </div>
+                                    <?php else: ?>
+                                        ¿Agregar nuevas variantes?
+                                        <small class="d-block fw-normal text-dark">Activa esta opción para agregar variantes adicionales a este producto</small>
+                                    <?php endif; ?>
+                                </label>
                             </div>
                         </div>
+                    </div>
 
-                        <!-- Campos simples (se ocultan si selecciona variantes) -->
-                        <div id="campos-simples">
+                    <!-- Campos simples (se ocultan si selecciona variantes) -->
+                    <div id="campos-simples" <?php echo ($accion === 'crear') ? '' : 'style="display: block;"'; ?>>
                             <div class="row">
                                 <div class="col-md-6 mb-3">
                                     <label for="color" class="form-label">Color</label>
@@ -205,7 +209,7 @@
                         <!-- Área de variantes (se muestra si selecciona variantes) -->
                         <div id="area-variantes" style="display: none;">
                             <h6 class="text-primary mb-3">
-                                <i class="bi bi-grid"></i> Variantes del Producto
+                                <i class="bi bi-grid"></i> <?php echo $accion === 'crear' ? 'Variantes del Producto' : 'Nuevas Variantes'; ?>
                             </h6>
 
                             <div id="variantes-container">
@@ -216,6 +220,9 @@
                                 <i class="bi bi-plus-circle"></i> Agregar Variante
                             </button>
                         </div>
+
+                    <?php if ($accion === 'editar'): ?>
+                        <!-- En modo edición, también mostrar campos normales (ocultos cuando se activen variantes) -->
                     <?php else: ?>
                         <!-- En modo edición, campos normales -->
                         <div class="row">
@@ -430,8 +437,7 @@
 </div>
 
 <script>
-    <?php if ($accion === 'crear'): ?>
-    // Gestión de variantes
+    // Gestión de variantes (disponible en crear y editar)
     let contadorVariantes = 0;
     const checkboxVariantes = document.getElementById('crear_variantes');
     const camposSimples = document.getElementById('campos-simples');
@@ -444,8 +450,10 @@
         if (this.checked) {
             camposSimples.style.display = 'none';
             areaVariantes.style.display = 'block';
+            <?php if ($accion === 'crear'): ?>
             stockInput.disabled = true;
             stockInput.value = 0;
+            <?php endif; ?>
             // NO deshabilitar imagen principal - se usará como default para variantes
 
             // Agregar primera variante automáticamente
@@ -455,7 +463,9 @@
         } else {
             camposSimples.style.display = 'block';
             areaVariantes.style.display = 'none';
+            <?php if ($accion === 'crear'): ?>
             stockInput.disabled = false;
+            <?php endif; ?>
 
             // Limpiar variantes
             document.getElementById('variantes-container').innerHTML = '';
@@ -614,7 +624,6 @@
             reader.readAsDataURL(input.files[0]);
         }
     }
-    <?php endif; ?>
 
     // Eliminar imagen existente
     function eliminarImagenExistente(campoNombre, previewId) {
