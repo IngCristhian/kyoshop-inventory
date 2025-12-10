@@ -634,10 +634,21 @@ document.addEventListener('DOMContentLoaded', function() {
     font-weight: bold;
 }
 
+.variante-btn.active strong {
+    color: white;
+    font-weight: 700;
+}
+
+.variante-btn.active small {
+    color: rgba(255, 255, 255, 0.95);
+    font-weight: 600;
+}
+
 .variante-btn small {
     display: block;
-    font-size: 0.75rem;
+    font-size: 0.8rem;
     margin-top: 2px;
+    font-weight: 500;
 }
 
 #variantesContainer .border {
