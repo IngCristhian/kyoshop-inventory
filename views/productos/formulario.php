@@ -106,24 +106,6 @@
                         </div>
                     </div>
 
-                    <!-- Opción de crear variantes (disponible en creación y edición) -->
-                    <div class="card border-info mb-3">
-                        <div class="card-body bg-info bg-opacity-10">
-                            <div class="form-check">
-                                <input class="form-check-input" type="checkbox" id="crear_variantes" name="crear_variantes" value="1">
-                                <label class="form-check-label fw-bold text-dark" for="crear_variantes">
-                                    <?php if ($accion === 'crear'): ?>
-                                        ¿Crear múltiples variantes?
-                                        <small class="d-block fw-normal text-dark">Activa esta opción si tienes el mismo producto en diferentes colores y/o tallas</small>
-                                    <?php else: ?>
-                                        ¿Agregar nuevas variantes?
-                                        <small class="d-block fw-normal text-dark">Activa esta opción para agregar variantes adicionales a este producto</small>
-                                    <?php endif; ?>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
                     <!-- Campos simples (se ocultan si selecciona variantes) -->
                     <div id="campos-simples" <?php echo ($accion === 'crear') ? '' : 'style="display: block;"'; ?>>
                             <div class="row">
@@ -206,6 +188,24 @@
                             </div>
                         </div>
 
+                    <!-- Opción de crear variantes (disponible en creación y edición) -->
+                    <div class="card border-info mb-3" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);">
+                        <div class="card-body">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="crear_variantes" name="crear_variantes" value="1">
+                                <label class="form-check-label fw-bold" style="color: #667eea;" for="crear_variantes">
+                                    <?php if ($accion === 'crear'): ?>
+                                        ¿Crear múltiples variantes?
+                                        <small class="d-block fw-normal text-muted">Activa esta opción si tienes el mismo producto en diferentes colores y/o tallas</small>
+                                    <?php else: ?>
+                                        ¿Agregar nuevas variantes?
+                                        <small class="d-block fw-normal text-muted">Activa esta opción para agregar variantes adicionales a este producto</small>
+                                    <?php endif; ?>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
                         <!-- Área de variantes (se muestra si selecciona variantes) -->
                         <div id="area-variantes" style="display: none;">
                             <h6 class="text-primary mb-3">
@@ -222,9 +222,7 @@
                         </div>
 
                     <?php if ($accion === 'editar'): ?>
-                        <!-- En modo edición, también mostrar campos normales (ocultos cuando se activen variantes) -->
-                    <?php else: ?>
-                        <!-- En modo edición, campos normales -->
+                        <!-- En modo edición, campos normales (separados para evitar conflictos con crear) -->
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="color" class="form-label">Color</label>
