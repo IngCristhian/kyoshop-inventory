@@ -347,15 +347,24 @@ class ProductoController {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
             redirect('productos');
         }
-        
+
         // Validar token CSRF
         if (!validateCSRFToken($_POST['csrf_token'] ?? '')) {
             redirect('productos', 'Token de seguridad inválido', 'error');
         }
-        
+
         $producto = $this->producto->obtenerPorId($id);
         if (!$producto) {
             redirect('productos', 'Producto no encontrado', 'error');
+        }
+
+        // Verificar si se están creando variantes
+        $crearVariantes = isset($_POST['crear_variantes']) && $_POST['crear_variantes'] == '1';
+
+        if ($crearVariantes) {
+            // Agregar nuevas variantes basadas en el producto existente
+            $this->agregarVariantesDesdeEdicion($id, $producto, $_POST, $_FILES);
+            return; // La función redirige automáticamente
         }
 
         $datos = $this->procesarDatos($_POST);
@@ -571,6 +580,142 @@ class ProductoController {
         exit;
     }
     
+    /**
+     * Agregar variantes desde el modo edición
+     */
+    private function agregarVariantesDesdeEdicion($productoId, $productoBase, $post, $files) {
+        // Validar que existan variantes
+        if (empty($post['variantes']) || !is_array($post['variantes'])) {
+            $_SESSION['errores'] = ['Debe agregar al menos una variante'];
+            redirect("productos/editar/{$productoId}");
+        }
+
+        // Usar datos del producto base
+        $datosBase = [
+            'nombre' => $productoBase['nombre'],
+            'descripcion' => $productoBase['descripcion'],
+            'precio' => $productoBase['precio'],
+            'categoria' => $productoBase['categoria'],
+            'tipo' => $productoBase['tipo'],
+            'ubicacion' => $productoBase['ubicacion']
+        ];
+
+        // Procesar imagen principal del producto base (se usará como default)
+        $imagenPrincipal = $productoBase['imagen'];
+
+        // Si se sube una nueva imagen principal, usarla
+        if (isset($files['imagen']) && $files['imagen']['error'] === UPLOAD_ERR_OK) {
+            $resultadoImagen = $this->subirImagen($files['imagen']);
+            if ($resultadoImagen['success']) {
+                $imagenPrincipal = $resultadoImagen['filename'];
+            }
+        }
+
+        $productosCreados = 0;
+        $erroresVariantes = [];
+
+        try {
+            foreach ($post['variantes'] as $index => $variante) {
+                // Validar datos de la variante
+                if (empty($variante['color']) || empty($variante['talla']) || !isset($variante['stock'])) {
+                    $erroresVariantes[] = "Variante " . ($index + 1) . ": Todos los campos son obligatorios";
+                    continue;
+                }
+
+                // Crear datos del producto variante
+                $datosVariante = $datosBase;
+                $datosVariante['nombre'] = $datosBase['nombre'] . ' - ' . $variante['color'] . ' - ' . $variante['talla'];
+                $datosVariante['color'] = sanitize($variante['color']);
+                $datosVariante['talla'] = sanitize($variante['talla']);
+                $datosVariante['stock'] = intval($variante['stock']);
+
+                // Generar código automático para la variante
+                $timestamp = time() . str_pad($index, 3, '0', STR_PAD_LEFT);
+                $datosVariante['codigo_producto'] = strtoupper(
+                    substr($datosVariante['categoria'], 0, 3) . '-' .
+                    substr($datosVariante['color'], 0, 3) . '-' .
+                    substr($datosVariante['talla'], 0, 2) . '-' .
+                    $timestamp
+                );
+
+                // Procesar imagen principal de la variante (o usar imagen principal del producto base)
+                if (isset($files['variantes']['name'][$index]['imagen']) &&
+                    $files['variantes']['error'][$index]['imagen'] === UPLOAD_ERR_OK) {
+
+                    $imagenVariante = [
+                        'name' => $files['variantes']['name'][$index]['imagen'],
+                        'type' => $files['variantes']['type'][$index]['imagen'],
+                        'tmp_name' => $files['variantes']['tmp_name'][$index]['imagen'],
+                        'error' => $files['variantes']['error'][$index]['imagen'],
+                        'size' => $files['variantes']['size'][$index]['imagen']
+                    ];
+
+                    $resultadoImagen = $this->subirImagen($imagenVariante);
+                    if ($resultadoImagen['success']) {
+                        $datosVariante['imagen'] = $resultadoImagen['filename'];
+                    } else {
+                        $erroresVariantes[] = "Variante " . ($index + 1) . ": Error al subir imagen principal";
+                        continue;
+                    }
+                } else {
+                    // Si no se subió imagen específica, usar la imagen principal del producto base
+                    $datosVariante['imagen'] = $imagenPrincipal;
+                }
+
+                // Procesar imagen con modelo de la variante (opcional)
+                if (isset($files['variantes']['name'][$index]['imagen_modelo']) &&
+                    $files['variantes']['error'][$index]['imagen_modelo'] === UPLOAD_ERR_OK) {
+
+                    $imagenModeloVariante = [
+                        'name' => $files['variantes']['name'][$index]['imagen_modelo'],
+                        'type' => $files['variantes']['type'][$index]['imagen_modelo'],
+                        'tmp_name' => $files['variantes']['tmp_name'][$index]['imagen_modelo'],
+                        'error' => $files['variantes']['error'][$index]['imagen_modelo'],
+                        'size' => $files['variantes']['size'][$index]['imagen_modelo']
+                    ];
+
+                    $resultadoImagenModelo = $this->subirImagen($imagenModeloVariante);
+                    if ($resultadoImagenModelo['success']) {
+                        $datosVariante['imagen_modelo'] = $resultadoImagenModelo['filename'];
+                    }
+                    // No es error crítico si falla la imagen con modelo
+                }
+
+                // Crear el producto variante
+                $id = $this->producto->crear($datosVariante);
+
+                // Registrar movimiento en historial
+                $this->historial->registrar([
+                    'producto_id' => $id,
+                    'usuario_id' => $_SESSION['usuario_id'],
+                    'tipo_movimiento' => 'creacion',
+                    'cantidad' => $datosVariante['stock'],
+                    'stock_anterior' => 0,
+                    'stock_nuevo' => $datosVariante['stock'],
+                    'motivo' => 'Variante agregada desde edición del producto #' . $productoId
+                ]);
+
+                $productosCreados++;
+            }
+
+            if ($productosCreados > 0) {
+                $mensaje = "Se agregaron $productosCreados variantes exitosamente al producto";
+                if (!empty($erroresVariantes)) {
+                    $mensaje .= '. Algunos errores: ' . implode(', ', array_slice($erroresVariantes, 0, 3));
+                }
+                redirect('productos', $mensaje, 'success');
+            } else {
+                $_SESSION['errores'] = $erroresVariantes;
+                redirect("productos/editar/{$productoId}");
+            }
+
+        } catch (Exception $e) {
+            error_log("Error al agregar variantes desde edición: " . $e->getMessage());
+            $_SESSION['errores'] = ['Error al agregar las variantes: ' . $e->getMessage()];
+            redirect("productos/editar/{$productoId}");
+        }
+    }
+
     /**
      * Procesar y sanitizar datos del formulario
      */
