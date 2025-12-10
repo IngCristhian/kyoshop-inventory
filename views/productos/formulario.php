@@ -189,17 +189,17 @@
                         </div>
 
                     <!-- Opción de crear variantes (disponible en creación y edición) -->
-                    <div class="card border-info mb-3">
-                        <div class="card-body bg-info bg-opacity-10">
+                    <div class="card border-info mb-3" style="background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);">
+                        <div class="card-body">
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" id="crear_variantes" name="crear_variantes" value="1">
-                                <label class="form-check-label fw-bold text-dark" for="crear_variantes">
+                                <label class="form-check-label fw-bold" style="color: #667eea;" for="crear_variantes">
                                     <?php if ($accion === 'crear'): ?>
                                         ¿Crear múltiples variantes?
-                                        <small class="d-block fw-normal text-dark">Activa esta opción si tienes el mismo producto en diferentes colores y/o tallas</small>
+                                        <small class="d-block fw-normal text-muted">Activa esta opción si tienes el mismo producto en diferentes colores y/o tallas</small>
                                     <?php else: ?>
                                         ¿Agregar nuevas variantes?
-                                        <small class="d-block fw-normal text-dark">Activa esta opción para agregar variantes adicionales a este producto</small>
+                                        <small class="d-block fw-normal text-muted">Activa esta opción para agregar variantes adicionales a este producto</small>
                                     <?php endif; ?>
                                 </label>
                             </div>
