@@ -61,9 +61,10 @@ class ProductoController {
             'busqueda' => $_GET['busqueda'] ?? '',
             'stock_bajo' => isset($_GET['stock_bajo'])
         ];
-        
-        $productos = $this->producto->obtenerTodos($pagina, ITEMS_PER_PAGE, $filtros);
-        $totalProductos = $this->producto->contarTotal($filtros);
+
+        // IMPORTANTE: Usar obtenerTodosSinVariantes para mostrar solo productos padre (consolidados)
+        $productos = $this->producto->obtenerTodosSinVariantes($pagina, ITEMS_PER_PAGE, $filtros);
+        $totalProductos = $this->producto->contarTotalSinVariantes($filtros);
         $totalPaginas = ceil($totalProductos / ITEMS_PER_PAGE);
         $categorias = $this->producto->obtenerCategorias();
         
@@ -217,6 +218,40 @@ class ProductoController {
         $erroresVariantes = [];
 
         try {
+            // PASO 1: Crear producto padre (consolidado) primero
+            $stockTotal = 0;
+            foreach ($post['variantes'] as $variante) {
+                $stockTotal += intval($variante['stock'] ?? 0);
+            }
+
+            $datosProductoPadre = $datosBase;
+            $datosProductoPadre['stock'] = $stockTotal;
+            $datosProductoPadre['codigo_producto'] = strtoupper(
+                substr($datosBase['categoria'], 0, 3) . '-CONSOLIDATED-' . time()
+            );
+            $datosProductoPadre['imagen'] = $imagenPrincipal;
+            // Producto padre NO tiene talla ni color específicos (representa el grupo)
+            $datosProductoPadre['talla'] = null;
+            $datosProductoPadre['color'] = null;
+
+            $productoPadreId = $this->producto->crear($datosProductoPadre);
+
+            if (!$productoPadreId) {
+                throw new Exception('Error al crear producto padre consolidado');
+            }
+
+            // Registrar creación del producto padre
+            $this->historial->registrar([
+                'producto_id' => $productoPadreId,
+                'usuario_id' => $_SESSION['usuario_id'],
+                'tipo_movimiento' => 'creacion',
+                'cantidad' => $stockTotal,
+                'stock_anterior' => 0,
+                'stock_nuevo' => $stockTotal,
+                'motivo' => 'Producto padre creado para consolidar variantes'
+            ]);
+
+            // PASO 2: Crear variantes hijas
             foreach ($post['variantes'] as $index => $variante) {
                 // Validar datos de la variante
                 if (empty($variante['color']) || empty($variante['talla']) || !isset($variante['stock'])) {
@@ -230,6 +265,7 @@ class ProductoController {
                 $datosVariante['color'] = sanitize($variante['color']);
                 $datosVariante['talla'] = sanitize($variante['talla']);
                 $datosVariante['stock'] = intval($variante['stock']);
+                $datosVariante['producto_padre_id'] = $productoPadreId; // CRÍTICO: Vincular variante con padre
 
                 // Generar código automático para la variante
                 $timestamp = time() . str_pad($index, 3, '0', STR_PAD_LEFT);
@@ -590,6 +626,16 @@ class ProductoController {
             redirect("productos/editar/{$productoId}");
         }
 
+        // El producto que estamos editando se convertirá en el producto padre
+        // Primero verificar si ya tiene producto_padre_id (es una variante)
+        if ($productoBase['producto_padre_id'] !== null) {
+            // Este producto ya ES una variante, usar su padre como producto padre
+            $productoPadreId = $productoBase['producto_padre_id'];
+        } else {
+            // Este producto se convertirá en el padre
+            $productoPadreId = $productoId;
+        }
+
         // Usar datos del producto base
         $datosBase = [
             'nombre' => $productoBase['nombre'],
@@ -628,6 +674,7 @@ class ProductoController {
                 $datosVariante['color'] = sanitize($variante['color']);
                 $datosVariante['talla'] = sanitize($variante['talla']);
                 $datosVariante['stock'] = intval($variante['stock']);
+                $datosVariante['producto_padre_id'] = $productoPadreId; // CRÍTICO: Vincular variante con padre
 
                 // Generar código automático para la variante
                 $timestamp = time() . str_pad($index, 3, '0', STR_PAD_LEFT);

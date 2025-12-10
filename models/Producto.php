@@ -131,10 +131,10 @@ class Producto {
     public function crear($datos) {
         $sql = "INSERT INTO productos (
                     nombre, descripcion, precio, stock, imagen, imagen_modelo,
-                    categoria, tipo, talla, color, ubicacion, codigo_producto
+                    categoria, tipo, talla, color, ubicacion, codigo_producto, producto_padre_id
                 ) VALUES (
                     :nombre, :descripcion, :precio, :stock, :imagen, :imagen_modelo,
-                    :categoria, :tipo, :talla, :color, :ubicacion, :codigo_producto
+                    :categoria, :tipo, :talla, :color, :ubicacion, :codigo_producto, :producto_padre_id
                 )";
 
         return $this->db->insert($sql, [
@@ -146,10 +146,11 @@ class Producto {
             'imagen_modelo' => $datos['imagen_modelo'] ?? null,
             'categoria' => $datos['categoria'],
             'tipo' => $datos['tipo'],
-            'talla' => $datos['talla'],
-            'color' => $datos['color'],
+            'talla' => $datos['talla'] ?? null,
+            'color' => $datos['color'] ?? null,
             'ubicacion' => $datos['ubicacion'],
-            'codigo_producto' => $datos['codigo_producto']
+            'codigo_producto' => $datos['codigo_producto'],
+            'producto_padre_id' => $datos['producto_padre_id'] ?? null
         ]);
     }
     
@@ -365,6 +366,49 @@ class Producto {
                 AND activo = 1
                 ORDER BY nombre";
         return $this->db->fetchAll($sql);
+    }
+
+    /**
+     * Contar total de productos sin incluir variantes
+     * @param array $filtros Filtros de búsqueda
+     * @return int Total de productos padre
+     */
+    public function contarTotalSinVariantes($filtros = []) {
+        $condiciones = ['activo = 1', 'producto_padre_id IS NULL'];
+        $parametros = [];
+
+        // Aplicar mismos filtros que en obtenerTodosSinVariantes
+        if (!empty($filtros['categoria'])) {
+            $condiciones[] = 'categoria = :categoria';
+            $parametros['categoria'] = $filtros['categoria'];
+        }
+
+        if (!empty($filtros['tipo'])) {
+            $condiciones[] = 'tipo = :tipo';
+            $parametros['tipo'] = $filtros['tipo'];
+        }
+
+        if (!empty($filtros['ubicacion'])) {
+            $condiciones[] = 'ubicacion = :ubicacion';
+            $parametros['ubicacion'] = $filtros['ubicacion'];
+        }
+
+        if (!empty($filtros['busqueda'])) {
+            $condiciones[] = '(nombre LIKE :busqueda1 OR descripcion LIKE :busqueda2 OR codigo_producto LIKE :busqueda3)';
+            $parametros['busqueda1'] = '%' . $filtros['busqueda'] . '%';
+            $parametros['busqueda2'] = '%' . $filtros['busqueda'] . '%';
+            $parametros['busqueda3'] = '%' . $filtros['busqueda'] . '%';
+        }
+
+        if (isset($filtros['stock_bajo']) && $filtros['stock_bajo']) {
+            $condiciones[] = 'stock <= 5';
+        }
+
+        $where = implode(' AND ', $condiciones);
+
+        $sql = "SELECT COUNT(*) as total FROM productos WHERE {$where}";
+        $resultado = $this->db->fetch($sql, $parametros);
+        return $resultado['total'];
     }
 
     /**
