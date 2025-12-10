@@ -456,6 +456,42 @@ function cargarVariantes(productoId, stockOriginal) {
                 document.getElementById('variantesContainer').style.display = 'block';
                 document.getElementById('detallesExtras').style.display = 'none';
 
+                // IMPORTANTE: Resetear galería e incorporar todas las imágenes de las variantes
+                imagenesGaleria = [];
+
+                // Agregar imágenes de todas las variantes a la galería
+                data.variantes.forEach((variante, index) => {
+                    const tallaText = variante.talla || 'S/T';
+                    const colorText = variante.color || 'Sin color';
+                    const etiquetaBase = `${tallaText} - ${colorText}`;
+
+                    // Agregar imagen principal de la variante
+                    if (variante.imagen && variante.imagen.trim() !== '') {
+                        imagenesGaleria.push({
+                            url: variante.imagen,
+                            etiqueta: etiquetaBase,
+                            varianteId: variante.id
+                        });
+                    }
+
+                    // Agregar imagen con modelo de la variante
+                    if (variante.imagen_modelo && variante.imagen_modelo.trim() !== '') {
+                        imagenesGaleria.push({
+                            url: variante.imagen_modelo,
+                            etiqueta: `${etiquetaBase} (Modelo)`,
+                            varianteId: variante.id
+                        });
+                    }
+                });
+
+                // Mostrar controles de galería si hay imágenes
+                if (imagenesGaleria.length > 0) {
+                    document.getElementById('galeriaControles').style.display = 'block';
+                    mostrarImagenGaleria(0);
+                } else {
+                    document.getElementById('galeriaControles').style.display = 'none';
+                }
+
                 // Limpiar selector
                 const selector = document.getElementById('variantesSelector');
                 selector.innerHTML = '';
@@ -501,6 +537,16 @@ function seleccionarVariante(variante, todasVariantes) {
         btn.classList.remove('active');
     });
     event.target.closest('.variante-btn').classList.add('active');
+
+    // Buscar la imagen de esta variante en la galería y mostrarla
+    if (imagenesGaleria.length > 0) {
+        const indexImagenVariante = imagenesGaleria.findIndex(img => img.varianteId === variante.id);
+
+        if (indexImagenVariante !== -1) {
+            // Encontró la imagen de la variante, mostrarla
+            mostrarImagenGaleria(indexImagenVariante);
+        }
+    }
 }
 
 function mostrarImagenGaleria(index) {
