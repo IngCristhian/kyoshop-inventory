@@ -222,9 +222,7 @@
                         </div>
 
                     <?php if ($accion === 'editar'): ?>
-                        <!-- En modo edición, también mostrar campos normales (ocultos cuando se activen variantes) -->
-                    <?php else: ?>
-                        <!-- En modo edición, campos normales -->
+                        <!-- En modo edición, campos normales (separados para evitar conflictos con crear) -->
                         <div class="row">
                             <div class="col-md-6 mb-3">
                                 <label for="color" class="form-label">Color</label>
