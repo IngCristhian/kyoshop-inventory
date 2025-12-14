@@ -236,22 +236,19 @@ class VentaController {
 
         $termino = $_POST['termino'] ?? '';
 
-        // Si no hay término de búsqueda, devolver todos los productos con stock
-        if (empty($termino)) {
-            $productos = $this->producto->obtenerTodos(1, 100, ['stock_minimo' => 1]);
-            $this->enviarJSON(['productos' => $productos]);
-            return;
+        // Preparar filtros para obtener productos con stock
+        $filtros = ['stock_minimo' => 1];
+
+        // Si hay término de búsqueda, agregarlo a los filtros
+        if (!empty($termino)) {
+            $filtros['busqueda'] = $termino;
         }
 
-        // Buscar productos que tengan stock disponible
-        $productos = $this->producto->buscar($termino, 50);
+        // Obtener todos los productos que coincidan (sin límite de paginación)
+        // Usar un límite alto para asegurar que se devuelvan todos los productos
+        $productos = $this->producto->obtenerTodos(1, 10000, $filtros);
 
-        // Filtrar solo productos con stock > 0
-        $productosConStock = array_filter($productos, function($producto) {
-            return $producto['stock'] > 0;
-        });
-
-        $this->enviarJSON(['productos' => array_values($productosConStock)]);
+        $this->enviarJSON(['productos' => $productos]);
     }
 
     /**
