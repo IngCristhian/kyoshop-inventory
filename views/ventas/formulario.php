@@ -675,7 +675,7 @@ function actualizarListaProductosAgregados() {
                             <strong class="d-block">${escapeHtml(producto.nombre)}</strong>
                             <small class="text-muted">${escapeHtml(producto.codigo)}</small>
                         </div>
-                        <button type="button" class="btn btn-sm btn-danger ms-2" onclick="eliminarProducto(${index})" title="Eliminar">
+                        <button type="button" class="btn btn-sm btn-danger ms-2" onclick="eliminarProductoDelCarrito(${index})" title="Eliminar">
                             <i class="bi bi-trash"></i>
                         </button>
                     </div>
@@ -734,16 +734,13 @@ function actualizarCantidad(index, cantidad) {
     actualizarListaProductosAgregados();
 }
 
-function eliminarProducto(index) {
+function eliminarProductoDelCarrito(index) {
     if (confirm('¿Está seguro de eliminar este producto de la venta?')) {
         productosAgregados.splice(index, 1);
         actualizarListaProductosAgregados();
 
         // Refrescar la lista de productos para quitar el badge "Agregado"
-        const termino = document.getElementById('busquedaProducto').value.trim();
-        if (termino.length > 0) {
-            document.getElementById('busquedaProducto').dispatchEvent(new Event('input'));
-        }
+        aplicarFiltrosYOrden();
     }
 }
 
