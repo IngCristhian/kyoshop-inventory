@@ -133,37 +133,65 @@
 </div>
 
 <script>
-const tiposCombos = {
-    'small': 10,
-    'medium': 25,
-    'big': 50,
-    'extra_big': 100
-};
+// Esperar a que el DOM esté completamente cargado
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('=== DEBUG: DOM Cargado ===');
 
-const tiposDisponibles = ['Niño', 'Mujer', 'Hombre'];
+    const tiposCombos = {
+        'small': 10,
+        'medium': 25,
+        'big': 50,
+        'extra_big': 100
+    };
 
-let contadorTipos = 0;
+    const tiposDisponibles = ['Niño', 'Mujer', 'Hombre'];
+
+    let contadorTipos = 0;
+
+    // Verificar que los elementos existen
+    const elementoTipo = document.getElementById('tipo');
+    const elementoMaxPrendas = document.getElementById('max_prendas');
+    const elementoCantidadTotal = document.getElementById('cantidad_total');
+    const elementoTotalPrendas = document.getElementById('total_prendas');
+    const elementoTiposContainer = document.getElementById('tipos-container');
+    const elementoBtnAgregar = document.getElementById('btnAgregarTipo');
+    const elementoFormCombo = document.getElementById('formCombo');
+
+    console.log('Elementos del DOM:', {
+        tipo: elementoTipo,
+        maxPrendas: elementoMaxPrendas,
+        cantidadTotal: elementoCantidadTotal,
+        totalPrendas: elementoTotalPrendas,
+        tiposContainer: elementoTiposContainer,
+        btnAgregar: elementoBtnAgregar,
+        formCombo: elementoFormCombo
+    });
+
+    if (!elementoTipo || !elementoMaxPrendas || !elementoCantidadTotal || !elementoTotalPrendas) {
+        console.error('ERROR: Faltan elementos del DOM necesarios para el formulario');
+        return;
+    }
 
 // Cambiar tipo de combo
-document.getElementById('tipo').addEventListener('change', function() {
+elementoTipo.addEventListener('change', function() {
     const tipo = this.value;
     const maxPrendas = tiposCombos[tipo] || 0;
     console.log('=== DEBUG: Tipo cambiado ===');
     console.log('Tipo seleccionado:', tipo);
     console.log('Max prendas:', maxPrendas);
-    document.getElementById('max_prendas').textContent = maxPrendas;
-    document.getElementById('cantidad_total').value = maxPrendas;
-    console.log('Campo cantidad_total actualizado a:', document.getElementById('cantidad_total').value);
+    elementoMaxPrendas.textContent = maxPrendas;
+    elementoCantidadTotal.value = maxPrendas;
+    console.log('Campo cantidad_total actualizado a:', elementoCantidadTotal.value);
     calcularTotal();
 });
 
 // Agregar tipo
-document.getElementById('btnAgregarTipo').addEventListener('click', function() {
+elementoBtnAgregar.addEventListener('click', function() {
     agregarTipo();
 });
 
 function agregarTipo(nombre = '', cantidad = '') {
-    const container = document.getElementById('tipos-container');
+    const container = elementoTiposContainer;
     const id = contadorTipos++;
 
     const div = document.createElement('div');
@@ -219,28 +247,27 @@ function calcularTotal() {
 
     console.log('=== DEBUG: Calculando total ===');
     console.log('Total de prendas calculadas:', total);
-    document.getElementById('total_prendas').textContent = total;
+    elementoTotalPrendas.textContent = total;
 
     // Validar que no exceda el máximo
-    const max = parseInt(document.getElementById('max_prendas').textContent) || 0;
-    const totalElement = document.getElementById('total_prendas');
+    const max = parseInt(elementoMaxPrendas.textContent) || 0;
 
     if (total > max) {
-        totalElement.className = 'text-danger fw-bold';
+        elementoTotalPrendas.className = 'text-danger fw-bold';
     } else if (total === max && total > 0) {
-        totalElement.className = 'text-success fw-bold';
+        elementoTotalPrendas.className = 'text-success fw-bold';
     } else {
-        totalElement.className = '';
+        elementoTotalPrendas.className = '';
     }
 }
 
 // Validación del formulario
-document.getElementById('formCombo').addEventListener('submit', function(e) {
-    const tipo = document.getElementById('tipo').value;
+elementoFormCombo.addEventListener('submit', function(e) {
+    const tipo = elementoTipo.value;
     const precio = parseFloat(document.getElementById('precio').value);
-    const total = parseInt(document.getElementById('total_prendas').textContent);
-    const max = parseInt(document.getElementById('max_prendas').textContent);
-    const cantidadTotal = document.getElementById('cantidad_total').value;
+    const total = parseInt(elementoTotalPrendas.textContent);
+    const max = parseInt(elementoMaxPrendas.textContent);
+    const cantidadTotal = elementoCantidadTotal.value;
 
     console.log('=== DEBUG: Validación del formulario ===');
     console.log('Tipo:', tipo);
@@ -278,6 +305,8 @@ document.getElementById('formCombo').addEventListener('submit', function(e) {
         return;
     }
 });
+
+}); // Fin de DOMContentLoaded
 </script>
 
 <?php
