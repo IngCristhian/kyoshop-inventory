@@ -148,8 +148,12 @@ let contadorTipos = 0;
 document.getElementById('tipo').addEventListener('change', function() {
     const tipo = this.value;
     const maxPrendas = tiposCombos[tipo] || 0;
+    console.log('=== DEBUG: Tipo cambiado ===');
+    console.log('Tipo seleccionado:', tipo);
+    console.log('Max prendas:', maxPrendas);
     document.getElementById('max_prendas').textContent = maxPrendas;
     document.getElementById('cantidad_total').value = maxPrendas;
+    console.log('Campo cantidad_total actualizado a:', document.getElementById('cantidad_total').value);
     calcularTotal();
 });
 
@@ -213,6 +217,8 @@ function calcularTotal() {
         total += valor;
     });
 
+    console.log('=== DEBUG: Calculando total ===');
+    console.log('Total de prendas calculadas:', total);
     document.getElementById('total_prendas').textContent = total;
 
     // Validar que no exceda el máximo
@@ -234,6 +240,14 @@ document.getElementById('formCombo').addEventListener('submit', function(e) {
     const precio = parseFloat(document.getElementById('precio').value);
     const total = parseInt(document.getElementById('total_prendas').textContent);
     const max = parseInt(document.getElementById('max_prendas').textContent);
+    const cantidadTotal = document.getElementById('cantidad_total').value;
+
+    console.log('=== DEBUG: Validación del formulario ===');
+    console.log('Tipo:', tipo);
+    console.log('Precio:', precio);
+    console.log('Total prendas (calculado):', total);
+    console.log('Max prendas:', max);
+    console.log('Campo cantidad_total (hidden):', cantidadTotal);
 
     if (!tipo) {
         e.preventDefault();

@@ -67,6 +67,11 @@ class ComboController {
 
         $datos = $this->procesarDatos($_POST);
 
+        // DEBUG: Ver qué datos estamos recibiendo
+        error_log('=== DEBUG COMBO ===');
+        error_log('POST data: ' . print_r($_POST, true));
+        error_log('Datos procesados: ' . print_r($datos, true));
+
         // Validar datos básicos
         $errores = $this->validar($datos);
         if (!empty($errores)) {
@@ -77,6 +82,10 @@ class ComboController {
 
         // Procesar tipos
         $tipos = $this->procesarTipos($_POST);
+
+        // DEBUG: Ver tipos procesados
+        error_log('Tipos procesados: ' . print_r($tipos, true));
+        error_log('Suma de tipos: ' . array_sum($tipos));
 
         // Validar que la suma de tipos coincida con el total
         $sumaTipos = array_sum($tipos);
