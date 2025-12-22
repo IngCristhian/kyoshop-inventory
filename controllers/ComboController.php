@@ -6,14 +6,17 @@
 
 require_once 'models/Combo.php';
 require_once 'models/Producto.php';
+require_once 'models/Cliente.php';
 
 class ComboController {
     private $combo;
     private $producto;
+    private $cliente;
 
     public function __construct() {
         $this->combo = new Combo();
         $this->producto = new Producto();
+        $this->cliente = new Cliente();
     }
 
     /**
@@ -42,11 +45,15 @@ class ComboController {
      * Mostrar formulario de creación
      */
     public function crear() {
+        // Obtener todos los clientes activos
+        $clientes = $this->cliente->obtenerTodos();
+
         $data = [
             'titulo' => 'Crear Combo - ' . APP_NAME,
             'combo' => [],
             'accion' => 'crear',
-            'tipos_combo' => Combo::TIPOS
+            'tipos_combo' => Combo::TIPOS,
+            'clientes' => $clientes
         ];
 
         $this->cargarVista('combos/formulario', $data);
@@ -228,7 +235,8 @@ class ComboController {
             'tipo' => sanitize($datos['tipo'] ?? ''),
             'cantidad_total' => intval($datos['cantidad_total'] ?? 0),
             'precio' => floatval($datos['precio'] ?? 0),
-            'ubicacion' => sanitize($datos['ubicacion'] ?? 'Mixto')
+            'ubicacion' => sanitize($datos['ubicacion'] ?? 'Mixto'),
+            'cliente_id' => intval($datos['cliente_id'] ?? 0)
         ];
     }
 
@@ -278,6 +286,10 @@ class ComboController {
 
         if (!in_array($datos['ubicacion'], ['Medellín', 'Bogotá', 'Mixto'])) {
             $errores[] = 'La ubicación no es válida';
+        }
+
+        if (empty($datos['cliente_id']) || $datos['cliente_id'] <= 0) {
+            $errores[] = 'Debe seleccionar un cliente';
         }
 
         return $errores;

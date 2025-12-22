@@ -262,14 +262,14 @@ class Combo {
             // PASO 1: Crear venta para el combo
             $numeroVenta = 'COM-' . date('Ymd') . '-' . str_pad($comboId, 4, '0', STR_PAD_LEFT);
 
-            // Obtener o crear cliente general para combos
-            $clienteGeneral = $this->obtenerClienteGeneral();
+            // Usar el cliente seleccionado o crear cliente general si no se proporcionó
+            $clienteId = !empty($datos['cliente_id']) ? $datos['cliente_id'] : $this->obtenerClienteGeneral();
 
             $sqlVenta = "INSERT INTO ventas (cliente_id, usuario_id, numero_venta, subtotal, total, metodo_pago, estado_pago, observaciones)
                         VALUES (:cliente_id, :usuario_id, :numero_venta, :subtotal, :total, 'transferencia', 'pendiente', :observaciones)";
 
             $ventaId = $this->db->insert($sqlVenta, [
-                'cliente_id' => $clienteGeneral,
+                'cliente_id' => $clienteId,
                 'usuario_id' => $usuarioId,
                 'numero_venta' => $numeroVenta,
                 'subtotal' => $precioCombo,

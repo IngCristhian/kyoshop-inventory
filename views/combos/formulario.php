@@ -55,6 +55,22 @@
                         </div>
                     </div>
 
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="cliente_id" class="form-label">Cliente *</label>
+                            <select class="form-select" id="cliente_id" name="cliente_id" required>
+                                <option value="">Seleccione un cliente</option>
+                                <?php foreach ($clientes as $cliente): ?>
+                                    <option value="<?= $cliente['id'] ?>"
+                                            <?= (isset($_SESSION['datos_antiguos']['cliente_id']) && $_SESSION['datos_antiguos']['cliente_id'] == $cliente['id']) ? 'selected' : '' ?>>
+                                        <?= htmlspecialchars($cliente['nombre']) ?> - <?= htmlspecialchars($cliente['telefono']) ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                            <small class="text-muted">Cliente al que se le venderá el combo</small>
+                        </div>
+                    </div>
+
                     <input type="hidden" id="cantidad_total" name="cantidad_total" value="0">
 
                     <h5 class="text-primary mb-3 mt-4">
