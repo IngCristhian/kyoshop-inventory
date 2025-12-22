@@ -101,6 +101,11 @@ class ComboController {
         if ($resultado['success']) {
             $mensaje = 'Combo creado exitosamente';
 
+            // Agregar información de venta
+            if (!empty($resultado['numero_venta'])) {
+                $mensaje .= '. Venta registrada: ' . $resultado['numero_venta'];
+            }
+
             // Agregar advertencias si las hay
             if (!empty($resultado['advertencias'])) {
                 $advertencias = array_map(function($adv) {

@@ -60,7 +60,7 @@
                 <div class="d-flex gap-2 flex-wrap">
                     <?php foreach ($combo['categorias'] as $cat): ?>
                         <span class="badge bg-primary">
-                            <?= htmlspecialchars($cat['categoria']) ?>: <?= $cat['cantidad'] ?> prendas
+                            <?= htmlspecialchars($cat['tipo']) ?>: <?= $cat['cantidad'] ?> prendas
                         </span>
                     <?php endforeach; ?>
                 </div>

@@ -135,6 +135,13 @@ class Database {
     public function rollBack() {
         return $this->pdo->rollBack();
     }
+
+    /**
+     * Verificar si hay una transacción activa
+     */
+    public function inTransaction() {
+        return $this->pdo->inTransaction();
+    }
 }
 
 // Función helper para obtener la conexión fácilmente
