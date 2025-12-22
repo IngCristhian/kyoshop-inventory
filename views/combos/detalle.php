@@ -80,7 +80,7 @@
                         <i class="bi bi-pencil"></i> Editar Combo
                     </a>
                     <button type="button" class="btn btn-outline-danger"
-                            onclick="confirmarEliminacion(<?= $combo['id'] ?>, '<?= htmlspecialchars($combo['nombre']) ?>')">
+                            onclick="return confirmarEliminacionCombo(<?= $combo['id'] ?>, '<?= htmlspecialchars($combo['nombre']) ?>', event);">
                         <i class="bi bi-trash"></i> Eliminar Combo
                     </button>
                     <a href="<?= APP_URL ?>/combos" class="btn btn-outline-secondary">
@@ -168,20 +168,43 @@
 </div>
 
 <script>
-function confirmarEliminacion(id, nombre) {
+function confirmarEliminacionCombo(id, nombre, event) {
+    // Prevenir propagación y comportamiento por defecto
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
+    console.log('=== DEBUG: confirmarEliminacionCombo ===');
+    console.log('ID:', id);
+    console.log('Nombre:', nombre);
+    console.log('Event:', event);
+
     if (confirm(`¿Está seguro de eliminar el combo "${nombre}"?\n\nEsta acción no se puede deshacer.`)) {
+        console.log('Usuario confirmó eliminación');
+
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = '<?= APP_URL ?>/combos/eliminar/' + id;
+
+        console.log('Action:', form.action);
 
         const csrfInput = document.createElement('input');
         csrfInput.type = 'hidden';
         csrfInput.name = 'csrf_token';
         csrfInput.value = '<?= generateCSRFToken() ?>';
 
+        console.log('CSRF Token:', csrfInput.value);
+
         form.appendChild(csrfInput);
         document.body.appendChild(form);
+
+        console.log('Enviando formulario...');
         form.submit();
+    } else {
+        console.log('Usuario canceló eliminación');
     }
+
+    return false;
 }
 </script>

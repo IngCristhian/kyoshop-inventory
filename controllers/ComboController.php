@@ -6,14 +6,17 @@
 
 require_once 'models/Combo.php';
 require_once 'models/Producto.php';
+require_once 'models/Cliente.php';
 
 class ComboController {
     private $combo;
     private $producto;
+    private $cliente;
 
     public function __construct() {
         $this->combo = new Combo();
         $this->producto = new Producto();
+        $this->cliente = new Cliente();
     }
 
     /**
@@ -42,11 +45,15 @@ class ComboController {
      * Mostrar formulario de creación
      */
     public function crear() {
+        // Obtener todos los clientes activos
+        $clientes = $this->cliente->obtenerTodos();
+
         $data = [
             'titulo' => 'Crear Combo - ' . APP_NAME,
             'combo' => [],
             'accion' => 'crear',
-            'tipos_combo' => Combo::TIPOS
+            'tipos_combo' => Combo::TIPOS,
+            'clientes' => $clientes
         ];
 
         $this->cargarVista('combos/formulario', $data);
@@ -67,6 +74,11 @@ class ComboController {
 
         $datos = $this->procesarDatos($_POST);
 
+        // DEBUG: Ver qué datos estamos recibiendo
+        error_log('=== DEBUG COMBO ===');
+        error_log('POST data: ' . print_r($_POST, true));
+        error_log('Datos procesados: ' . print_r($datos, true));
+
         // Validar datos básicos
         $errores = $this->validar($datos);
         if (!empty($errores)) {
@@ -77,6 +89,10 @@ class ComboController {
 
         // Procesar tipos
         $tipos = $this->procesarTipos($_POST);
+
+        // DEBUG: Ver tipos procesados
+        error_log('Tipos procesados: ' . print_r($tipos, true));
+        error_log('Suma de tipos: ' . array_sum($tipos));
 
         // Validar que la suma de tipos coincida con el total
         $sumaTipos = array_sum($tipos);
@@ -91,6 +107,11 @@ class ComboController {
 
         if ($resultado['success']) {
             $mensaje = 'Combo creado exitosamente';
+
+            // Agregar información de venta
+            if (!empty($resultado['numero_venta'])) {
+                $mensaje .= '. Venta registrada: ' . $resultado['numero_venta'];
+            }
 
             // Agregar advertencias si las hay
             if (!empty($resultado['advertencias'])) {
@@ -194,14 +215,32 @@ class ComboController {
      * Eliminar combo
      */
     public function eliminar($id) {
+        error_log('=== DEBUG: Eliminar combo ===');
+        error_log('ID: ' . $id);
+        error_log('REQUEST_METHOD: ' . $_SERVER['REQUEST_METHOD']);
+        error_log('POST data: ' . print_r($_POST, true));
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            error_log('ERROR: No es POST, redirigiendo a combos');
             redirect('combos');
         }
 
-        if ($this->combo->eliminar($id)) {
+        // Validar token CSRF
+        if (!validateCSRFToken($_POST['csrf_token'] ?? '')) {
+            error_log('ERROR: Token CSRF inválido');
+            redirect('combos', 'Token de seguridad inválido', 'error');
+        }
+
+        error_log('Token CSRF válido, procediendo a eliminar');
+        $resultado = $this->combo->eliminar($id);
+        error_log('Resultado de eliminar: ' . print_r($resultado, true));
+
+        if ($resultado['success']) {
+            error_log('SUCCESS: Combo eliminado, redirigiendo con mensaje de éxito');
             redirect('combos', 'Combo eliminado exitosamente', 'success');
         } else {
-            redirect('combos', 'Error al eliminar combo', 'error');
+            error_log('ERROR: ' . $resultado['message']);
+            redirect('combos', $resultado['message'], 'error');
         }
     }
 
@@ -214,7 +253,8 @@ class ComboController {
             'tipo' => sanitize($datos['tipo'] ?? ''),
             'cantidad_total' => intval($datos['cantidad_total'] ?? 0),
             'precio' => floatval($datos['precio'] ?? 0),
-            'ubicacion' => sanitize($datos['ubicacion'] ?? 'Mixto')
+            'ubicacion' => sanitize($datos['ubicacion'] ?? 'Mixto'),
+            'cliente_id' => intval($datos['cliente_id'] ?? 0)
         ];
     }
 
@@ -264,6 +304,10 @@ class ComboController {
 
         if (!in_array($datos['ubicacion'], ['Medellín', 'Bogotá', 'Mixto'])) {
             $errores[] = 'La ubicación no es válida';
+        }
+
+        if (empty($datos['cliente_id']) || $datos['cliente_id'] <= 0) {
+            $errores[] = 'Debe seleccionar un cliente';
         }
 
         return $errores;
