@@ -80,7 +80,7 @@
                         <i class="bi bi-pencil"></i> Editar Combo
                     </a>
                     <button type="button" class="btn btn-outline-danger"
-                            onclick="confirmarEliminacion(<?= $combo['id'] ?>, '<?= htmlspecialchars($combo['nombre']) ?>')">
+                            onclick="return confirmarEliminacion(<?= $combo['id'] ?>, '<?= htmlspecialchars($combo['nombre']) ?>', event);">
                         <i class="bi bi-trash"></i> Eliminar Combo
                     </button>
                     <a href="<?= APP_URL ?>/combos" class="btn btn-outline-secondary">
@@ -168,10 +168,17 @@
 </div>
 
 <script>
-function confirmarEliminacion(id, nombre) {
+function confirmarEliminacion(id, nombre, event) {
+    // Prevenir propagación y comportamiento por defecto
+    if (event) {
+        event.preventDefault();
+        event.stopPropagation();
+    }
+
     console.log('=== DEBUG: confirmarEliminacion ===');
     console.log('ID:', id);
     console.log('Nombre:', nombre);
+    console.log('Event:', event);
 
     if (confirm(`¿Está seguro de eliminar el combo "${nombre}"?\n\nEsta acción no se puede deshacer.`)) {
         console.log('Usuario confirmó eliminación');
@@ -197,5 +204,7 @@ function confirmarEliminacion(id, nombre) {
     } else {
         console.log('Usuario canceló eliminación');
     }
+
+    return false;
 }
 </script>
