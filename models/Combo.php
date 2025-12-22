@@ -393,10 +393,47 @@ class Combo {
      * Eliminar combo (soft delete)
      */
     public function eliminar($id) {
-        $sql = "UPDATE combos
-                SET activo = 0, fecha_actualizacion = CURRENT_TIMESTAMP
-                WHERE id = :id";
-        return $this->db->execute($sql, ['id' => $id]);
+        try {
+            // Primero verificar que el combo existe y está activo
+            $sqlCheck = "SELECT id, nombre, activo FROM combos WHERE id = :id";
+            $combo = $this->db->fetch($sqlCheck, ['id' => $id]);
+
+            if (!$combo) {
+                return [
+                    'success' => false,
+                    'message' => 'Combo no encontrado',
+                    'rows' => 0
+                ];
+            }
+
+            if ($combo['activo'] == 0) {
+                return [
+                    'success' => false,
+                    'message' => 'El combo ya está eliminado',
+                    'rows' => 0
+                ];
+            }
+
+            // Realizar soft delete
+            $sqlUpdate = "UPDATE combos
+                         SET activo = 0, fecha_actualizacion = CURRENT_TIMESTAMP
+                         WHERE id = :id";
+            $rows = $this->db->execute($sqlUpdate, ['id' => $id]);
+
+            return [
+                'success' => true,
+                'message' => 'Combo eliminado correctamente',
+                'rows' => $rows
+            ];
+
+        } catch (Exception $e) {
+            error_log("Error en Combo::eliminar() - ID: {$id} - " . $e->getMessage());
+            return [
+                'success' => false,
+                'message' => 'Error al eliminar: ' . $e->getMessage(),
+                'rows' => 0
+            ];
+        }
     }
 
     /**

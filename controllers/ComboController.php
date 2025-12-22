@@ -219,10 +219,17 @@ class ComboController {
             redirect('combos');
         }
 
-        if ($this->combo->eliminar($id)) {
+        // Validar token CSRF
+        if (!validateCSRFToken($_POST['csrf_token'] ?? '')) {
+            redirect('combos', 'Token de seguridad inválido', 'error');
+        }
+
+        $resultado = $this->combo->eliminar($id);
+
+        if ($resultado['success']) {
             redirect('combos', 'Combo eliminado exitosamente', 'success');
         } else {
-            redirect('combos', 'Error al eliminar combo', 'error');
+            redirect('combos', $resultado['message'], 'error');
         }
     }
 
