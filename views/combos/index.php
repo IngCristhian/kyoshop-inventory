@@ -177,19 +177,33 @@
 
 <script>
 function confirmarEliminacion(id, nombre) {
+    console.log('=== DEBUG: confirmarEliminacion ===');
+    console.log('ID:', id);
+    console.log('Nombre:', nombre);
+
     if (confirm(`¿Está seguro de eliminar el combo "${nombre}"?\n\nEsta acción no se puede deshacer.`)) {
+        console.log('Usuario confirmó eliminación');
+
         const form = document.createElement('form');
         form.method = 'POST';
         form.action = '<?= APP_URL ?>/combos/eliminar/' + id;
+
+        console.log('Action:', form.action);
 
         const csrfInput = document.createElement('input');
         csrfInput.type = 'hidden';
         csrfInput.name = 'csrf_token';
         csrfInput.value = '<?= generateCSRFToken() ?>';
 
+        console.log('CSRF Token:', csrfInput.value);
+
         form.appendChild(csrfInput);
         document.body.appendChild(form);
+
+        console.log('Enviando formulario...');
         form.submit();
+    } else {
+        console.log('Usuario canceló eliminación');
     }
 }
 </script>

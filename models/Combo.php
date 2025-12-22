@@ -394,11 +394,17 @@ class Combo {
      */
     public function eliminar($id) {
         try {
+            error_log("=== Combo::eliminar() ===");
+            error_log("ID recibido: " . $id);
+
             // Primero verificar que el combo existe y está activo
             $sqlCheck = "SELECT id, nombre, activo FROM combos WHERE id = :id";
             $combo = $this->db->fetch($sqlCheck, ['id' => $id]);
 
+            error_log("Combo encontrado: " . print_r($combo, true));
+
             if (!$combo) {
+                error_log("Combo NO encontrado con ID: " . $id);
                 return [
                     'success' => false,
                     'message' => 'Combo no encontrado',
@@ -407,6 +413,7 @@ class Combo {
             }
 
             if ($combo['activo'] == 0) {
+                error_log("Combo ya está eliminado (activo = 0)");
                 return [
                     'success' => false,
                     'message' => 'El combo ya está eliminado',
@@ -418,16 +425,30 @@ class Combo {
             $sqlUpdate = "UPDATE combos
                          SET activo = 0, fecha_actualizacion = CURRENT_TIMESTAMP
                          WHERE id = :id";
-            $rows = $this->db->execute($sqlUpdate, ['id' => $id]);
 
-            return [
-                'success' => true,
-                'message' => 'Combo eliminado correctamente',
-                'rows' => $rows
-            ];
+            error_log("Ejecutando UPDATE para eliminar combo ID: " . $id);
+            $rows = $this->db->execute($sqlUpdate, ['id' => $id]);
+            error_log("Filas afectadas: " . $rows);
+
+            if ($rows > 0) {
+                error_log("Combo eliminado exitosamente");
+                return [
+                    'success' => true,
+                    'message' => 'Combo eliminado correctamente',
+                    'rows' => $rows
+                ];
+            } else {
+                error_log("No se afectaron filas al intentar eliminar");
+                return [
+                    'success' => false,
+                    'message' => 'No se pudo eliminar el combo (0 filas afectadas)',
+                    'rows' => 0
+                ];
+            }
 
         } catch (Exception $e) {
             error_log("Error en Combo::eliminar() - ID: {$id} - " . $e->getMessage());
+            error_log("Stack trace: " . $e->getTraceAsString());
             return [
                 'success' => false,
                 'message' => 'Error al eliminar: ' . $e->getMessage(),

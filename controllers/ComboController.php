@@ -215,20 +215,31 @@ class ComboController {
      * Eliminar combo
      */
     public function eliminar($id) {
+        error_log('=== DEBUG: Eliminar combo ===');
+        error_log('ID: ' . $id);
+        error_log('REQUEST_METHOD: ' . $_SERVER['REQUEST_METHOD']);
+        error_log('POST data: ' . print_r($_POST, true));
+
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            error_log('ERROR: No es POST, redirigiendo a combos');
             redirect('combos');
         }
 
         // Validar token CSRF
         if (!validateCSRFToken($_POST['csrf_token'] ?? '')) {
+            error_log('ERROR: Token CSRF inválido');
             redirect('combos', 'Token de seguridad inválido', 'error');
         }
 
+        error_log('Token CSRF válido, procediendo a eliminar');
         $resultado = $this->combo->eliminar($id);
+        error_log('Resultado de eliminar: ' . print_r($resultado, true));
 
         if ($resultado['success']) {
+            error_log('SUCCESS: Combo eliminado, redirigiendo con mensaje de éxito');
             redirect('combos', 'Combo eliminado exitosamente', 'success');
         } else {
+            error_log('ERROR: ' . $resultado['message']);
             redirect('combos', $resultado['message'], 'error');
         }
     }
