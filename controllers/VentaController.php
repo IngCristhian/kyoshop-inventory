@@ -35,7 +35,7 @@ class VentaController {
         $ventas = $this->venta->obtenerTodos($pagina, ITEMS_PER_PAGE, $filtros);
         $totalVentas = $this->venta->contarTotal($filtros);
         $totalPaginas = ceil($totalVentas / ITEMS_PER_PAGE);
-        $estadisticas = $this->venta->obtenerEstadisticas(30);
+        $estadisticas = $this->venta->obtenerEstadisticas();
 
         $data = [
             'titulo' => 'Ventas - ' . APP_NAME,
