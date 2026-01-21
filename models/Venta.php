@@ -403,8 +403,8 @@ class Venta {
     public function obtenerEstadisticas($dias = 30) {
         $sql = "SELECT
                     COUNT(*) as total_ventas,
-                    SUM(total) as monto_total,
-                    AVG(total) as ticket_promedio,
+                    SUM(CASE WHEN estado_pago != 'cancelado' THEN total ELSE 0 END) as monto_total,
+                    AVG(CASE WHEN estado_pago != 'cancelado' THEN total ELSE NULL END) as ticket_promedio,
                     COUNT(CASE WHEN estado_pago = 'pagado' THEN 1 END) as ventas_pagadas,
                     COUNT(CASE WHEN estado_pago = 'pendiente' THEN 1 END) as ventas_pendientes,
                     COUNT(CASE WHEN estado_pago = 'cancelado' THEN 1 END) as ventas_canceladas,
