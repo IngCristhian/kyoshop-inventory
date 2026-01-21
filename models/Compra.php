@@ -326,13 +326,22 @@ class Compra {
 
     /**
      * Obtener total de compras para un período (para dashboard)
+     * @param int|null $dias Número de días (null para todas las compras)
      */
-    public function obtenerTotalComprasPeriodo($dias = 30) {
+    public function obtenerTotalComprasPeriodo($dias = null) {
+        $whereClause = "";
+        $parametros = [];
+
+        if ($dias !== null) {
+            $whereClause = "WHERE fecha_compra >= DATE_SUB(NOW(), INTERVAL :dias DAY)";
+            $parametros['dias'] = $dias;
+        }
+
         $sql = "SELECT SUM(total) as total_compras
                 FROM compras
-                WHERE fecha_compra >= DATE_SUB(NOW(), INTERVAL :dias DAY)";
+                {$whereClause}";
 
-        $resultado = $this->db->fetch($sql, ['dias' => $dias]);
+        $resultado = $this->db->fetch($sql, $parametros);
         return $resultado['total_compras'] ?? 0;
     }
 

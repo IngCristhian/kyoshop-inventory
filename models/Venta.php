@@ -399,20 +399,29 @@ class Venta {
 
     /**
      * Obtener estadísticas de ventas
+     * @param int|null $dias Número de días (null para todas las ventas)
      */
-    public function obtenerEstadisticas($dias = 30) {
+    public function obtenerEstadisticas($dias = null) {
+        $whereClause = "";
+        $parametros = [];
+
+        if ($dias !== null) {
+            $whereClause = "WHERE fecha_venta >= DATE_SUB(NOW(), INTERVAL :dias DAY)";
+            $parametros['dias'] = $dias;
+        }
+
         $sql = "SELECT
                     COUNT(*) as total_ventas,
-                    SUM(total) as monto_total,
-                    AVG(total) as ticket_promedio,
+                    SUM(CASE WHEN estado_pago != 'cancelado' THEN total ELSE 0 END) as monto_total,
+                    AVG(CASE WHEN estado_pago != 'cancelado' THEN total ELSE NULL END) as ticket_promedio,
                     COUNT(CASE WHEN estado_pago = 'pagado' THEN 1 END) as ventas_pagadas,
                     COUNT(CASE WHEN estado_pago = 'pendiente' THEN 1 END) as ventas_pendientes,
                     COUNT(CASE WHEN estado_pago = 'cancelado' THEN 1 END) as ventas_canceladas,
                     COUNT(DISTINCT cliente_id) as clientes_unicos
                 FROM ventas
-                WHERE fecha_venta >= DATE_SUB(NOW(), INTERVAL :dias DAY)";
+                {$whereClause}";
 
-        return $this->db->fetch($sql, ['dias' => $dias]);
+        return $this->db->fetch($sql, $parametros);
     }
 
     /**
