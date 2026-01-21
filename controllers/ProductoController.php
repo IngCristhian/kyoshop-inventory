@@ -30,20 +30,20 @@ class ProductoController {
         $productosStockBajo = $this->producto->obtenerStockBajo();
         $productosRecientes = $this->producto->obtenerTodos(1, 5);
 
-        // Obtener datos de compras y ventas para ganancias
-        $totalCompras30d = $this->compra->obtenerTotalComprasPeriodo(30);
-        $estadisticasVentas = $this->venta->obtenerEstadisticas(30);
-        $totalVentas30d = $estadisticasVentas['monto_total'] ?? 0;
-        $gananciaNeta30d = $totalVentas30d - $totalCompras30d;
+        // Obtener datos de compras y ventas para ganancias (totales)
+        $totalCompras = $this->compra->obtenerTotalComprasPeriodo();
+        $estadisticasVentas = $this->venta->obtenerEstadisticas();
+        $totalVentas = $estadisticasVentas['monto_total'] ?? 0;
+        $gananciaNeta = $totalVentas - $totalCompras;
 
         $data = [
             'titulo' => 'Dashboard - ' . APP_NAME,
             'estadisticas' => $estadisticas,
             'productos_stock_bajo' => $productosStockBajo,
             'productos_recientes' => $productosRecientes,
-            'total_compras_30d' => $totalCompras30d,
-            'total_ventas_30d' => $totalVentas30d,
-            'ganancia_neta_30d' => $gananciaNeta30d
+            'total_compras' => $totalCompras,
+            'total_ventas' => $totalVentas,
+            'ganancia_neta' => $gananciaNeta
         ];
 
         $this->cargarVista('dashboard', $data);
