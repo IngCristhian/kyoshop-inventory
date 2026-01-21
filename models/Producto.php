@@ -241,14 +241,17 @@ class Producto {
      * Obtener estadísticas del inventario
      */
     public function obtenerEstadisticas() {
-        $sql = "SELECT 
+        $sql = "SELECT
                     COUNT(*) as total_productos,
                     SUM(stock) as total_stock,
                     COUNT(DISTINCT categoria) as total_categorias,
                     AVG(precio) as precio_promedio,
                     COUNT(CASE WHEN stock <= 5 THEN 1 END) as productos_bajo_stock,
-                    SUM(precio * stock) as valor_total_inventario
-                FROM productos 
+                    SUM(precio * stock) as valor_total_inventario,
+                    SUM(CASE WHEN tipo = 'Niño' THEN stock ELSE 0 END) as stock_nino,
+                    SUM(CASE WHEN tipo = 'Mujer' THEN stock ELSE 0 END) as stock_mujer,
+                    SUM(CASE WHEN tipo = 'Hombre' THEN stock ELSE 0 END) as stock_hombre
+                FROM productos
                 WHERE activo = 1";
         return $this->db->fetch($sql);
     }
