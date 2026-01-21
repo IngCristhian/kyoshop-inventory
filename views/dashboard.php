@@ -146,6 +146,72 @@
     </div>
 </div>
 
+<!-- Estadísticas por Tipo de Prenda -->
+<div class="row mb-4">
+    <div class="col-md-4 mb-4">
+        <div class="card text-white shadow h-100 py-2" style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">
+                            Prendas de Niño
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold">
+                            <?= number_format($estadisticas['stock_nino'] ?? 0) ?>
+                        </div>
+                        <small style="opacity: 0.8;">Unidades en stock</small>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-person" style="font-size: 2.5rem; opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card text-white shadow h-100 py-2" style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">
+                            Prendas de Mujer
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold">
+                            <?= number_format($estadisticas['stock_mujer'] ?? 0) ?>
+                        </div>
+                        <small style="opacity: 0.8;">Unidades en stock</small>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-person-standing-dress" style="font-size: 2.5rem; opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4 mb-4">
+        <div class="card text-white shadow h-100 py-2" style="background: linear-gradient(135deg, #30cfd0 0%, #330867 100%);">
+            <div class="card-body">
+                <div class="row no-gutters align-items-center">
+                    <div class="col mr-2">
+                        <div class="text-xs font-weight-bold text-uppercase mb-1">
+                            Prendas de Hombre
+                        </div>
+                        <div class="h5 mb-0 font-weight-bold">
+                            <?= number_format($estadisticas['stock_hombre'] ?? 0) ?>
+                        </div>
+                        <small style="opacity: 0.8;">Unidades en stock</small>
+                    </div>
+                    <div class="col-auto">
+                        <i class="bi bi-person-standing" style="font-size: 2.5rem; opacity: 0.7;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 <div class="row">
     <!-- Productos con Stock Bajo -->
     <div class="col-lg-6 mb-4">
